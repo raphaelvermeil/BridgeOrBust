@@ -5,14 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Create Project">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/GravitySimulation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PendulumSimulation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/RigidBody.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Vector2D.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/HelloApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -101,6 +93,7 @@
       <workItem from="1738186204078" duration="6763000" />
       <workItem from="1738199224735" duration="817000" />
       <workItem from="1738203306089" duration="2477000" />
+      <workItem from="1738250901109" duration="119000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />

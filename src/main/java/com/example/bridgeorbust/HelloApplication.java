@@ -14,8 +14,7 @@ public class HelloApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
 
 
-        RigidBody rig = new RigidBody();
-        VBox vbox = new VBox();
+
 
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
 
