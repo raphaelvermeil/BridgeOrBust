@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
@@ -37,7 +38,7 @@ public class SimplePhysicsEngine extends Application {
         double pivotY = 430;
         Rotate rotate = new Rotate(-45, pivotX, pivotY); // Initial rotation at 0 degrees
         rect.getTransforms().add(rotate);
-
+        Line line = new Line(400, 400, rig.getCenterX(), rig.getCenterY());
 
 
         Circle constraints = new Circle(400, 400, 400);
@@ -46,13 +47,14 @@ public class SimplePhysicsEngine extends Application {
         rig2.setFill(Color.WHITE);
         rectangle.setFill(Color.WHITE);
         rect.setFill(Color.WHITE);
+        line.setStroke(Color.WHITE);
+        line.setStrokeWidth(30);
 
 
 
 
 
-
-        pane.getChildren().addAll(constraints, rig, rig2, rectangle, rect);
+        pane.getChildren().addAll(constraints, rig, rig2, rectangle, rect, line);
         Scene scene = new Scene(pane, 800, 800);
 
 
@@ -81,6 +83,8 @@ public class SimplePhysicsEngine extends Application {
                 rotate.setAngle(rotate.getAngle() + angle);
                 System.out.println(rotate.getAngle());
 
+
+
                 int substeps = 8;
                 double substep_dt = dt / substeps;
                 for (int i = 0; i < substeps; i++) {
@@ -92,6 +96,8 @@ public class SimplePhysicsEngine extends Application {
                     updateRectangle(substep_dt, rectangle);
 //                    rectangle.setRotate(rectangle.getRotate() + 1);
                     rectangle.rotateAroundPivot(0.01);
+                    line.setEndX(rig.getCenterX());
+                    line.setEndY(rig.getCenterY());
 
                 }
 
