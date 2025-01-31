@@ -8,6 +8,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -17,21 +19,42 @@ public class SimplePhysicsEngine extends Application {
 
     private final double WIDTH = 800;
     private final double HEIGHT = 600;
-
+    Rectangle rect = new Rectangle(400, 400, 100, 30);
+    double angle = Math.toRadians(45);
+    double angleAcc = 0;
+    double angleVel = 0;
 
     @Override
     public void start(Stage stage) {
         Pane pane = new Pane();
-        PhysicsObject rig = new PhysicsObject(550, 400, 30);
-        PhysicsObject rig2 = new PhysicsObject(250, 400, 20);
-        Circle constraints = new Circle(400, 400, 200);
+        PhysicsCircle rig = new PhysicsCircle(550, 460, 20);
+        PhysicsCircle rig2 = new PhysicsCircle(550, 320, 20);
+        PhysicsRectangle rectangle = new PhysicsRectangle(400, 400, 100, 30);
+
+
+
+        double pivotX = 500;
+        double pivotY = 430;
+        Rotate rotate = new Rotate(-45, pivotX, pivotY); // Initial rotation at 0 degrees
+        rect.getTransforms().add(rotate);
+
+
+
+        Circle constraints = new Circle(400, 400, 400);
         constraints.setFill(Color.BLACK);
         rig.setFill(Color.WHITE);
         rig2.setFill(Color.WHITE);
+        rectangle.setFill(Color.WHITE);
+        rect.setFill(Color.WHITE);
 
-        Circle circle = new Circle(150, 100, 30);
-        pane.getChildren().addAll(circle, constraints, rig, rig2);
+
+
+
+
+
+        pane.getChildren().addAll(constraints, rig, rig2, rectangle, rect);
         Scene scene = new Scene(pane, 800, 800);
+
 
 
 
@@ -50,9 +73,30 @@ public class SimplePhysicsEngine extends Application {
                 lastTime = now;
 
 
-                applyGravity(0, 1000, List.of(rig, rig2));
-                updatePositions(dt, List.of(rig, rig2));
-                applyConstraints(List.of(rig, rig2));
+                double force = (1) * Math.sin(-1*(90- ((angle)*-1)));
+                angleAcc = force;
+                angleVel += angleAcc * dt;
+                angle += angleVel * dt;
+
+                rotate.setAngle(rotate.getAngle() + angle);
+                System.out.println(rotate.getAngle());
+
+                int substeps = 8;
+                double substep_dt = dt / substeps;
+                for (int i = 0; i < substeps; i++) {
+                    applyGravity(0, 1000, List.of(rig, rig2));
+                    updatePositions(substep_dt, List.of(rig, rig2));
+                    applyConstraints(List.of(rig, rig2), constraints);
+                    solveCollisions(List.of(rig, rig2));
+                    applyGravityRectangle(0, 1000, rectangle);
+                    updateRectangle(substep_dt, rectangle);
+//                    rectangle.setRotate(rectangle.getRotate() + 1);
+                    rectangle.rotateAroundPivot(0.01);
+
+                }
+
+
+
 
                 // Update the physics
 //                update(circle, dt);
@@ -68,79 +112,66 @@ public class SimplePhysicsEngine extends Application {
     }
 
     double velocityTest = 0;
-void update(Circle circle, double dt) {
 
 
 
 
-
-    //THIS WORKS:
-//    double gravity = 100;
-//    double accelerationX = 0;
-//    double accelerationY = gravity;
-//
-//    double prevX = circle.getCenterX();
-//    double prevY = circle.getCenterY();
-//    double velocityX = circle.getCenterX() - prevX;
-//    double velocityY = circle.getCenterY() - prevY;
-//    double prevVelocity = velocityTest;
-//    velocityTest = prevVelocity + accelerationY * dt;
-//
-//
-//    circle.setCenterY(circle.getCenterY() + velocityTest*dt + accelerationY * dt * dt);
-//
-//    accelerationY = 0;
-//    System.out.println("VelocityTest: " + velocityTest);
-}
-
-//void updatePositions(double dt, List<PhysicsObject> objects) {
-//    for (PhysicsObject object : objects) {
-//        object.update;
-//    }
-//}
-
-    void updatePositions(double dt, List<PhysicsObject> objects) {
-        for (PhysicsObject object : objects) {
+    void updatePositions(double dt, List<PhysicsCircle> objects) {
+        for (PhysicsCircle object : objects) {
             object.updatePosition(dt);
         }
     }
 
-    void applyGravity(double ax, double ay, List<PhysicsObject> objects) {
-        for (PhysicsObject object : objects) {
+    void updateRectangle(double dt, PhysicsRectangle rectangle) {
+        rectangle.updatePosition(dt);
+    }
+
+    void applyGravity(double ax, double ay, List<PhysicsCircle> objects) {
+        for (PhysicsCircle object : objects) {
             object.accelerate(ax, ay);
         }
     }
 
-    void applyConstraints(List<PhysicsObject> objects){
+    void applyGravityRectangle(double ax, double ay, PhysicsRectangle rectangle) {
+        rectangle.accelerate(ax, ay);
+    }
+
+    void applyConstraints(List<PhysicsCircle> objects, Circle constraints) {
         Vector2D position = new Vector2D(400, 400);
         double radius = 200;
 
-        for (PhysicsObject obj : objects) {
+        for (PhysicsCircle obj : objects) {
             Vector2D objPosition = new Vector2D(obj.getCenterX(), obj.getCenterY());
             Vector2D toObj = objPosition.subtract(position);
             double dist = toObj.magnitude();
 
-            if (dist > radius - obj.getRadius()) {
+            if (dist > constraints.getRadius() - obj.getRadius()) {
                 Vector2D n = toObj.normalize();
-                Vector2D newPosition = position.add(n.scale(200 - obj.getRadius()));
+                Vector2D newPosition = position.add(n.scale(constraints.getRadius() - obj.getRadius()));
                 obj.setCenterX(newPosition.getX());
                 obj.setCenterY(newPosition.getY());
             }
         }
-//        double constraintsPositionX = 400;
-//        double constraintsPositionY = 400;
-//
-//        double constraintRadius = 200;
-//        for (PhysicsObject object : objects) {
-//            double distance = Math.sqrt(Math.pow(object.getCenterX() - constraintsPositionX, 2) + Math.pow(object.getCenterY() - constraintsPositionY, 2));
-//            if (distance > constraintRadius - 15) {
-//                 double nX = (object.getCenterX() - constraintsPositionX) / distance;
-//                 double nY = (object.getCenterY() - constraintsPositionY) / distance;
-//                 object.setCenterX(constraintsPositionX + nX * (distance-0.5));
-//                 object.setCenterY(constraintsPositionY + nY * (distance-0.5));
-//            }
-//        }
+    }
 
+    void solveCollisions(List<PhysicsCircle> objects) {
+        for (int i = 0; i < objects.size(); i++) {
+            PhysicsCircle obj1 = objects.get(i);
+            for (int j = i + 1; j < objects.size(); j++) {
+                PhysicsCircle obj2 = objects.get(j);
+                Vector2D toObj = new Vector2D(obj2.getCenterX() - obj1.getCenterX(), obj2.getCenterY() - obj1.getCenterY());
+                double dist = toObj.magnitude();
+                double overlap = obj1.getRadius() + obj2.getRadius() - dist;
+                if (overlap > 0) {
+                    Vector2D n = toObj.normalize();
+                    Vector2D correction = n.scale(overlap / 2);
+                    obj1.setCenterX(obj1.getCenterX() - correction.getX());
+                    obj1.setCenterY(obj1.getCenterY() - correction.getY());
+                    obj2.setCenterX(obj2.getCenterX() + correction.getX());
+                    obj2.setCenterY(obj2.getCenterY() + correction.getY());
+                }
+            }
+        }
     }
 
     public static void main(String[] args) {

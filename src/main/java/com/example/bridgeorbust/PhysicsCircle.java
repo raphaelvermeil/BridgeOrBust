@@ -2,7 +2,7 @@ package com.example.bridgeorbust;
 
 import javafx.scene.shape.Circle;
 
-public class PhysicsObject extends Circle {
+public class PhysicsCircle extends Circle {
     private double position_current_x;    // Current X Position
     private double position_current_y;    // Current Y Position
     private double position_old_x;        // Old X Position
@@ -15,7 +15,7 @@ public class PhysicsObject extends Circle {
 
 
 
-    public PhysicsObject(double x, double y, double radius) {
+    public PhysicsCircle(double x, double y, double radius) {
         super(x, y, radius);
         this.position_current_x = x;
         this.position_current_y = y;
