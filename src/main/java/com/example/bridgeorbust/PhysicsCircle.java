@@ -1,5 +1,6 @@
 package com.example.bridgeorbust;
 
+import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Circle;
 
 public class PhysicsCircle extends Circle {
@@ -11,7 +12,8 @@ public class PhysicsCircle extends Circle {
     private double acceleration_y;        // Y Acceleration
     private double radius;                // Size
     private double mass = 1;              // Default mass
-
+    private double dragOffsetX;
+    private double dragOffsetY;
 
 
 
@@ -23,6 +25,21 @@ public class PhysicsCircle extends Circle {
         this.position_old_y = y;
         this.acceleration_x = 0;
         this.acceleration_y = 0;
+        this.setOnMousePressed(this::onMousePressed);
+        this.setOnMouseDragged(this::onMouseDragged);
+    }
+
+    public PhysicsCircle(double radius){
+        super(radius);
+    }
+    private void onMousePressed(MouseEvent event) {
+        dragOffsetX = getCenterX() - event.getSceneX();
+        dragOffsetY = getCenterY() - event.getSceneY();
+    }
+
+    private void onMouseDragged(MouseEvent event) {
+        setCenterX(event.getSceneX() + dragOffsetX);
+        setCenterY(event.getSceneY() + dragOffsetY);
     }
 
     public void updatePosition(double dt) {
@@ -35,8 +52,8 @@ public class PhysicsCircle extends Circle {
 
         // Verlet integration equation
 
-        this.setCenterX(this.getCenterX() + velocity_x + this.getAcceleration_x() * dt * dt);
-        this.setCenterY(this.getCenterY() + velocity_y + this.getAcceleration_y() * dt * dt);
+        this.setCenterX(this.getCenterX() + velocity_x + this.getAcceleration_x() * dt);
+        this.setCenterY(this.getCenterY() + velocity_y + this.getAcceleration_y() * dt);
 
         // Reset acceleration
         this.setAcceleration_x(0);

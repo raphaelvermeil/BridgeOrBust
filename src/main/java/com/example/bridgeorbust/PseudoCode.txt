@@ -1,0 +1,14 @@
+for each frame{
+    add gravity to acceleration
+
+    velocity = positionAtCurrentFrame - positionAtPreviousFrame
+
+    positionAtPreviousFrame = positionAtCurrentFrame
+
+    //Verlet Integration Equation:
+    positionAtCurrentFrame = positionAtCurrentFrame + velocity + acceleration * timeBetweenFrames
+
+    set acceleration to 0
+}
+
+

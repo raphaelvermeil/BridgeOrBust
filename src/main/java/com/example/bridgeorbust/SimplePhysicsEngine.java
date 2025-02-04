@@ -28,8 +28,9 @@ public class SimplePhysicsEngine extends Application {
     @Override
     public void start(Stage stage) {
         Pane pane = new Pane();
-        PhysicsCircle rig = new PhysicsCircle(550, 460, 20);
-        PhysicsCircle rig2 = new PhysicsCircle(550, 320, 20);
+        PhysicsCircle rig = new PhysicsCircle(250, 400, 20);
+        PhysicsCircle rig2 = new PhysicsCircle(350, 400, 20);
+
         PhysicsRectangle rectangle = new PhysicsRectangle(400, 400, 100, 30);
 
 
@@ -39,12 +40,12 @@ public class SimplePhysicsEngine extends Application {
         Rotate rotate = new Rotate(-45, pivotX, pivotY); // Initial rotation at 0 degrees
         rect.getTransforms().add(rotate);
         Line line = new Line(400, 400, rig.getCenterX(), rig.getCenterY());
-
+        PhysicsRod rod = new PhysicsRod(rig, rig2, 100);
 
         Circle constraints = new Circle(400, 400, 400);
         constraints.setFill(Color.BLACK);
-        rig.setFill(Color.WHITE);
-        rig2.setFill(Color.WHITE);
+//        rig.setFill(Color.WHITE);
+//        rig2.setFill(Color.WHITE);
         rectangle.setFill(Color.WHITE);
         rect.setFill(Color.WHITE);
         line.setStroke(Color.WHITE);
@@ -54,7 +55,7 @@ public class SimplePhysicsEngine extends Application {
 
 
 
-        pane.getChildren().addAll(constraints, rig, rig2, rectangle, rect, line);
+        pane.getChildren().addAll(constraints, rig, rig2, rod.getLine());
         Scene scene = new Scene(pane, 800, 800);
 
 
@@ -88,7 +89,7 @@ public class SimplePhysicsEngine extends Application {
                 int substeps = 8;
                 double substep_dt = dt / substeps;
                 for (int i = 0; i < substeps; i++) {
-                    applyGravity(0, 1000, List.of(rig, rig2));
+                    applyGravity(0, 9.8, List.of(rig, rig2));
                     updatePositions(substep_dt, List.of(rig, rig2));
                     applyConstraints(List.of(rig, rig2), constraints);
                     solveCollisions(List.of(rig, rig2));
@@ -96,8 +97,12 @@ public class SimplePhysicsEngine extends Application {
                     updateRectangle(substep_dt, rectangle);
 //                    rectangle.setRotate(rectangle.getRotate() + 1);
                     rectangle.rotateAroundPivot(0.01);
-                    line.setEndX(rig.getCenterX());
-                    line.setEndY(rig.getCenterY());
+                    rod.enforceConstraint();
+//                    rig.setCenterX(400);
+//                    rig.setCenterY(400);
+
+
+
 
                 }
 
