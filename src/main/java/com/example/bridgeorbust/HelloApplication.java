@@ -1,3 +1,4 @@
+/*
 package com.example.bridgeorbust;
 
 import javafx.application.Application;
@@ -27,4 +28,4 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch();
     }
-}
+}*/

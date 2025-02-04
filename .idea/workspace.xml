@@ -4,74 +4,49 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Other Stuff">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsRod.java" afterDir="false" />
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/HelloApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;raphaelvermeil&quot;
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "KianV09"
   }
-}</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
-    &quot;accountId&quot;: &quot;1085a5f7-3eec-445a-9ef0-dab3f201eaf7&quot;
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/raphaelvermeil/BridgeOrBust.git",
+    "accountId": "ef65ce83-6902-468d-aaae-ec537a1addcb"
   }
-}</component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2sGpF0nnjcdZcYrBJRKgrbLPMbU" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
-    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
-    &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
-    &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.SimplePhysicsEngine.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -88,62 +63,11 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1738091660854</updated>
-      <workItem from="1738091661787" duration="7589000" />
-      <workItem from="1738116294874" duration="801000" />
-      <workItem from="1738159763410" duration="2004000" />
-      <workItem from="1738171045069" duration="308000" />
-      <workItem from="1738180014606" duration="752000" />
-      <workItem from="1738186204078" duration="6763000" />
-      <workItem from="1738199224735" duration="817000" />
-      <workItem from="1738203306089" duration="2477000" />
-      <workItem from="1738250901109" duration="783000" />
-      <workItem from="1738257521639" duration="819000" />
-      <workItem from="1738262205419" duration="2414000" />
-      <workItem from="1738289892497" duration="9751000" />
-      <workItem from="1738335713543" duration="1353000" />
-      <workItem from="1738690180140" duration="5892000" />
+      <workItem from="1738091661787" duration="1000" />
     </task>
-    <task id="LOCAL-00001" summary="Create Project">
-      <option name="closed" value="true" />
-      <created>1738092280425</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1738092280425</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Create Project">
-      <option name="closed" value="true" />
-      <created>1738092311496</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1738092311496</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Create Project">
-      <option name="closed" value="true" />
-      <created>1738251035791</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1738251035791</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Other Stuff">
-      <option name="closed" value="true" />
-      <created>1738300532598</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1738300532598</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Create Project" />
-    <MESSAGE value="Other Stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Other Stuff" />
   </component>
 </project>
