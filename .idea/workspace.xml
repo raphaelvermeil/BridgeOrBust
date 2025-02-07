@@ -5,10 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Other Stuff">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsRod.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Beam.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/BridgeSimulation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/BridgeTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Pin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SolveLinearSystem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PseudoCode.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PseudoCode.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Vector2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Vector2D.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,10 +62,13 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.BridgeTest.executor&quot;: &quot;Run&quot;,
     &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
     &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
     &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SolveLinearSystem.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
@@ -101,7 +109,11 @@
       <workItem from="1738262205419" duration="2414000" />
       <workItem from="1738289892497" duration="9751000" />
       <workItem from="1738335713543" duration="1353000" />
-      <workItem from="1738690180140" duration="5892000" />
+      <workItem from="1738690180140" duration="10541000" />
+      <workItem from="1738858624920" duration="3537000" />
+      <workItem from="1738865959615" duration="2227000" />
+      <workItem from="1738894491623" duration="5897000" />
+      <workItem from="1738941021655" duration="9747000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -135,7 +147,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738300532598</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Other Stuff">
+      <option name="closed" value="true" />
+      <created>1738696722582</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1738696722582</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

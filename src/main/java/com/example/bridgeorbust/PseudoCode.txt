@@ -1,14 +1,77 @@
-for each frame{
-    add gravity to acceleration
-
-    velocity = positionAtCurrentFrame - positionAtPreviousFrame
-
-    positionAtPreviousFrame = positionAtCurrentFrame
-
-    //Verlet Integration Equation:
-    positionAtCurrentFrame = positionAtCurrentFrame + velocity + acceleration * timeBetweenFrames
-
-    set acceleration to 0
+for each frame {
+    for each pins{
+        calculateForces()
+    }
+    for each pins {
+        pin.update(timeBetweenEachFrame)
+    }
 }
+
+pin:
+//Adds the force of hook's law and gravity force aswell as mass to the pin
+function calculateForces() {
+    forceSum = 0
+    massSum = 0
+
+    for each beamConnectedToPin{
+        beam.addForceAndMass(thisPin, forceSum, massSum)
+    }
+}
+
+//Update position of pins according to the force and mass of pin
+function update(deltaTime){
+    if(pinIsNotFixed and massActingUponPin is bigger than 0) {
+        acceleration = forceSum / massSum
+        velocity += acceleration * deltaTime
+        position += velocity * deltatime
+    }
+}
+
+beam:
+//Adds the force of hook's law and gravity force aswell as mass to the pin
+function addForceAndMass(Pin, forceSum, massSum){
+    if(pin1 and pin2 are the ones connected to the beam){
+        pin.setForceSum(forcesSum + getForceAtPin(Pin))
+        pin.setMassSum(massSum + massOfBeam / 2) // by 2 because 1 beam is connected to 2 pins
+    }
+}
+
+function getForceAtPin(Pin){
+    currentLength = distance between pins of beam
+    displacement = difference between restLength and currentLength
+
+    //F = -kx -> Hook's Law
+    forceOfBeam = displacement * -stiffness
+    // F = mg
+    forceGravity = mass * 9.8
+
+
+    if(forceOfBeam > limit){
+        beam is broken
+    } else {
+        beam is not broken
+    }
+
+    if(Pin is attached to beam) {
+        return (forceOfBeam * -1) + forceGravity * 0.5
+    } else for if(Pin is the another pin attached to beam){
+         return forceOfBeam + forceGravity * 0.5
+    }
+}
+
+
+
+
+each frame:
+1. Calls calculateForces() for each pin
+2. CalculateForces() calls addForceAndMass() to add the force of hook's law and gravity force aswell as mass to the pin
+3. addForceAndMass() calls getForceAtPin() to calculate the force currently acting on the pin
+4. getForceAtPin() calculates the force of the beam using Hook's Law and gravity force
+5. getForceAtPin() returns the force acting on the pin
+6. calculateForces() updates the forceSum and massSum of the pin
+7. Calls update() for each pin
+8. update() updates the position of the pin according to the force and mass acting on it
+9. The pins move but are attached to the beams which makes the beams stretch or compress
+10. The beams recalculates the force acting on the pins and the process repeats for the next frame
 
 
