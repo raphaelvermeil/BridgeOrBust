@@ -4,10 +4,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<VBox alignment="CENTER" prefHeight="314.0" prefWidth="267.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.example.bridgeorbust.HelloController">
+<VBox alignment="CENTER" prefHeight="314.0" prefWidth="267.0" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bridgeorbust.HelloController">
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
-   <Circle fill="DODGERBLUE" radius="37.0" stroke="BLACK" strokeType="INSIDE" />
    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="62.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
 </VBox>
