@@ -1,4 +1,4 @@
-package com.example.bridgeorbust;
+package com.example.bridgeorbust.physicsSimulation;
 public class Vector2D {
     public double x, y;
 

@@ -9,4 +9,6 @@ module com.example.bridgeorbust {
 
     opens com.example.bridgeorbust to javafx.fxml;
     exports com.example.bridgeorbust;
+    exports com.example.bridgeorbust.physicsSimulation;
+    opens com.example.bridgeorbust.physicsSimulation to javafx.fxml;
 }

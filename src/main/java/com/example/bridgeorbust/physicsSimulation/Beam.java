@@ -1,4 +1,4 @@
-package com.example.bridgeorbust;
+package com.example.bridgeorbust.physicsSimulation;
 
 public class Beam {
     public Pin pin1, pin2;
@@ -36,9 +36,9 @@ public class Beam {
 
 
 
-        if (forceBeam.magnitude() > 100) { // Arbitrary break limit
+        if (forceBeam.magnitude() > 1000) { // Arbitrary break limit
             broken = true;
-        } else if(forceBeam.magnitude() < 100){
+        } else if(forceBeam.magnitude() < 1000){
             broken = false;
         }
 

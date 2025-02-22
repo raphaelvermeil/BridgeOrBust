@@ -1,25 +1,30 @@
-package com.example.bridgeorbust;
+package com.example.bridgeorbust.physicsSimulation;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class BridgeSimulation extends Application {
     private List<Pin> pins = new ArrayList<>();
     private List<Beam> beams = new ArrayList<>();
+    private Pin firstPin = null;
 
     @Override
     public void start(Stage stage) {
         Canvas canvas = new Canvas(800, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
+
+        canvas.setOnMouseClicked(this::handleMouseClick);
 
         setupBridge();
 
@@ -91,6 +96,39 @@ public class BridgeSimulation extends Application {
 
     }
 
+    private void handleMouseClick(MouseEvent event) {
+        double x = event.getX();
+        double y = event.getY();
+
+        Pin clickedPin = getPinAt(x, y);
+        if (firstPin == null) {
+            if (clickedPin != null) {
+                firstPin = clickedPin;
+            } else {
+                firstPin = new Pin(x, y, false);
+                pins.add(firstPin);
+            }
+        } else {
+            Pin secondPin = clickedPin != null ? clickedPin : new Pin(x, y, false);
+            if (clickedPin == null) {
+                pins.add(secondPin);
+            }
+            Beam beam = new Beam(firstPin, secondPin, 300, 10);
+            beams.add(beam);
+            firstPin = null;
+        }
+    }
+
+    private Pin getPinAt(double x, double y) {
+        for (Pin pin : pins) {
+            Vector2D pos = pin.getPosition();
+            if (pos.subtract(new Vector2D(x, y)).magnitude() < 10) {
+                return pin;
+            }
+        }
+        return null;
+    }
+
     private void updateSimulation(double deltaTime) {
         for (Pin pin : pins) {
             pin.calculateForces();
@@ -98,7 +136,11 @@ public class BridgeSimulation extends Application {
         for (Pin pin : pins) {
             pin.update(deltaTime);
         }
+
+
     }
+
+
 
     private void render(GraphicsContext gc) {
         gc.clearRect(0, 0, 800, 600);

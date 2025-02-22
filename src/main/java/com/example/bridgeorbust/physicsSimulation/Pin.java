@@ -1,4 +1,4 @@
-package com.example.bridgeorbust;
+package com.example.bridgeorbust.physicsSimulation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class Pin {
             position = position.add(velocity.multiply(deltaTime));
         }
 
-        System.out.println(this.getForceSum().magnitude() + " " + this.getMassSum());
+
     }
 
     public void addBeam(Beam beam) {

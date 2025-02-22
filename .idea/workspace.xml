@@ -5,10 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Other Stuff">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsRod.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/PhysicsCircle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SimplePhysicsEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Vector2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Vector2D.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,10 +59,12 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
     &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
     &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
     &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SolveLinearSystem.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
@@ -102,6 +106,12 @@
       <workItem from="1738289892497" duration="9751000" />
       <workItem from="1738335713543" duration="1353000" />
       <workItem from="1738690180140" duration="5892000" />
+      <workItem from="1738973072318" duration="864000" />
+      <workItem from="1739026386604" duration="855000" />
+      <workItem from="1739047594409" duration="4919000" />
+      <workItem from="1739234982887" duration="1146000" />
+      <workItem from="1739394355635" duration="1922000" />
+      <workItem from="1740157167797" duration="4420000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -144,6 +154,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Create Project" />
     <MESSAGE value="Other Stuff" />
-    <option name="LAST_COMMIT_MESSAGE" value="Other Stuff" />
+    <MESSAGE value="Physics Algorithm solved" />
+    <option name="LAST_COMMIT_MESSAGE" value="Physics Algorithm solved" />
   </component>
 </project>
