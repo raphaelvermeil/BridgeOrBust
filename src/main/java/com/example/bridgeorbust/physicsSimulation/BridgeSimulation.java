@@ -5,10 +5,14 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,16 +21,38 @@ public class BridgeSimulation extends Application {
     private List<Pin> pins = new ArrayList<>();
     private List<Beam> beams = new ArrayList<>();
     private Pin firstPin = null;
-
+    boolean play=true;
     @Override
     public void start(Stage stage) {
         Canvas canvas = new Canvas(800, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
 
         canvas.setOnMouseClicked(this::handleMouseClick);
 
+        Pane pane = new Pane();
+        pane.getChildren().add(canvas);
+
+        ImageView playPause = new ImageView(new Image("file:pause.png"));
+        playPause.setX(50);
+        playPause.setY(20);
+        playPause.setFitWidth(30);  // Resize if needed
+        playPause.setFitHeight(30);
+
+        pane.getChildren().add(playPause);
+
+        Scene scene = new Scene(pane);
         setupBridge();
+
+        playPause.setOnMouseClicked(e->{
+            if(play){
+                playPause.setImage(new Image("file:play.png"));
+                play=false;
+            }
+            else{
+                playPause.setImage(new Image("file:pause.png"));
+                play=true;
+            }
+        });
 
         new AnimationTimer() {
             long lastTime = System.nanoTime();
@@ -35,8 +61,10 @@ public class BridgeSimulation extends Application {
             public void handle(long now) {
                 double deltaTime = (now - lastTime) / 1e9;
                 lastTime = now;
+                if(play){
+                    updateSimulation(deltaTime);
+                }
 
-                updateSimulation(deltaTime);
                 render(gc);
             }
         }.start();
@@ -101,7 +129,11 @@ public class BridgeSimulation extends Application {
         double y = event.getY();
 
         Pin clickedPin = getPinAt(x, y);
-        if (firstPin == null) {
+
+        if(y<100){
+
+        }
+        else if (firstPin == null) {
             if (clickedPin != null) {
                 firstPin = clickedPin;
             } else {
@@ -160,7 +192,13 @@ public class BridgeSimulation extends Application {
         }
     }
 
+    private void playPause(){
+
+    }
+
     public static void main(String[] args) {
         launch();
     }
 }
+
+

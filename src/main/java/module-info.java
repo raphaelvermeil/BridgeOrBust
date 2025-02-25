@@ -6,6 +6,7 @@ module com.example.bridgeorbust {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
+    requires java.desktop;
 
     opens com.example.bridgeorbust to javafx.fxml;
     exports com.example.bridgeorbust;
