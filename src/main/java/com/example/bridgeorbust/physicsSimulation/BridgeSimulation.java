@@ -21,13 +21,19 @@ public class BridgeSimulation extends Application {
     private List<Pin> pins = new ArrayList<>();
     private List<Beam> beams = new ArrayList<>();
     private Pin firstPin = null;
+    private double stiffness = 4000;
+    private double cursorX = 0;
+    private double cursorY = 0;
+
     boolean play=true;
     @Override
     public void start(Stage stage) {
         Canvas canvas = new Canvas(800, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+//        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
 
         canvas.setOnMouseClicked(this::handleMouseClick);
+        canvas.setOnMouseMoved(this::handleMouseMove);
 
         Pane pane = new Pane();
         pane.getChildren().add(canvas);
@@ -151,6 +157,11 @@ public class BridgeSimulation extends Application {
         }
     }
 
+    private void handleMouseMove(MouseEvent event) {
+        cursorX = event.getX();
+        cursorY = event.getY();
+    }
+
     private Pin getPinAt(double x, double y) {
         for (Pin pin : pins) {
             Vector2D pos = pin.getPosition();
@@ -185,6 +196,13 @@ public class BridgeSimulation extends Application {
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
+        if (firstPin != null) {
+            gc.setStroke(Color.BLACK);
+            Vector2D pos1 = firstPin.getPosition();
+            Vector2D pos2 = new Vector2D(cursorX, cursorY);
+            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+        }
+
         gc.setFill(Color.BLUE);
         for (Pin pin : pins) {
             Vector2D pos = pin.getPosition();
@@ -192,13 +210,9 @@ public class BridgeSimulation extends Application {
         }
     }
 
-    private void playPause(){
-
-    }
-
     public static void main(String[] args) {
         launch();
     }
 }
-//uefinsclkmz
+
 

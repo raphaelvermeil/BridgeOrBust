@@ -1,0 +1,230 @@
+Index: src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bridgeorbust.physicsSimulation;\r\n//wow this is such a great project\r\nimport javafx.animation.AnimationTimer;\r\nimport javafx.application.Application;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.Iterator;\r\nimport java.util.List;\r\n\r\npublic class BridgeSimulation extends Application {\r\n    private List<Pin> pins = new ArrayList<>();\r\n    private List<Beam> beams = new ArrayList<>();\r\n    private Pin firstPin = null;\r\n\r\n    @Override\r\n    public void start(Stage stage) {\r\n        Canvas canvas = new Canvas(800, 600);\r\n        GraphicsContext gc = canvas.getGraphicsContext2D();\r\n        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));\r\n\r\n        canvas.setOnMouseClicked(this::handleMouseClick);\r\n\r\n        setupBridge();\r\n\r\n        new AnimationTimer() {\r\n            long lastTime = System.nanoTime();\r\n\r\n            @Override\r\n            public void handle(long now) {\r\n                double deltaTime = (now - lastTime) / 1e9;\r\n                lastTime = now;\r\n\r\n                updateSimulation(deltaTime);\r\n                render(gc);\r\n            }\r\n        }.start();\r\n\r\n        stage.setScene(scene);\r\n        stage.setTitle(\"Bridge Simulation\");\r\n        stage.show();\r\n    }\r\n\r\n    private void setupBridge() {\r\n        Pin p1 = new Pin(200, 300, true);\r\n        Pin p2 = new Pin(400, 300, false);\r\n        Pin p3 = new Pin(600, 300, false);\r\n        Pin p4 = new Pin(800, 300, true);\r\n        Pin p5 = new Pin(200, 400, true);\r\n        Pin p6 = new Pin(800, 400, true);\r\n//        Pin p5 = new Pin(400, 150, false);\r\n//        Pin p6 = new Pin(600, 150, false);\r\n//        Pin p7 = new Pin(400, 350, false);\r\n//        Pin p8 = new Pin(400, 400, false);\r\n\r\n        Beam b1 = new Beam(p1, p2, 300, 10);\r\n        Beam b2 = new Beam(p2, p3, 300, 10);\r\n        Beam b3 = new Beam(p3, p4, 300, 10);\r\n        Beam b4 = new Beam(p2, p5, 300, 10);\r\n        Beam b5 = new Beam(p3, p6, 300, 10);\r\n\r\n//        Beam b4 = new Beam(p1, p5, 300, 10);\r\n//        Beam b5 = new Beam(p2, p5, 300, 10);\r\n//        Beam b6 = new Beam(p4, p6, 300, 10);\r\n//        Beam b7 = new Beam(p3, p6, 300, 10);\r\n//        Beam b8 = new Beam(p5, p6, 300, 10);\r\n//        Beam b9 = new Beam(p2, p7, 300, 10);\r\n//        Beam b10 = new Beam(p7, p8, 300, 10);\r\n\r\n\r\n        pins.add(p1);\r\n        pins.add(p2);\r\n        pins.add(p3);\r\n        pins.add(p4);\r\n        pins.add(p5);\r\n        pins.add(p6);\r\n\r\n\r\n\r\n\r\n        beams.add(b1);\r\n        beams.add(b2);\r\n        beams.add(b3);\r\n        beams.add(b4);\r\n        beams.add(b5);\r\n//        beams.add(b6);\r\n//        beams.add(b7);\r\n//        beams.add(b8);\r\n//        beams.add(b9);\r\n//        beams.add(b10);\r\n\r\n    }\r\n\r\n    private void handleMouseClick(MouseEvent event) {\r\n        double x = event.getX();\r\n        double y = event.getY();\r\n\r\n        Pin clickedPin = getPinAt(x, y);\r\n        if (firstPin == null) {\r\n            if (clickedPin != null) {\r\n                firstPin = clickedPin;\r\n            } else {\r\n                firstPin = new Pin(x, y, false);\r\n                pins.add(firstPin);\r\n            }\r\n        } else {\r\n            Pin secondPin = clickedPin != null ? clickedPin : new Pin(x, y, false);\r\n            if (clickedPin == null) {\r\n                pins.add(secondPin);\r\n            }\r\n            Beam beam = new Beam(firstPin, secondPin, 300, 10);\r\n            beams.add(beam);\r\n            firstPin = null;\r\n        }\r\n    }\r\n\r\n    private Pin getPinAt(double x, double y) {\r\n        for (Pin pin : pins) {\r\n            Vector2D pos = pin.getPosition();\r\n            if (pos.subtract(new Vector2D(x, y)).magnitude() < 10) {\r\n                return pin;\r\n            }\r\n        }\r\n        return null;\r\n    }\r\n\r\n    private void updateSimulation(double deltaTime) {\r\n        for (Pin pin : pins) {\r\n            pin.calculateForces();\r\n        }\r\n        for (Pin pin : pins) {\r\n            pin.update(deltaTime);\r\n        }\r\n\r\n\r\n    }\r\n\r\n\r\n\r\n    private void render(GraphicsContext gc) {\r\n        gc.clearRect(0, 0, 800, 600);\r\n\r\n        gc.setStroke(Color.BLACK);\r\n        for (Beam beam : beams) {\r\n            Vector2D pos1 = beam.pin1.getPosition();\r\n            Vector2D pos2 = beam.pin2.getPosition();\r\n            gc.setStroke(beam.isBroken() ? Color.RED : Color.BLACK);\r\n            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);\r\n        }\r\n\r\n        gc.setFill(Color.BLUE);\r\n        for (Pin pin : pins) {\r\n            Vector2D pos = pin.getPosition();\r\n            gc.fillOval(pos.x - 5, pos.y - 5, 10, 10);\r\n        }\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        launch();\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java b/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java
+--- a/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java	(revision 06ee2cef18b605793cae425e80ad06601166a9ca)
++++ b/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java	(date 1740508986827)
+@@ -17,6 +17,9 @@
+     private List<Pin> pins = new ArrayList<>();
+     private List<Beam> beams = new ArrayList<>();
+     private Pin firstPin = null;
++    private double stiffness = 4000;
++    private double cursorX = 0;
++    private double cursorY = 0;
+ 
+     @Override
+     public void start(Stage stage) {
+@@ -25,6 +28,8 @@
+         Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
+ 
+         canvas.setOnMouseClicked(this::handleMouseClick);
++        canvas.setOnMouseMoved(this::handleMouseMove);
++
+ 
+         setupBridge();
+ 
+@@ -36,8 +41,14 @@
+                 double deltaTime = (now - lastTime) / 1e9;
+                 lastTime = now;
+ 
++//                for(int i = 0; i < 4; i++){
++//
++//                    updateSimulation(deltaTime);
++//                    render(gc);
++//                }
+                 updateSimulation(deltaTime);
+                 render(gc);
++
+             }
+         }.start();
+ 
+@@ -58,11 +69,11 @@
+ //        Pin p7 = new Pin(400, 350, false);
+ //        Pin p8 = new Pin(400, 400, false);
+ 
+-        Beam b1 = new Beam(p1, p2, 300, 10);
+-        Beam b2 = new Beam(p2, p3, 300, 10);
+-        Beam b3 = new Beam(p3, p4, 300, 10);
+-        Beam b4 = new Beam(p2, p5, 300, 10);
+-        Beam b5 = new Beam(p3, p6, 300, 10);
++        Beam b1 = new Beam(p1, p2, stiffness, 50);
++        Beam b2 = new Beam(p2, p3, stiffness, 50);
++        Beam b3 = new Beam(p3, p4, stiffness, 50);
++        Beam b4 = new Beam(p2, p5, stiffness, 50);
++        Beam b5 = new Beam(p3, p6, stiffness, 50);
+ 
+ //        Beam b4 = new Beam(p1, p5, 300, 10);
+ //        Beam b5 = new Beam(p2, p5, 300, 10);
+@@ -113,12 +124,17 @@
+             if (clickedPin == null) {
+                 pins.add(secondPin);
+             }
+-            Beam beam = new Beam(firstPin, secondPin, 300, 10);
++            Beam beam = new Beam(firstPin, secondPin, stiffness, 10);
+             beams.add(beam);
+             firstPin = null;
+         }
+     }
+ 
++    private void handleMouseMove(MouseEvent event) {
++        cursorX = event.getX();
++        cursorY = event.getY();
++    }
++
+     private Pin getPinAt(double x, double y) {
+         for (Pin pin : pins) {
+             Vector2D pos = pin.getPosition();
+@@ -152,12 +168,21 @@
+             gc.setStroke(beam.isBroken() ? Color.RED : Color.BLACK);
+             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+         }
++
++        if(firstPin != null){
++            gc.setStroke(Color.BLACK);
++            Vector2D pos1 = firstPin.getPosition();
++            Vector2D pos2 = new Vector2D(cursorX, cursorY);
++            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
++        }
+ 
+         gc.setFill(Color.BLUE);
+         for (Pin pin : pins) {
+             Vector2D pos = pin.getPosition();
+             gc.fillOval(pos.x - 5, pos.y - 5, 10, 10);
+         }
++
++
+     }
+ 
+     public static void main(String[] args) {
+Index: src/main/resources/com/example/bridgeorbust/hello-view.fxml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n\r\n<?import javafx.geometry.*?>\r\n<?import javafx.scene.layout.*?>\r\n<?import javafx.scene.shape.*?>\r\n\r\n<VBox alignment=\"CENTER\" prefHeight=\"314.0\" prefWidth=\"267.0\" spacing=\"20.0\" xmlns=\"http://javafx.com/javafx/11.0.14-internal\" xmlns:fx=\"http://javafx.com/fxml/1\" fx:controller=\"com.example.bridgeorbust.HelloController\">\r\n  <padding>\r\n    <Insets bottom=\"20.0\" left=\"20.0\" right=\"20.0\" top=\"20.0\" />\r\n  </padding>\r\n   <Rectangle arcHeight=\"5.0\" arcWidth=\"5.0\" fill=\"DODGERBLUE\" height=\"62.0\" stroke=\"BLACK\" strokeType=\"INSIDE\" width=\"200.0\" />\r\n</VBox>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/resources/com/example/bridgeorbust/hello-view.fxml b/src/main/resources/com/example/bridgeorbust/hello-view.fxml
+--- a/src/main/resources/com/example/bridgeorbust/hello-view.fxml	(revision 06ee2cef18b605793cae425e80ad06601166a9ca)
++++ b/src/main/resources/com/example/bridgeorbust/hello-view.fxml	(date 1740507728868)
+@@ -1,12 +1,18 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ 
+ <?import javafx.geometry.*?>
++<?import javafx.scene.image.*?>
+ <?import javafx.scene.layout.*?>
+ <?import javafx.scene.shape.*?>
+ 
+-<VBox alignment="CENTER" prefHeight="314.0" prefWidth="267.0" spacing="20.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bridgeorbust.HelloController">
++<VBox alignment="CENTER" prefHeight="314.0" prefWidth="267.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bridgeorbust.HelloController">
+   <padding>
+     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
++
+   </padding>
++   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
++      <image>
++         <Image url="@Shutterstock_86973980-1.jpg" />
++      </image></ImageView>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="62.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+ </VBox>
+Index: src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bridgeorbust.physicsSimulation;\r\n\r\npublic class Beam {\r\n    public Pin pin1, pin2;\r\n    private double restLength;\r\n    private double stiffness;\r\n    private double mass;\r\n    private boolean broken = false;\r\n\r\n    public Beam(Pin p1, Pin p2, double stiffness, double mass) {\r\n        this.pin1 = p1;\r\n        this.pin2 = p2;\r\n        this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();\r\n        this.stiffness = stiffness;\r\n        this.mass = mass;\r\n\r\n        p1.addBeam(this);\r\n        p2.addBeam(this);\r\n    }\r\n\r\n    public void addForceAndMassIfConnected(Pin pin, Vector2D forceSum, double massSum) {\r\n        if (pin == pin1 || pin == pin2) {\r\n            pin.setForceSum(forceSum.add(getForceAtPin(pin)));\r\n            pin.setMassSum(massSum + mass / 2.0);\r\n        }\r\n    }\r\n\r\n    public Vector2D getForceAtPin(Pin pin) {\r\n        if (pin1 == null || pin2 == null) return new Vector2D();\r\n\r\n        Vector2D currentLength = pin2.getPosition().subtract(pin1.getPosition());\r\n        Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - restLength);\r\n\r\n        Vector2D forceBeam = displacement.multiply(-stiffness);\r\n        Vector2D forceGravity = new Vector2D(0, mass * 9.81);\r\n\r\n\r\n\r\n        if (forceBeam.magnitude() > 1000) { // Arbitrary break limit\r\n            broken = true;\r\n        } else if(forceBeam.magnitude() < 1000){\r\n            broken = false;\r\n        }\r\n\r\n//        return pin == pin1 ? forceBeam.multiply(-1).add(forceGravity.multiply(0.5)) : forceBeam.add(forceGravity.multiply(0.5));\r\n        if (pin == pin1){\r\n            return forceBeam.multiply(-1).add(forceGravity.multiply(0.5));\r\n        }else if(pin == pin2){\r\n            return forceBeam.add(forceGravity.multiply(0.5));\r\n        }else{\r\n            return new Vector2D();\r\n        }\r\n\r\n    }\r\n\r\n    public boolean isBroken() {\r\n        return broken;\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java b/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java
+--- a/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java	(revision 06ee2cef18b605793cae425e80ad06601166a9ca)
++++ b/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java	(date 1740505308293)
+@@ -32,7 +32,7 @@
+         Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - restLength);
+ 
+         Vector2D forceBeam = displacement.multiply(-stiffness);
+-        Vector2D forceGravity = new Vector2D(0, mass * 9.81);
++        Vector2D forceGravity = new Vector2D(0, mass * 60);
+ 
+ 
+ 
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"91190871-3849-461b-8f03-dc2c5ace9180\" name=\"Changes\" comment=\"Other Stuff\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Beam.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/BridgeSimulation.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Pin.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Vector2D.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Vector2D.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/module-info.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/module-info.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;raphaelvermeil&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,\r\n    &quot;accountId&quot;: &quot;1085a5f7-3eec-445a-9ef0-dab3f201eaf7&quot;\r\n  }\r\n}</component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHomeTypeForPersistence\" value=\"WRAPPER\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2sGpF0nnjcdZcYrBJRKgrbLPMbU\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,\r\n    &quot;Application.SolveLinearSystem.executor&quot;: &quot;Run&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;git-widget-placeholder&quot;: &quot;master&quot;,\r\n    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,\r\n    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,\r\n    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,\r\n    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;\r\n  }\r\n}</component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.24807.4\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"91190871-3849-461b-8f03-dc2c5ace9180\" name=\"Changes\" comment=\"\" />\r\n      <created>1738091660854</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1738091660854</updated>\r\n      <workItem from=\"1738091661787\" duration=\"7589000\" />\r\n      <workItem from=\"1738116294874\" duration=\"801000\" />\r\n      <workItem from=\"1738159763410\" duration=\"2004000\" />\r\n      <workItem from=\"1738171045069\" duration=\"308000\" />\r\n      <workItem from=\"1738180014606\" duration=\"752000\" />\r\n      <workItem from=\"1738186204078\" duration=\"6763000\" />\r\n      <workItem from=\"1738199224735\" duration=\"817000\" />\r\n      <workItem from=\"1738203306089\" duration=\"2477000\" />\r\n      <workItem from=\"1738250901109\" duration=\"783000\" />\r\n      <workItem from=\"1738257521639\" duration=\"819000\" />\r\n      <workItem from=\"1738262205419\" duration=\"2414000\" />\r\n      <workItem from=\"1738289892497\" duration=\"9751000\" />\r\n      <workItem from=\"1738335713543\" duration=\"1353000\" />\r\n      <workItem from=\"1738690180140\" duration=\"5892000\" />\r\n      <workItem from=\"1738973072318\" duration=\"864000\" />\r\n      <workItem from=\"1739026386604\" duration=\"855000\" />\r\n      <workItem from=\"1739047594409\" duration=\"4919000\" />\r\n      <workItem from=\"1739234982887\" duration=\"1146000\" />\r\n      <workItem from=\"1739394355635\" duration=\"1922000\" />\r\n      <workItem from=\"1740157167797\" duration=\"4420000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Create Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738092280425</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738092280425</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Create Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738092311496</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738092311496</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Create Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738251035791</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738251035791</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Other Stuff\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738300532598</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738300532598</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"5\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Create Project\" />\r\n    <MESSAGE value=\"Other Stuff\" />\r\n    <MESSAGE value=\"Physics Algorithm solved\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Physics Algorithm solved\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 06ee2cef18b605793cae425e80ad06601166a9ca)
++++ b/.idea/workspace.xml	(date 1740509359457)
+@@ -4,13 +4,11 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Other Stuff">
++    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Creating rodes and pins">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/Vector2D.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Vector2D.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/bridgeorbust/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/bridgeorbust/hello-view.fxml" afterDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -76,6 +74,14 @@
+     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+ }</component>
++  <component name="RecentsManager">
++    <key name="MoveFile.RECENT_KEYS">
++      <recent name="C:\Users\rapha\Documents\BridgeOrBust\src\main\resources\com\example\bridgeorbust" />
++      <recent name="C:\Users\rapha\Documents\BridgeOrBust\src\main" />
++      <recent name="C:\Users\rapha\Documents\BridgeOrBust\target\classes\com\example\bridgeorbust" />
++      <recent name="C:\Users\rapha\Documents\BridgeOrBust" />
++    </key>
++  </component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+@@ -111,7 +117,7 @@
+       <workItem from="1739047594409" duration="4919000" />
+       <workItem from="1739234982887" duration="1146000" />
+       <workItem from="1739394355635" duration="1922000" />
+-      <workItem from="1740157167797" duration="4420000" />
++      <workItem from="1740157167797" duration="18243000" />
+     </task>
+     <task id="LOCAL-00001" summary="Create Project">
+       <option name="closed" value="true" />
+@@ -145,7 +151,15 @@
+       <option name="project" value="LOCAL" />
+       <updated>1738300532598</updated>
+     </task>
+-    <option name="localTasksCounter" value="5" />
++    <task id="LOCAL-00005" summary="Creating rodes and pins">
++      <option name="closed" value="true" />
++      <created>1740255004044</created>
++      <option name="number" value="00005" />
++      <option name="presentableId" value="LOCAL-00005" />
++      <option name="project" value="LOCAL" />
++      <updated>1740255004044</updated>
++    </task>
++    <option name="localTasksCounter" value="6" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -155,6 +169,7 @@
+     <MESSAGE value="Create Project" />
+     <MESSAGE value="Other Stuff" />
+     <MESSAGE value="Physics Algorithm solved" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Physics Algorithm solved" />
++    <MESSAGE value="Creating rodes and pins" />
++    <option name="LAST_COMMIT_MESSAGE" value="Creating rodes and pins" />
+   </component>
+ </project>
+\ No newline at end of file

@@ -32,7 +32,7 @@ public class Beam {
         Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - restLength);
 
         Vector2D forceBeam = displacement.multiply(-stiffness);
-        Vector2D forceGravity = new Vector2D(0, mass * 9.81);
+        Vector2D forceGravity = new Vector2D(0, mass * 60);
 
 
 
