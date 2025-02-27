@@ -6,6 +6,7 @@ public class Beam {
     private double stiffness;
     private double mass;
     private boolean broken = false;
+    private boolean physical=false;
 
     public Beam(Pin p1, Pin p2, double stiffness, double mass) {
         this.pin1 = p1;
@@ -16,6 +17,25 @@ public class Beam {
 
         p1.addBeam(this);
         p2.addBeam(this);
+    }
+    public Beam(Pin p1, Pin p2, double stiffness, double mass,boolean physical) {
+        this.pin1 = p1;
+        this.pin2 = p2;
+        this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
+        this.stiffness = stiffness;
+        this.mass = mass;
+        this.physical=physical;
+
+        p1.addBeam(this);
+        p2.addBeam(this);
+    }
+
+    public void setPhysical(boolean physical) {
+        this.physical = physical;
+    }
+
+    public boolean isPhysical() {
+        return physical;
     }
 
     public void addForceAndMassIfConnected(Pin pin, Vector2D forceSum, double massSum) {

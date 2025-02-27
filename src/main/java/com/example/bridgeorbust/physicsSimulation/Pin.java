@@ -61,4 +61,8 @@ public class Pin {
     public void setMassSum(double massSum) {
         this.massSum = massSum;
     }
+
+    public boolean isPositionFixed() {
+        return positionFixed;
+    }
 }
