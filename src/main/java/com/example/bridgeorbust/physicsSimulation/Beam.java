@@ -7,7 +7,11 @@ public class Beam {
     private double mass;
     private boolean broken = false;
     private boolean physical=false;
+    private double maxLength=250;
 
+    public Beam(){
+
+    }
     public Beam(Pin p1, Pin p2, double stiffness, double mass) {
         this.pin1 = p1;
         this.pin2 = p2;
@@ -32,6 +36,10 @@ public class Beam {
 
     public void setPhysical(boolean physical) {
         this.physical = physical;
+    }
+
+    public double getMaxLength() {
+        return maxLength;
     }
 
     public boolean isPhysical() {
