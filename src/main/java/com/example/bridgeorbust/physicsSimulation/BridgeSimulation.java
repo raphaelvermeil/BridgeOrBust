@@ -28,7 +28,7 @@ public class BridgeSimulation extends Application {
     private double stiffness = 4000;
     private double cursorX = 0;
     private double cursorY = 0;
-    boolean play = true;
+    boolean play = false;
     boolean roadMode = false;
 
     @Override
@@ -43,7 +43,7 @@ public class BridgeSimulation extends Application {
         Pane pane = new Pane();
         pane.getChildren().add(canvas);
 
-        ImageView playPause = new ImageView(new Image("file:pause.png"));
+        ImageView playPause = new ImageView(new Image("file:play.png"));
         playPause.setX(50);
         playPause.setY(20);
         playPause.setFitWidth(30);  // Resize if needed
@@ -57,10 +57,11 @@ public class BridgeSimulation extends Application {
         roadButton.setToggleGroup(buttons);
         trussButton.setToggleGroup(buttons);
         buttons.selectToggle(trussButton);
-        controls.getChildren().addAll(roadButton,trussButton);
-        controls.setLayoutX(canvas.getWidth() - 120);controls.setLayoutY(10);
+        controls.getChildren().addAll(roadButton, trussButton);
+        controls.setLayoutX(canvas.getWidth() - 120);
+        controls.setLayoutY(10);
 
-        pane.getChildren().addAll(playPause,controls);
+        pane.getChildren().addAll(playPause, controls);
 
         Scene scene = new Scene(pane);
         setupBridge(gc);
@@ -98,22 +99,7 @@ public class BridgeSimulation extends Application {
     }
 
     private void setupBridge(GraphicsContext gc) {
-        Pin p1 = new Pin(200, 300, true);
-        Pin p2 = new Pin(400, 300, false);
-        Pin p3 = new Pin(600, 300, false);
-        Pin p4 = new Pin(800, 300, true);
-        Pin p5 = new Pin(200, 400, true);
-        Pin p6 = new Pin(800, 400, true);
-//        Pin p5 = new Pin(400, 150, false);
-//        Pin p6 = new Pin(600, 150, false);
-//        Pin p7 = new Pin(400, 350, false);
-//        Pin p8 = new Pin(400, 400, false);
-        pins.add(p1);
-        pins.add(p2);
-        pins.add(p3);
-        pins.add(p4);
-        pins.add(p5);
-        pins.add(p6);
+        level1();
 
         for (Pin pin : pins) {
             if (pin.isPositionFixed()) {
@@ -128,29 +114,51 @@ public class BridgeSimulation extends Application {
             }
         }
 
-        Beam b1 = new Beam(p1, p2, 300, 10,true);
-        Beam b2 = new Beam(p2, p3, 300, 10,true);
-        Beam b3 = new Beam(p3, p4, 300, 10,true);
-        Beam b4 = new Beam(p2, p5, 300, 10);
-        Beam b5 = new Beam(p3, p6, 300, 10);
-//        Beam b4 = new Beam(p1, p5, 300, 10);
-//        Beam b5 = new Beam(p2, p5, 300, 10);
-//        Beam b6 = new Beam(p4, p6, 300, 10);
-//        Beam b7 = new Beam(p3, p6, 300, 10);
-//        Beam b8 = new Beam(p5, p6, 300, 10);
-//        Beam b9 = new Beam(p2, p7, 300, 10);
-//        Beam b10 = new Beam(p7, p8, 300, 10);
-        beams.add(b1);
-        beams.add(b2);
-        beams.add(b3);
-        beams.add(b4);
-        beams.add(b5);
+//        Beam b1 = new Beam(p1, p2, 300, 10,true);
+//        Beam b2 = new Beam(p2, p3, 300, 10,true);
+//        Beam b3 = new Beam(p3, p4, 300, 10,true);
+//        Beam b4 = new Beam(p2, p5, 300, 10);
+//        Beam b5 = new Beam(p3, p6, 300, 10);
+////        Beam b4 = new Beam(p1, p5, 300, 10);
+////        Beam b5 = new Beam(p2, p5, 300, 10);
+////        Beam b6 = new Beam(p4, p6, 300, 10);
+////        Beam b7 = new Beam(p3, p6, 300, 10);
+////        Beam b8 = new Beam(p5, p6, 300, 10);
+////        Beam b9 = new Beam(p2, p7, 300, 10);
+////        Beam b10 = new Beam(p7, p8, 300, 10);
+//        beams.add(b1);
+//        beams.add(b2);
+//        beams.add(b3);
+//        beams.add(b4);
+//        beams.add(b5);
 //        beams.add(b6);
 //        beams.add(b7);
 //        beams.add(b8);
 //        beams.add(b9);
 //        beams.add(b10);
 
+    }
+
+    private void level1() {//fix numeration!
+        Pin p1 = new Pin(200, 300, true);
+        Pin p4 = new Pin(800, 300, true);
+        Pin p5 = new Pin(200, 400, true);
+        Pin p6 = new Pin(800, 400, true);
+
+        pins.add(p1);
+        pins.add(p4);
+        pins.add(p5);
+        pins.add(p6);
+    }
+
+    private void level2() {//fix numeration!
+        Pin p1 = new Pin(150, 300, true);
+        Pin p2 = new Pin(850, 300, true);
+        Pin p3 = new Pin(400, 550, true);
+
+        pins.add(p1);
+        pins.add(p2);
+        pins.add(p3);
     }
 
     private void handleMouseClick(MouseEvent event) {
@@ -168,13 +176,17 @@ public class BridgeSimulation extends Application {
                 pins.add(firstPin);
             }
         } else {
-            Pin secondPin = clickedPin != null ? clickedPin : new Pin(x, y, false);
-            if (clickedPin == null) {
-                pins.add(secondPin);
+            double deltaX = x - firstPin.getPosition().x;
+            double deltaY = y - firstPin.getPosition().y;
+            if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= new Beam().getMaxLength()) {
+                Pin secondPin = (clickedPin != null ? clickedPin : new Pin(x, y, false));
+                if (clickedPin == null) {
+                    pins.add(secondPin);
+                }
+                Beam beam = new Beam(firstPin, secondPin, 600, 10, roadMode);
+                beams.add(beam);
+                firstPin = null;
             }
-            Beam beam = new Beam(firstPin, secondPin, 300, 10,roadMode);
-            beams.add(beam);
-            firstPin = null;
         }
     }
 
@@ -213,14 +225,19 @@ public class BridgeSimulation extends Application {
         for (Beam beam : beams) {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
-            gc.setStroke(beam.isPhysical()? (beam.isBroken() ? Color.RED : Color.YELLOWGREEN):(beam.isBroken() ? Color.RED : Color.BLACK));
+            gc.setStroke(beam.isPhysical() ? (beam.isBroken() ? Color.RED : Color.YELLOWGREEN) : (beam.isBroken() ? Color.RED : Color.BLACK));
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
         if (firstPin != null) {
             gc.setStroke(Color.BLACK);
             Vector2D pos1 = firstPin.getPosition();
-            Vector2D pos2 = new Vector2D(cursorX, cursorY);
+
+            double deltaX = cursorX - pos1.x;
+            double deltaY = cursorY - pos1.y;
+            double magnitude=Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            double ratio=new Beam().getMaxLength()/magnitude;
+            Vector2D pos2 = ratio >= 1 ? new Vector2D(cursorX, cursorY):new Vector2D(pos1.x+deltaX*ratio, pos1.y+deltaY*ratio);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
