@@ -34,8 +34,6 @@ public class Pin {
             velocity = velocity.add(acceleration.multiply(deltaTime));
             position = position.add(velocity.multiply(deltaTime));
         }
-
-
     }
 
     public void addBeam(Beam beam) {
