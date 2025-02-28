@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -16,7 +17,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.*;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +62,21 @@ public class BridgeSimulation extends Application {
         controls.setLayoutX(canvas.getWidth() - 120);
         controls.setLayoutY(10);
 
-        pane.getChildren().addAll(playPause, controls);
+        Button resetButton = new Button("Reset");
+        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
+        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() -50);
+
+//        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
+//            resetButton.setLayoutX(newVal.doubleValue() - resetButton.getWidth() - 10);
+//        });
+//
+//        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
+//            resetButton.setLayoutY(newVal.doubleValue() - resetButton.getHeight() - 10);
+//        });
+
+
+
+        pane.getChildren().addAll(playPause, controls, resetButton);
 
         Scene scene = new Scene(pane);
         setupBridge(gc);
@@ -77,6 +92,11 @@ public class BridgeSimulation extends Application {
         });
         trussButton.setOnAction(e -> roadMode = false);
         roadButton.setOnAction(e -> roadMode = true);
+        resetButton.setOnAction(e -> {
+            pins.clear();
+            beams.clear();
+            setupBridge(gc);
+        });
 
         new AnimationTimer() {
             long lastTime = System.nanoTime();
@@ -183,7 +203,7 @@ public class BridgeSimulation extends Application {
                 if (clickedPin == null) {
                     pins.add(secondPin);
                 }
-                Beam beam = new Beam(firstPin, secondPin, 600, 10, roadMode);
+                Beam beam = new Beam(firstPin, secondPin, 1200, 10, roadMode);
                 beams.add(beam);
                 firstPin = null;
             }
