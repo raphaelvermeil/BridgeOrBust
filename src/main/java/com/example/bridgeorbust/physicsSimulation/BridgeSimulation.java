@@ -16,7 +16,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -158,7 +157,7 @@ public class BridgeSimulation extends Application {
         pins.add(p1);
         pins.add(p2);
         pins.add(p3);
-        car(200);
+        car(100);
     }
 
     private void handleMouseClick(MouseEvent event) {
@@ -212,7 +211,6 @@ public class BridgeSimulation extends Application {
         return null;
     }
 
-
     private void updateSimulation(double deltaTime) {
         for (Pin pin : pins) {
             pin.calculateForces();
@@ -220,29 +218,62 @@ public class BridgeSimulation extends Application {
         for (Pin pin : pins) {
             pin.update(deltaTime);
         }
-        if (carIsUnderPhysical()) {
-            System.out.println(physicalBeamsOverCar.size());
-        }
-        while(carIsUnderPhysical()){
-            Beam overBeam=physicalBeamsOverCar.getFirst();
-            double deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
-            double deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
-            double relativePosition=overBeam.pin1.getPosition().x-car.pin1.getPosition().x;
-            double ratio=relativePosition/deltaX;
-            car.pin1.setY(car.pin1.getPosition().y+(deltaY*ratio));
+        while (carIsUnderPhysical()) {
+            //System.out.println("correction made");
         }
     }
 
+//    private boolean carIsUnderPhysical() {
+//        boolean under=false;
+//        physicalBeamsOverCar.clear();
+//
+//        for (Beam beam : beams) {
+//            if (beam.isPhysical()) {
+//                //wheel1
+//                if ((car.pin1.getPosition().x >= beam.pin1.getPosition().x && car.pin1.getPosition().x <= beam.pin2.getPosition().x)
+//                        | (car.pin1.getPosition().x <= beam.pin1.getPosition().x && car.pin1.getPosition().x >= beam.pin2.getPosition().x)) {
+//                    if(car.pin1.getPosition().y>=beam.pin1.getPosition().y | car.pin1.getPosition().y>=beam.pin2.getPosition().y){
+//                        physicalBeamsOverCar.add(beam);
+//                        under=true;
+//                    }
+//                }
+//            }
+//        }
+//        return under;
+//    }
     private boolean carIsUnderPhysical() {
         boolean under=false;
-        physicalBeamsOverCar.clear();
+
+        Beam overBeam;
+        double deltaX,deltaY,relativePosition,ratio;
+
         for (Beam beam : beams) {
             if (beam.isPhysical()) {
                 //wheel1
-                if ((car.pin1.getPosition().x >= beam.pin1.getPosition().x && car.pin1.getPosition().x <= beam.pin2.getPosition().x)
+                if ((car.pin1.getPosition().x > beam.pin1.getPosition().x && car.pin1.getPosition().x < beam.pin2.getPosition().x)
                         | (car.pin1.getPosition().x <= beam.pin1.getPosition().x && car.pin1.getPosition().x >= beam.pin2.getPosition().x)) {
-                    if(car.pin1.getPosition().y>=beam.pin1.getPosition().y | car.pin1.getPosition().y>=beam.pin2.getPosition().y){
-                        physicalBeamsOverCar.add(beam);
+                    if(car.pin1.getPosition().y>=beam.pin1.getPosition().y-15 | car.pin1.getPosition().y>=beam.pin2.getPosition().y-15){
+                        overBeam=beam;
+                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+                        relativePosition=overBeam.pin1.getPosition().x-car.pin1.getPosition().x;
+                        ratio=relativePosition/deltaX;
+                        car.pin1.setY(overBeam.pin1.getPosition().y+(deltaY*ratio)-15);
+                        //System.out.println("r="+ratio+"dY*r="+deltaY*ratio);
+                        under=true;
+                    }
+                }
+                //wheel2
+                if ((car.pin2.getPosition().x > beam.pin1.getPosition().x && car.pin2.getPosition().x < beam.pin2.getPosition().x)
+                        | (car.pin2.getPosition().x <= beam.pin1.getPosition().x && car.pin2.getPosition().x >= beam.pin2.getPosition().x)) {
+                    if(car.pin2.getPosition().y>=beam.pin1.getPosition().y-15 | car.pin2.getPosition().y>=beam.pin2.getPosition().y-15){
+                        overBeam=beam;
+                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+                        relativePosition=overBeam.pin1.getPosition().x-car.pin2.getPosition().x;
+                        ratio=relativePosition/deltaX;
+                        car.pin2.setY(car.pin2.getPosition().y+(deltaY*ratio)-14);
+
                         under=true;
                     }
                 }
