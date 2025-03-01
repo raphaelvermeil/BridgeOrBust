@@ -223,6 +223,14 @@ public class BridgeSimulation extends Application {
         if (carIsUnderPhysical()) {
             System.out.println(physicalBeamsOverCar.size());
         }
+        while(carIsUnderPhysical()){
+            Beam overBeam=physicalBeamsOverCar.getFirst();
+            double deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+            double deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+            double relativePosition=overBeam.pin1.getPosition().x-car.pin1.getPosition().x;
+            double ratio=relativePosition/deltaX;
+            car.pin1.setY(car.pin1.getPosition().y+(deltaY*ratio));
+        }
     }
 
     private boolean carIsUnderPhysical() {
@@ -237,12 +245,7 @@ public class BridgeSimulation extends Application {
                         physicalBeamsOverCar.add(beam);
                         under=true;
                     }
-
                 }
-//                else if (car.pin1.getPosition().x <= beam.pin1.getPosition().x && car.pin1.getPosition().x >= beam.pin2.getPosition().x) {
-//                    physicalBeamsOverCar.add(beam);
-//                    under=true;
-//                }
             }
         }
         return under;
