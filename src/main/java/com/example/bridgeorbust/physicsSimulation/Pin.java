@@ -34,7 +34,13 @@ public class Pin {
             velocity = velocity.add(acceleration.multiply(deltaTime));
             position = position.add(velocity.multiply(deltaTime));
         }
+    }
+    public void setX(double x){
+        this.position=new Vector2D(x, position.y);
 
+    }
+    public void setY(double y){
+        this.position=new Vector2D(position.x, y);
 
     }
 
