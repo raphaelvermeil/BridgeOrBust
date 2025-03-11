@@ -23,6 +23,11 @@ public class Vector2D {
         return new Vector2D(this.x * scalar, this.y * scalar);
     }
 
+
+    public Vector2D multiply(Vector2D other) {
+        return new Vector2D(this.x * other.x, this.y * other.y);
+    }
+
     public Vector2D normalize() {
         double mag = magnitude();
         return mag > 0 ? new Vector2D(x / mag, y / mag) : new Vector2D();

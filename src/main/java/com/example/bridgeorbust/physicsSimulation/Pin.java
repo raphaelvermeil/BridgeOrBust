@@ -71,4 +71,8 @@ public class Pin {
     public boolean isPositionFixed() {
         return positionFixed;
     }
+
+    public Vector2D getVelocity() {
+        return velocity;
+    }
 }
