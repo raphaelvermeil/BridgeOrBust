@@ -53,21 +53,26 @@ public class Ball {
     }
 
     void checkCollisions(Beam beam) {
+
+
+
         Beam overBeam;
-        double deltaX,deltaY,relativePosition,ratio;
-        if (beam.isPhysical()) {
-            if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)//if wheel 1 is between two pins of a beam
-                    | (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) { //Same as above but in reverse order
-                if (this.position.y > beam.pin1.getPosition().y - radius | this.position.y > beam.pin2.getPosition().y - radius) {
-                        overBeam = beam;
-                        deltaX = overBeam.pin1.getPosition().x - overBeam.pin2.getPosition().x;
-                        deltaY = overBeam.pin1.getPosition().y - overBeam.pin2.getPosition().y;
-                        relativePosition = overBeam.pin1.getPosition().x - this.position.x;
-                        ratio = relativePosition / deltaX;
-                        this.position.y = overBeam.pin1.getPosition().y + (deltaY * ratio) - radius;
-                        System.out.println("1. r=" + ratio + " dY*r=" + deltaY * ratio);
-//                        under = true;
-                }
+        double deltaX, deltaY, relativePosition, ratio, adjustment, pinDistance,relativeHeight;
+
+        if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)
+                || (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) {
+            if (this.position.y >= beam.pin1.getPosition().y - (2*this.radius) || this.position.y >= beam.pin2.getPosition().y - (2*this.radius)) {
+                overBeam = beam;
+                deltaX =  overBeam.pin2.getPosition().x- overBeam.pin1.getPosition().x;
+                deltaY = overBeam.pin1.getPosition().y - overBeam.pin2.getPosition().y;
+                relativePosition = this.position.x - overBeam.pin1.getPosition().x;
+                ratio = relativePosition / deltaX;
+                pinDistance = this.position.y - overBeam.pin1.getPosition().y;
+                relativeHeight=(deltaX>=0)?deltaY*ratio:-(deltaY*ratio);
+                adjustment = (deltaY >= 0) ? pinDistance + relativeHeight : pinDistance+deltaY+relativeHeight;
+//                car.pin2.setY(car.pin1.getPosition().y -adjustment - 15);
+                this.position.y= this.position.y -adjustment - 2*this.radius;
+                System.out.println("2 adj="+adjustment);
             }
         }
     }
