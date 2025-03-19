@@ -61,22 +61,56 @@ public class Ball {
 
         if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)
                 || (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) {
-            if (this.position.y >= beam.pin1.getPosition().y - (2*this.radius) || this.position.y >= beam.pin2.getPosition().y - (2*this.radius)) {
-                overBeam = beam;
-                deltaX =  overBeam.pin2.getPosition().x- overBeam.pin1.getPosition().x;
-                deltaY = overBeam.pin1.getPosition().y - overBeam.pin2.getPosition().y;
-                relativePosition = this.position.x - overBeam.pin1.getPosition().x;
-                ratio = relativePosition / deltaX;
-                pinDistance = this.position.y - overBeam.pin1.getPosition().y;
-                relativeHeight=(deltaX>=0)?deltaY*ratio:-(deltaY*ratio);
-                adjustment = (deltaY >= 0) ? pinDistance + relativeHeight : pinDistance+deltaY+relativeHeight;
-//                car.pin2.setY(car.pin1.getPosition().y -adjustment - 15);
-                this.position.y= this.position.y -adjustment - 2*this.radius;
-                System.out.println("2 adj="+adjustment);
+            if (this.position.y >= beam.pin1.getPosition().y -this.radius || this.position.y >= beam.pin2.getPosition().y - (this.radius) ) {
+                if(trulyUnder(beam)){
+
+                }
+//                overBeam = beam;
+//                deltaX =  overBeam.pin2.getPosition().x- overBeam.pin1.getPosition().x;
+//                deltaY = overBeam.pin1.getPosition().y - overBeam.pin2.getPosition().y;
+//                relativePosition = this.position.x - overBeam.pin1.getPosition().x;
+//                ratio = relativePosition / deltaX;
+//                pinDistance = this.position.y - overBeam.pin1.getPosition().y;
+//                relativeHeight=(deltaX>=0)?deltaY*ratio:-(deltaY*ratio);
+//                adjustment = (deltaY >= 0) ? pinDistance + relativeHeight : pinDistance+deltaY+relativeHeight;
+////                car.pin2.setY(car.pin1.getPosition().y -adjustment - 15);
+//                this.position.y= this.position.y - adjustment - this.radius;
+//                System.out.println("adj="+adjustment);
             }
         }
     }
-
+    private boolean trulyUnder(Beam beam){
+        double deltaX,deltaY,relativeLength,ratio,relativeHeight,yLimit;
+        Pin leadingPinX,followingPinX, leadingPinY,followingPinY;
+        if(beam.pin1.getPosition().x>=beam.pin2.getPosition().x){
+            leadingPinX=beam.pin2;
+            followingPinX=beam.pin1;
+        }
+        else {
+            leadingPinX=beam.pin1;
+            followingPinX=beam.pin2;
+        }
+//        if(beam.pin1.getPosition().y>=beam.pin2.getPosition().y){
+//            leadingPinY=beam.pin2;
+//            followingPinY=beam.pin1;
+//        }
+//        else {
+//            leadingPinY=beam.pin1;
+//            followingPinY=beam.pin2;
+//        }
+        deltaX=followingPinX.getPosition().x-leadingPinX.getPosition().x;
+        deltaY=followingPinX.getPosition().y-leadingPinX.getPosition().y;
+        relativeLength=this.position.x+this.radius-leadingPinX.getPosition().x;
+        relativeHeight=deltaY*relativeLength/deltaX;
+        yLimit=leadingPinX.getPosition().y+relativeHeight-this.radius;
+        if(this.position.y>yLimit){
+            this.position.y= yLimit;
+            this.oldPosition.y=yLimit;
+            return true;
+        }
+        else
+            return false;
+    }
 //    public void setX(double x){
 //        this.position=new Vector2D(x, position.y);
 //
