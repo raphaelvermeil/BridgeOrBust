@@ -4,32 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="waza">
-
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Added calc to ball">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-11_12_07_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-11_12_07_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-11_12_08_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-11_12_08_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-11_12_12_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-11_12_12_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2025-03-11_12_19_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Merge_at_2025-03-11_12_19_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-11_12_26_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-11_12_26_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]1/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]2/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_2.xml" beforeDir="false" />
-
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Beam destroy become red part 2">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +36,24 @@
     &quot;assignee&quot;: &quot;raphaelvermeil&quot;
   }
 }</component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDONw9iBM6NCxxQ",
+        "number": 2
+      },
+      "lastSeen": 1741709287081
+    },
+    {
+      "id": {
+        "id": "PR_kwDONw9iBM6PTab3",
+        "number": 3
+      },
+      "lastSeen": 1742403686186
+    }
+  ]
+}]]></component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
@@ -90,7 +87,7 @@
     "Application.SimplePhysicsEngine.executor": "Run",
     "Application.SolveLinearSystem.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "noahwaza",
+    "git-widget-placeholder": "master",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -217,15 +214,6 @@
       <option name="project" value="LOCAL" />
       <updated>1742315274684</updated>
     </task>
-
-    <task id="LOCAL-00011" summary="waza">
-      <option name="closed" value="true" />
-      <created>1742317242100</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1742317242100</updated>
-
     <task id="LOCAL-00011" summary="Added calc to ball">
       <option name="closed" value="true" />
       <created>1742316166090</created>
@@ -233,7 +221,6 @@
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
-
     </task>
     <option name="localTasksCounter" value="12" />
     <servers />
@@ -296,12 +283,9 @@
     <MESSAGE value="refresh" />
     <MESSAGE value="refresh test #2" />
     <MESSAGE value="Added verlet red ball" />
-
     <MESSAGE value="waza" />
-    <option name="LAST_COMMIT_MESSAGE" value="waza" />
-
     <MESSAGE value="Added calc to ball" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added calc to ball" />
-
+    <MESSAGE value="Beam destroy become red part 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Beam destroy become red part 2" />
   </component>
 </project>

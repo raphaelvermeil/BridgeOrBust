@@ -99,6 +99,8 @@ public class BridgeSimulation extends Application {
             pins.clear();
             beams.clear();
             setupBridge(gc);
+            ball.setPosition(new Vector2D(0, 0));
+            ball.setOldPosition(new Vector2D(0, 0));
         });
 
         new AnimationTimer() {
@@ -226,9 +228,19 @@ public class BridgeSimulation extends Application {
             pin.update(deltaTime);
         }
         for (Beam beam : beams) {
-            ball.checkCollisions(beam);
+            if (beam.isPhysical()){
+                for(int i = 0; i < 1000; i++){
+                    ball.checkCollisions(beam);
+                }
+
+            }
+
+
+            if(beam.isBroken()){
+                destroyBeam(beam);
+            }
         }
-        ball.accelerate(0, 9.8);
+        ball.accelerate(1, 9.8);
         ball.update(deltaTime);
 
 //        if (carIsUnderPhysical()) {
