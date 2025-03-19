@@ -224,14 +224,9 @@ public class BridgeSimulation extends Application {
         }
         for (Pin pin : pins) {
             pin.update(deltaTime);
-
-
         }
         for (Beam beam : beams) {
-//            ball.checkCollisions(beam);
-            if(beam.isBroken()){
-                destroyBeam(beam);
-            }
+            ball.checkCollisions(beam);
         }
         ball.accelerate(0, 9.8);
         ball.update(deltaTime);
