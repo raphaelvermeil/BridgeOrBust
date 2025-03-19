@@ -5,6 +5,8 @@ public class Beam {
     private double restLength;
     private double stiffness;
     private double mass;
+    private double massPerLength;
+    private double breakLimit=1500;
     private boolean broken = false;
     private boolean physical=false;
     private double maxLength=250;
@@ -14,22 +16,13 @@ public class Beam {
     public Beam(){
 
     }
-    public Beam(Pin p1, Pin p2, double stiffness, double mass) {
+    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength,boolean physical) {
         this.pin1 = p1;
         this.pin2 = p2;
         this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
         this.stiffness = stiffness;
-        this.mass = mass;
-
-        p1.addBeam(this);
-        p2.addBeam(this);
-    }
-    public Beam(Pin p1, Pin p2, double stiffness, double mass,boolean physical) {
-        this.pin1 = p1;
-        this.pin2 = p2;
-        this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
-        this.stiffness = stiffness;
-        this.mass = mass;
+        this.massPerLength=massPerLength;
+        createMass();
         this.physical=physical;
 
         p1.addBeam(this);
@@ -75,20 +68,9 @@ public class Beam {
                 this.blueColorCoefficient = (forceBeam.magnitude() / 3900) * 255;
             }
 
-            
-            
-//        System.out.println(redColorCoefficient);
-//        System.out.println(forceBeam.magnitude());
-            if (forceBeam.magnitude() > 3800) { // Arbitrary break limit
+            if (forceBeam.magnitude() > this.breakLimit || forceBeam.magnitude() < -this.breakLimit) { // Arbitrary break limit
                 broken = true;
             }
-//        } else if(forceBeam.magnitude() < 2000 || forceBeam.magnitude() > -2000){
-//            broken = false;
-//        }
-
-//        Vector2D totalForce = forceBeam.add(forceAirFriction);
-
-//        return pin == pin1 ? forceBeam.multiply(-1).add(forceGravity.multiply(0.5)) : forceBeam.add(forceGravity.multiply(0.5));
             if (pin == pin1) {
                 return forceBeam.multiply(-1).add(forceGravity.multiply(0.5)).add(forceAirFriction);
             } else if (pin == pin2) {
@@ -127,6 +109,9 @@ public class Beam {
 
     public void setblueColorCoefficient(double blueColorCoefficient) {
         this.blueColorCoefficient = blueColorCoefficient;
+    }
+    public void createMass(){
+        this.mass=this.restLength*this.massPerLength;
     }
 }
 

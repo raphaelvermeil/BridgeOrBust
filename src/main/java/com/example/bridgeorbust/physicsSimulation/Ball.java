@@ -27,7 +27,7 @@ public class Ball {
 
     public void update(double dt) {
 
-        double velocity_x = this.position.x - this.oldPosition.x;
+        double velocity_x = 2;//this.position.x - this.oldPosition.x;
         double velocity_y = this.position.y - this.oldPosition.y;
 
 
