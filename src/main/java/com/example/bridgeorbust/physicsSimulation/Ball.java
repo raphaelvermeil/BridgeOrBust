@@ -55,8 +55,23 @@ public class Ball {
     void checkCollisions(Beam beam) {
         if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)
                 || (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) {
+
             if (this.position.y >= beam.pin1.getPosition().y -this.radius || this.position.y >= beam.pin2.getPosition().y - (this.radius) ) {
                 if(trulyUnder(beam)){}
+
+            if (this.position.y >= beam.pin1.getPosition().y - (2*this.radius) || this.position.y >= beam.pin2.getPosition().y - (2*this.radius)) {
+                overBeam = beam;
+                deltaX =  overBeam.pin2.getPosition().x- overBeam.pin1.getPosition().x;
+                deltaY = overBeam.pin1.getPosition().y - overBeam.pin2.getPosition().y;
+                relativePosition = this.position.x - overBeam.pin1.getPosition().x;
+                ratio = relativePosition / deltaX;
+                pinDistance = this.position.y - overBeam.pin1.getPosition().y;
+                relativeHeight=(deltaX>=0)?deltaY*ratio:-(deltaY*ratio);
+                adjustment = (deltaY >= 0) ? pinDistance + relativeHeight : pinDistance+deltaY+relativeHeight;
+//                car.pin2.setY(car.pin1.getPosition().y -adjustment - 15);
+                this.position.y= this.position.y -adjustment - 2*this.radius;
+
+
             }
         }
     }

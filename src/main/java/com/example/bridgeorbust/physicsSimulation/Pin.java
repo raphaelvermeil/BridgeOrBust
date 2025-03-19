@@ -48,6 +48,10 @@ public class Pin {
         connectedBeams.add(beam);
     }
 
+    public void removeBeam(Beam beam) {
+        connectedBeams.remove(beam);
+    }
+
     public Vector2D getPosition() {
         return position;
     }
@@ -74,5 +78,9 @@ public class Pin {
 
     public Vector2D getVelocity() {
         return velocity;
+    }
+
+    public int getConnectedBeamsSize() {
+        return connectedBeams.size();
     }
 }

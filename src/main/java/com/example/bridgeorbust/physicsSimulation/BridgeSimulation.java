@@ -37,6 +37,7 @@ public class BridgeSimulation extends Application {
     public void start(Stage stage) {
         Canvas canvas = new Canvas(1000, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+//        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
 
         canvas.setOnMouseClicked(this::handleMouseClick);
         canvas.setOnMouseMoved(this::handleMouseMove);
@@ -229,6 +230,82 @@ public class BridgeSimulation extends Application {
         }
         ball.accelerate(0, 9.8);
         ball.update(deltaTime);
+
+//        if (carIsUnderPhysical()) {
+//            //System.out.println("correction made");
+//        }
+    }
+
+//    private boolean carIsUnderPhysical() {
+//        boolean under=false;
+//
+//        Beam overBeam;
+//        double deltaX,deltaY,relativePosition,ratio;
+//
+//        for (Beam beam : beams) {
+//            if (beam.isPhysical()) {
+//                //wheel1
+//                if ((car.pin1.getPosition().x > beam.pin1.getPosition().x && car.pin1.getPosition().x < beam.pin2.getPosition().x)//if wheel 1 is between two pins of a beam
+//                        | (car.pin1.getPosition().x <= beam.pin1.getPosition().x && car.pin1.getPosition().x >= beam.pin2.getPosition().x)) { //Same as above but in reverse order
+//                    if(car.pin1.getPosition().y>beam.pin1.getPosition().y-15 | car.pin1.getPosition().y>beam.pin2.getPosition().y-15){
+//                        overBeam=beam;
+//                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+//                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+//                        relativePosition=overBeam.pin1.getPosition().x-car.pin1.getPosition().x;
+//                        ratio=relativePosition/deltaX;
+//                        car.pin1.setY(overBeam.pin1.getPosition().y+(deltaY*ratio)-15);
+//                        System.out.println("1. r="+ratio+" dY*r="+deltaY*ratio);
+//                        under=true;
+//                    }
+//                }
+//                //wheel2
+//                if ((car.pin2.getPosition().x > beam.pin1.getPosition().x && car.pin2.getPosition().x < beam.pin2.getPosition().x)
+//                        | (car.pin2.getPosition().x <= beam.pin1.getPosition().x && car.pin2.getPosition().x >= beam.pin2.getPosition().x)) {
+//                    if(car.pin2.getPosition().y>beam.pin1.getPosition().y-15 | car.pin2.getPosition().y>beam.pin2.getPosition().y-15){
+//                        overBeam=beam;
+//                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+//                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+//                        relativePosition=overBeam.pin1.getPosition().x-car.pin2.getPosition().x;
+//                        ratio=relativePosition/deltaX;
+//                        System.out.println("2. r="+ratio+" dY*r="+deltaY*ratio);
+//                        car.pin2.setY(car.pin2.getPosition().y+(deltaY*ratio)-15);
+//
+//                        under=true;
+//                    }
+//                }
+//            }
+//        }
+//        return under;
+//    }
+
+    private void destroyBeam(Beam beam) {
+//         Remove the specified beam from the list of beams
+        beams.remove(beam);
+        beam.pin1.removeBeam(beam);
+        beam.pin2.removeBeam(beam);
+
+//       if(beam.pin1.getConnectedBeamsSize() < 4) {
+//           if(beam.pin1.isPositionFixed() == false){
+//               pins.remove(beam.pin1);
+//               beam.pin1 = null;
+//           }
+//       }
+//       if (beam.pin2.getConnectedBeamsSize() < 4) {
+//              if(beam.pin2.isPositionFixed() == false){
+//                pins.remove(beam.pin2);
+//                beam.pin2 = null;
+//              }
+//       }
+//        beam.pin1.removeBeam(beam);
+//        beam.pin2.removeBeam(beam);
+//        beams.remove(beam);
+//
+//        beam = null;
+
+
+        // Remove pins that are not connected to any remaining beams
+
+
     }
 
     private void render(GraphicsContext gc) {
@@ -251,7 +328,9 @@ public class BridgeSimulation extends Application {
         for (Beam beam : beams) {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
-            gc.setStroke(beam.isPhysical() ? (beam.isBroken() ? Color.RED : Color.YELLOWGREEN) : (beam.isBroken() ? Color.RED : Color.BLACK));
+            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),(int) beam.getGreenColorCoefficient(), 0));
+            gc.setLineWidth(2);
+//            gc.setStroke(Color.BLACK);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
