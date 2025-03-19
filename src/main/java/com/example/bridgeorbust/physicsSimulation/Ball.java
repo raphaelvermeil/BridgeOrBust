@@ -43,7 +43,7 @@ public class Ball {
         this.acceleration.x = 0;
 
         this.acceleration.y = 0;
-        System.out.println(this.position.x + " " + this.position.y);
+
     }
 
     void accelerate(double ax, double ay) {

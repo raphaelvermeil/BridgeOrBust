@@ -336,18 +336,19 @@ public class BridgeSimulation extends Application {
             Vector2D pos = pin.getPosition();
             gc.fillOval(pos.x - 5, pos.y - 5, 10, 10);
         }
-        gc.setStroke(Color.BLACK);
+        gc.setStroke(Color.DARKGREY);
         for (Beam beam : beams) {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
-            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),(int) beam.getGreenColorCoefficient(), 0));
-            gc.setLineWidth(2);
+
+            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),0, (int)beam.getblueColorCoefficient()));
+            gc.setLineWidth(4);
 //            gc.setStroke(Color.BLACK);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
         if (firstPin != null) {
-            gc.setStroke(Color.BLACK);
+            gc.setStroke(Color.DARKGREY);
             Vector2D pos1 = firstPin.getPosition();
 
             double deltaX = cursorX - pos1.x;

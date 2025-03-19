@@ -10,7 +10,7 @@ public class Beam {
     private double maxLength=250;
     private double airFrictionCoefficient = 3;
     private double redColorCoefficient;
-    private double greenColorCoefficient;
+    private double blueColorCoefficient;
     public Beam(){
 
     }
@@ -67,19 +67,19 @@ public class Beam {
             Vector2D forceBeam = displacement.multiply(-stiffness);
             Vector2D forceGravity = new Vector2D(0, mass * 60);
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
-            System.out.println(forceBeam.magnitude());
-            if(forceBeam.magnitude() > 0) {
-                this.redColorCoefficient = (forceBeam.magnitude() / 5000) * 255;
+            System.out.println();
+            if(currentLength.magnitude() > restLength) {
+                this.redColorCoefficient = (forceBeam.magnitude() / 3900) * 255;
 
-            } else if(forceBeam.magnitude() < 0) {
-                this.greenColorCoefficient = (forceBeam.magnitude() / -5000) * 255;
+            } else if(currentLength.magnitude() < restLength) {
+                this.blueColorCoefficient = (forceBeam.magnitude() / 3900) * 255;
             }
 
             
             
 //        System.out.println(redColorCoefficient);
 //        System.out.println(forceBeam.magnitude());
-            if (forceBeam.magnitude() > 3800 || forceBeam.magnitude() < -3800) { // Arbitrary break limit
+            if (forceBeam.magnitude() > 3800) { // Arbitrary break limit
                 broken = true;
             }
 //        } else if(forceBeam.magnitude() < 2000 || forceBeam.magnitude() > -2000){
@@ -121,12 +121,12 @@ public class Beam {
         this.redColorCoefficient = redColorCoefficient;
     }
 
-    public double getGreenColorCoefficient() {
-        return greenColorCoefficient;
+    public double getblueColorCoefficient() {
+        return blueColorCoefficient;
     }
 
-    public void setGreenColorCoefficient(double greenColorCoefficient) {
-        this.greenColorCoefficient = greenColorCoefficient;
+    public void setblueColorCoefficient(double blueColorCoefficient) {
+        this.blueColorCoefficient = blueColorCoefficient;
     }
 }
 
