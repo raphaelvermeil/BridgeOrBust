@@ -72,7 +72,7 @@ public class Ball {
                 adjustment = (deltaY >= 0) ? pinDistance + relativeHeight : pinDistance+deltaY+relativeHeight;
 //                car.pin2.setY(car.pin1.getPosition().y -adjustment - 15);
                 this.position.y= this.position.y -adjustment - 2*this.radius;
-                System.out.println("2 adj="+adjustment);
+
             }
         }
     }

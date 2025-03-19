@@ -224,9 +224,14 @@ public class BridgeSimulation extends Application {
         }
         for (Pin pin : pins) {
             pin.update(deltaTime);
+
+
         }
         for (Beam beam : beams) {
-            ball.checkCollisions(beam);
+//            ball.checkCollisions(beam);
+            if(beam.isBroken()){
+                destroyBeam(beam);
+            }
         }
         ball.accelerate(0, 9.8);
         ball.update(deltaTime);
@@ -278,6 +283,36 @@ public class BridgeSimulation extends Application {
 //        return under;
 //    }
 
+    private void destroyBeam(Beam beam) {
+//         Remove the specified beam from the list of beams
+        beams.remove(beam);
+        beam.pin1.removeBeam(beam);
+        beam.pin2.removeBeam(beam);
+
+//       if(beam.pin1.getConnectedBeamsSize() < 4) {
+//           if(beam.pin1.isPositionFixed() == false){
+//               pins.remove(beam.pin1);
+//               beam.pin1 = null;
+//           }
+//       }
+//       if (beam.pin2.getConnectedBeamsSize() < 4) {
+//              if(beam.pin2.isPositionFixed() == false){
+//                pins.remove(beam.pin2);
+//                beam.pin2 = null;
+//              }
+//       }
+//        beam.pin1.removeBeam(beam);
+//        beam.pin2.removeBeam(beam);
+//        beams.remove(beam);
+//
+//        beam = null;
+
+
+        // Remove pins that are not connected to any remaining beams
+
+
+    }
+
     private void render(GraphicsContext gc) {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
@@ -298,7 +333,9 @@ public class BridgeSimulation extends Application {
         for (Beam beam : beams) {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
-            gc.setStroke(beam.isPhysical() ? (beam.isBroken() ? Color.RED : Color.YELLOWGREEN) : (beam.isBroken() ? Color.RED : Color.BLACK));
+            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),(int) beam.getGreenColorCoefficient(), 0));
+            gc.setLineWidth(2);
+//            gc.setStroke(Color.BLACK);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
