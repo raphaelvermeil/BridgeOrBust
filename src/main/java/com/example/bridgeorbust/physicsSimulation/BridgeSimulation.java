@@ -1,4 +1,5 @@
 package com.example.bridgeorbust.physicsSimulation;
+//wow this is such a great project
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -21,21 +22,24 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BridgeSimulation extends Application {
-//    private List<Pin> startPins=new ArrayList<>();
-//    private List<Pin> copyPins=new ArrayList<>();
     private List<Pin> pins = new ArrayList<>();
-    private List<Beam> beams = new ArrayList<>();//new ArrayList<>();
+    private List<Beam> beams = new ArrayList<>();
+    //    private List<Beam> physicalBeamsOverCar = new ArrayList<>();
     private Pin firstPin = null;
     private double cursorX = 0;
     private double cursorY = 0;
     boolean play = false;
     boolean roadMode = false;
     public Ball ball;
+    private Beam previousBeam = null;
+    private int mouseCounter = 0;
+    //this is refresh test
 
     @Override
     public void start(Stage stage) {
         Canvas canvas = new Canvas(1000, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+//        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
 
         canvas.setOnMouseClicked(this::handleMouseClick);
         canvas.setOnMouseMoved(this::handleMouseMove);
@@ -67,6 +71,10 @@ public class BridgeSimulation extends Application {
         resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
         resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() -50);
 
+        Button undoButton = new Button("Undo");
+        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 70);
+        undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
+
 //        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
 //            resetButton.setLayoutX(newVal.doubleValue() - resetButton.getWidth() - 10);
 //        });
@@ -77,7 +85,7 @@ public class BridgeSimulation extends Application {
 
 
 
-        pane.getChildren().addAll(playPause, controls, resetButton);
+        pane.getChildren().addAll(playPause, controls, resetButton, undoButton);
 
         Scene scene = new Scene(pane);
         setupBridge(gc);
@@ -106,6 +114,20 @@ public class BridgeSimulation extends Application {
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 play = false;
+            }
+            firstPin = null;
+        });
+        undoButton.setOnAction(e -> {
+
+            Beam beam = beams.get(beams.size() - 1);
+            if(mouseCounter>0) {
+                destroyBeam(beam);
+
+                if (beam.pin1.getConnectedBeamsSize() < 1) {
+                    pins.remove(beam.pin1);
+                } else if (beam.pin2.getConnectedBeamsSize() < 1) {
+                    pins.remove(beam.pin2);
+                }
             }
         });
 
@@ -196,10 +218,20 @@ public class BridgeSimulation extends Application {
 
                 Beam beam = new Beam(firstPin, secondPin, 800, 0.03, roadMode);
                 beams.add(beam);
+                previousBeam = beam;
                 firstPin = null;
+                mouseCounter++;
+
             }
         }
     }
+
+//    private void car(double mass) {
+//        this.car = new Car(new Pin(15, 0, false), new Pin(70, 0, false), 10000, mass);
+//        pins.add(car.pin1);
+//        pins.add(car.pin2);
+//        //beams.add(car);
+//    }
 
     private void handleMouseMove(MouseEvent event) {
         cursorX = event.getX();
@@ -240,32 +272,10 @@ public class BridgeSimulation extends Application {
     }
 
     private void destroyBeam(Beam beam) {
-//         Remove the specified beam from the list of beams
         beams.remove(beam);
         beam.pin1.removeBeam(beam);
         beam.pin2.removeBeam(beam);
-
-//       if(beam.pin1.getConnectedBeamsSize() < 4) {
-//           if(beam.pin1.isPositionFixed() == false){
-//               pins.remove(beam.pin1);
-//               beam.pin1 = null;
-//           }
-//       }
-//       if (beam.pin2.getConnectedBeamsSize() < 4) {
-//              if(beam.pin2.isPositionFixed() == false){
-//                pins.remove(beam.pin2);
-//                beam.pin2 = null;
-//              }
-//       }
-//        beam.pin1.removeBeam(beam);
-//        beam.pin2.removeBeam(beam);
-//        beams.remove(beam);
-//
-//        beam = null;
-
-
-        // Remove pins that are not connected to any remaining beams
-
+        mouseCounter--;
 
     }
 
