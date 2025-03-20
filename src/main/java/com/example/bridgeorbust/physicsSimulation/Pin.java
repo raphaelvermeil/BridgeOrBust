@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Pin {
     private Vector2D position;
+    private Vector2D initialPosition;
     private Vector2D velocity;
     private Vector2D forceSum;
     private double massSum;
@@ -13,13 +14,16 @@ public class Pin {
 
     public Pin(double x, double y, boolean fixed) {
         this.position = new Vector2D(x, y);
+        this.initialPosition= new Vector2D(x,y);
         this.velocity = new Vector2D();
         this.forceSum = new Vector2D();
         this.massSum = 0.0;
         this.positionFixed = fixed;
         this.connectedBeams = new ArrayList<>();
     }
-
+    public void resetToInit(){
+        this.position=this.initialPosition;
+    }
     public void calculateForces() {
         forceSum = new Vector2D();
         massSum = 0.0;

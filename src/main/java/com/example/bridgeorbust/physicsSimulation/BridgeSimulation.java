@@ -1,5 +1,4 @@
 package com.example.bridgeorbust.physicsSimulation;
-//wow this is such a great project
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -22,23 +21,21 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BridgeSimulation extends Application {
+//    private List<Pin> startPins=new ArrayList<>();
+//    private List<Pin> copyPins=new ArrayList<>();
     private List<Pin> pins = new ArrayList<>();
-    private List<Beam> beams = new ArrayList<>();
-    //    private List<Beam> physicalBeamsOverCar = new ArrayList<>();
+    private List<Beam> beams = new ArrayList<>();//new ArrayList<>();
     private Pin firstPin = null;
     private double cursorX = 0;
     private double cursorY = 0;
     boolean play = false;
     boolean roadMode = false;
-    //    Car car;
     public Ball ball;
-    //this is refresh test
 
     @Override
     public void start(Stage stage) {
         Canvas canvas = new Canvas(1000, 600);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-//        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
 
         canvas.setOnMouseClicked(this::handleMouseClick);
         canvas.setOnMouseMoved(this::handleMouseMove);
@@ -88,6 +85,10 @@ public class BridgeSimulation extends Application {
         playPause.setOnMouseClicked(e -> {
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
+                for (Beam beam:beams){
+                    beam.pin1.resetToInit();
+                    beam.pin2.resetToInit();
+                }
                 play = false;
             } else {
                 playPause.setImage(new Image("file:pause.png"));
@@ -102,6 +103,10 @@ public class BridgeSimulation extends Application {
             setupBridge(gc);
             ball.setPosition(new Vector2D(0, 0));
             ball.setOldPosition(new Vector2D(0, 0));
+            if (play) {
+                playPause.setImage(new Image("file:play.png"));
+                play = false;
+            }
         });
 
         new AnimationTimer() {
@@ -115,8 +120,6 @@ public class BridgeSimulation extends Application {
 
                 if (play) {
                     updateSimulation(deltaTime);
-
-
                 }
                 render(gc);
             }
@@ -172,8 +175,10 @@ public class BridgeSimulation extends Application {
 
         Pin clickedPin = getPinAt(x, y);
 
-        if (y < 80) {
-        } else if (firstPin == null) {
+        if (y < 80||play) {
+            System.out.println("Cannot build.");
+        }
+        else if (firstPin == null) {
             if (clickedPin != null) {
                 firstPin = clickedPin;
             } else {
@@ -189,19 +194,12 @@ public class BridgeSimulation extends Application {
                     pins.add(secondPin);
                 }
 
-                Beam beam = new Beam(firstPin, secondPin, 1000, 0.08, roadMode);
+                Beam beam = new Beam(firstPin, secondPin, 800, 0.03, roadMode);
                 beams.add(beam);
                 firstPin = null;
             }
         }
     }
-
-//    private void car(double mass) {
-//        this.car = new Car(new Pin(15, 0, false), new Pin(70, 0, false), 10000, mass);
-//        pins.add(car.pin1);
-//        pins.add(car.pin2);
-//        //beams.add(car);
-//    }
 
     private void handleMouseMove(MouseEvent event) {
         cursorX = event.getX();

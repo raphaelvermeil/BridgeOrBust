@@ -6,7 +6,7 @@ public class Beam {
     private double stiffness;
     private double mass;
     private double massPerLength;
-    private double breakLimit=1500;
+    private double breakLimit=3300;
     private boolean broken = false;
     private boolean physical=false;
     private double maxLength=250;
@@ -62,10 +62,10 @@ public class Beam {
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
             System.out.println();
             if(currentLength.magnitude() > restLength) {
-                this.redColorCoefficient = (forceBeam.magnitude() / 3900) * 255;
+                this.redColorCoefficient = (forceBeam.magnitude() / breakLimit) * 255;
 
             } else if(currentLength.magnitude() < restLength) {
-                this.blueColorCoefficient = (forceBeam.magnitude() / 3900) * 255;
+                this.blueColorCoefficient = (forceBeam.magnitude() / breakLimit) * 255;
             }
 
             if (forceBeam.magnitude() > this.breakLimit || forceBeam.magnitude() < -this.breakLimit) { // Arbitrary break limit
@@ -78,13 +78,6 @@ public class Beam {
             } else {
                 return new Vector2D();
             }
-//        if (pin == pin1) {
-//            return totalForce.multiply(-1).add(forceGravity.multiply(0.5));
-//        } else if (pin == pin2) {
-//            return totalForce.add(forceGravity.multiply(0.5));
-//        } else {
-//            return new Vector2D();
-//        }
         }
         return new Vector2D();
     }
