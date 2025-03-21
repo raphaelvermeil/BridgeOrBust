@@ -83,58 +83,49 @@ public class GameTitleScreen extends Application {
         root.getChildren().addAll(bridge);
     }
 
-     */
-
-    /** Adds buttons to the UI and assigns functionality. */
+     */ /** Adds buttons to the UI and assigns functionality. */
     private void addButtons(Pane root, Stage primaryStage) {
         Button playButton = createStyledButton("PLAY", 40, 70, -19);
         Button settingsButton = createStyledButton("SETTINGS", 30, 190, 8);
         Button quitButton = createStyledButton("QUIT", 40, 310, -4);
-        //testing effect 1
-        ScaleTransition stEnter = new ScaleTransition(Duration.millis(200), playButton);
-        stEnter.setToX(1.3);
-        stEnter.setToY(1.2);
-
-        ScaleTransition stExit = new ScaleTransition(Duration.millis(200), playButton);
-        stExit.setToX(1.0);
-        stExit.setToY(1.0);
-
-        playButton.setOnMouseEntered(e -> stEnter.playFromStart());
-        playButton.setOnMouseExited(e -> stExit.playFromStart());
 
         // Add hover effects
         addHoverEffect(playButton);
         addHoverEffect(settingsButton);
         addHoverEffect(quitButton);
 
-        // Quit button action
-        quitButton.setOnAction(e -> Platform.exit());
-        addQuitButtonEffect(quitButton);
 
         // Play button action
-        playButton.setOnMouseClicked(e -> {
-            BridgeSimulation app = new BridgeSimulation();
-            app.start(new Stage());
-            primaryStage.close();
-        });
+        playButton.setOnAction(e -> handleButtonClick(primaryStage, root, "play"));
+
+        // Settings button action
+        settingsButton.setOnAction(e -> handleButtonClick(primaryStage, root, "settings"));
+
+        // Quit button action
+        quitButton.setOnAction(e -> Platform.exit());
 
         root.getChildren().addAll(playButton, settingsButton, quitButton);
     }
 
-
-    /** Handles play button click, transitioning to a new scene. */
-    private void handlePlayButtonClick(Stage primaryStage, Pane root) {
-        ScaleTransition stClick = new ScaleTransition(Duration.millis(100));
+    /** Handles button clicks with smooth transitions. */
+    private void handleButtonClick(Stage primaryStage, Pane root, String action) {
+        ScaleTransition stClick = new ScaleTransition(Duration.millis(500), root);
         stClick.setToX(1.0);
         stClick.setToY(1.0);
         stClick.setOnFinished(event -> {
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(300), root);
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(400), root);
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0);
             fadeOut.setOnFinished(ev -> {
-                Scene newScene = createGameScene(primaryStage);
-                primaryStage.setScene(newScene);
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), newScene.getRoot());
+                if (action.equals("play")) {
+                    // Replace with new LevelSelectionScene
+                    LevelSelectionScene levelSelectionScene = new LevelSelectionScene();
+                    primaryStage.setScene(levelSelectionScene.createLevelSelectionScene(primaryStage));
+                } else if (action.equals("settings")) {
+                    SettingsScene settingsScene = new SettingsScene();
+                    primaryStage.setScene(settingsScene.createSettingsScene(primaryStage));
+                }
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), primaryStage.getScene().getRoot());
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1.0);
                 fadeIn.play();
@@ -142,14 +133,6 @@ public class GameTitleScreen extends Application {
             fadeOut.play();
         });
         stClick.play();
-    }
-
-    /** Creates the game scene. */
-    private Scene createGameScene(Stage primaryStage) {
-        StackPane pane = new StackPane();
-        pane.setStyle("-fx-background-color: #A9EDFE;");
-        pane.getChildren().add(new Button("Simple Button"));
-        return new Scene(pane, 600, 400);
     }
 
     /** Creates a styled button. */
@@ -162,22 +145,25 @@ public class GameTitleScreen extends Application {
         return button;
     }
 
-    /** Adds hover effect to a button. */
-    private void addHoverEffect(Button button) {
-        button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #C2EBCA; -fx-text-fill: grey;"));
-        button.setOnMouseExited(e -> button.setStyle(""));
+    public Scene createGameTitleScene(Stage primaryStage) {
+        Pane root = new Pane();
+        root.setStyle("-fx-background-color: #A9EDFE;");
+        addHangingLines(root);
+        addCircles(root);
+        addButtons(root, primaryStage);
+        return new Scene(root, 600, 400);
     }
+    /** Adds hover effects to buttons. */
+    private void addHoverEffect(Button button) {
+        ScaleTransition stEnter = new ScaleTransition(Duration.millis(200), button);
+        stEnter.setToX(1.3);
+        stEnter.setToY(1.2);
+        ScaleTransition stExit = new ScaleTransition(Duration.millis(200), button);
+        stExit.setToX(1.0);
+        stExit.setToY(1.0);
 
-    /** Adds a pulsing text effect to the quit button. */
-    private void addQuitButtonEffect(Button quitButton) {
-        Timeline chargeEffect = new Timeline(
-                new KeyFrame(Duration.millis(0), new KeyValue(quitButton.textFillProperty(), Color.LIGHTGRAY)),
-                new KeyFrame(Duration.millis(400), new KeyValue(quitButton.textFillProperty(), Color.WHITE))
-        );
-        chargeEffect.setAutoReverse(true);
-        chargeEffect.setCycleCount(Animation.INDEFINITE);
-        quitButton.setOnMouseEntered(e -> chargeEffect.play());
-        quitButton.setOnMouseExited(e -> chargeEffect.stop());
+        button.setOnMouseEntered(e -> stEnter.playFromStart());
+        button.setOnMouseExited(e -> stExit.playFromStart());
     }
 
     public static void main(String[] args) {
