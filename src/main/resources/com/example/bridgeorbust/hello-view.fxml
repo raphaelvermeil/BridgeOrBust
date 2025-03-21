@@ -1,18 +1,314 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" prefHeight="314.0" prefWidth="267.0" spacing="20.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.bridgeorbust.HelloController">
-  <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-
-  </padding>
-   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@Shutterstock_86973980-1.jpg" />
-      </image></ImageView>
-   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="62.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-</VBox>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+      <ImageView fitHeight="400.0" fitWidth="600.0" opacity="0.91" pickOnBounds="true">
+         <image>
+            <Image url="@cloud1.png" />
+         </image>
+      </ImageView>
+        <BorderPane cacheShape="false" centerShape="false" layoutY="-18.0" prefHeight="416.0" prefWidth="624.0" scaleShape="false">
+            <left>
+                <VBox prefHeight="415.0" prefWidth="270.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <VBox cacheShape="false" centerShape="false" prefHeight="395.0" prefWidth="270.0" scaleShape="false">
+                            <children>
+                                <Button mnemonicParsing="false" prefHeight="62.0" prefWidth="178.0" text="PLAY">
+                                    <VBox.margin>
+                                        <Insets top="100.0" />
+                                    </VBox.margin>
+                                    <effect>
+                                        <InnerShadow choke="0.98" height="14.04" radius="8.274999999999999" width="21.06">
+                                            <color>
+                                                <Color red="0.47058823704719543" green="0.8117647171020508" blue="0.9803921580314636" />
+                                            </color>
+                                        </InnerShadow>
+                                    </effect>
+                                    <font>
+                                        <Font name="Stencil" size="29.0" />
+                                    </font>
+                                    <textFill>
+                              <LinearGradient endX="1.0" endY="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="1.0" green="1.0" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.007680491551459294">
+                                       <color>
+                                          <Color red="0.5789473652839661" green="0.5339181423187256" blue="0.12865497171878815" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.007680491551459294">
+                                       <color>
+                                          <Color red="0.5299999713897705" green="0.4875999987125397" blue="0.10599999874830246" opacity="0.5479452013969421" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.010752688172043034">
+                                       <color>
+                                          <Color red="0.4421052634716034" green="0.2852943539619446" blue="0.08023391664028168" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.33026113671274965">
+                                       <color>
+                                          <Color red="0.42105263471603394" green="0.30206626653671265" blue="0.08109162002801895" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.5830674701642451">
+                                       <color>
+                                          <Color red="0.5052631497383118" green="0.34676024317741394" blue="0.07298245280981064" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="0.5052631497383118" green="0.34676024317741394" blue="0.07298245280981064" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                                    </textFill></Button>
+                                <Button mnemonicParsing="false" prefHeight="54.0" prefWidth="168.0" text="SETTINGS">
+                                    <VBox.margin>
+                                        <Insets top="12.0" />
+                                    </VBox.margin>
+                                    <effect>
+                                        <ColorAdjust>
+                                            <input>
+                                                <InnerShadow blurType="GAUSSIAN" choke="0.95" height="34.31" radius="20.945" width="51.47">
+                                                    <color>
+                                                        <Color red="0.49376219511032104" green="0.7677615284919739" blue="0.8947368264198303" />
+                                                    </color>
+                                                    <input>
+                                                        <Reflection bottomOpacity="0.23" fraction="0.29" topOffset="5.0" topOpacity="0.0" />
+                                                    </input>
+                                                </InnerShadow>
+                                            </input>
+                                        </ColorAdjust>
+                                    </effect>
+                                    <font>
+                                        <Font name="Stencil" size="28.0" />
+                                    </font>
+                           <textFill>
+                              <LinearGradient cycleMethod="REPEAT" endX="1.0" endY="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="1.0" green="1.0" blue="1.0" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.007680491551459294">
+                                       <color>
+                                          <Color red="0.5684210658073425" green="0.3150526285171509" blue="0.0442105270922184" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.007680491551459294">
+                                       <color>
+                                          <Color red="0.3263157904148102" green="0.041091617196798325" blue="0.041091617196798325" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="0.010752688172043034">
+                                       <color>
+                                          <Color red="0.4421052634716034" green="0.2852943539619446" blue="0.08023391664028168" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="0.8105263113975525" green="0.6424171328544617" blue="0.3061988353729248" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </LinearGradient>
+                           </textFill></Button>
+                                <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="234.0" text="CREDITS">
+                                    <VBox.margin>
+                                        <Insets top="12.0" />
+                                    </VBox.margin>
+                                    <effect>
+                                        <InnerShadow choke="0.55" height="80.0" radius="39.5" width="80.0">
+                                            <color>
+                                                <Color red="0.47040000557899475" green="0.8101333379745483" blue="0.9800000190734863" />
+                                            </color>
+                                        </InnerShadow>
+                                    </effect>
+                                    <font>
+                                        <Font name="Goudy Stout" size="25.0" />
+                                    </font>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <textFill>
+                                        <RadialGradient centerX="0.2742290706886593" centerY="0.5" cycleMethod="REPEAT" radius="0.5">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color red="1.0" green="1.0" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.010752688172043034">
+                                                    <color>
+                                                        <Color red="0.4421052634716034" green="0.2852943539619446" blue="0.08023391664028168" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.2087912087912088">
+                                                    <color>
+                                                        <Color red="0.5789473652839661" green="0.5339181423187256" blue="0.12865497171878815" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.2527472527472528">
+                                                    <color>
+                                                        <Color red="0.5684210658073425" green="0.3150526285171509" blue="0.0442105270922184" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.35439560439560436">
+                                                    <color>
+                                                        <Color red="0.3052631616592407" green="0.20576998591423035" blue="0.20576998591423035" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.45329670329670346">
+                                                    <color>
+                                                        <Color red="0.557894766330719" green="0.40361273288726807" blue="0.22729045152664185" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.5604395604395604">
+                                                    <color>
+                                                        <Color red="0.5052631497383118" green="0.2818557620048523" blue="0.043040934950113297" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.6346153846153846">
+                                                    <color>
+                                                        <Color red="0.557894766330719" green="0.3501650393009186" blue="0.1281091570854187" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.7125132931584544">
+                                                    <color>
+                                                        <Color red="0.38947367668151855" green="0.22459648549556732" blue="0.023079922422766685" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.8791208791208791">
+                                                    <color>
+                                                        <Color red="0.38947367668151855" green="0.26493826508522034" blue="0.12261208891868591" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.9969278033794162">
+                                                    <color>
+                                                        <Color red="0.8105263113975525" green="0.6424171328544617" blue="0.3061988353729248" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color red="0.5368421077728271" green="0.5008869171142578" blue="0.105380117893219" />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </textFill></Button>
+                                <Button mnemonicParsing="false" prefHeight="59.0" prefWidth="170.0" text="exit" textOverrun="CLIP">
+                                    <VBox.margin>
+                                        <Insets top="12.0" />
+                                    </VBox.margin>
+                                    <font>
+                                        <Font name="Goudy Stout" size="27.0" />
+                                    </font>
+                                    <textFill>
+                                        <RadialGradient centerX="0.2654184853978093" centerY="0.5" cycleMethod="REPEAT" radius="0.5">
+                                            <stops>
+                                                <Stop>
+                                                    <color>
+                                                        <Color red="1.0" green="1.0" blue="1.0" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.010752688172043034">
+                                                    <color>
+                                                        <Color red="0.4421052634716034" green="0.2852943539619446" blue="0.08023391664028168" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.2087912087912088">
+                                                    <color>
+                                                        <Color red="0.5789473652839661" green="0.5339181423187256" blue="0.12865497171878815" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.2527472527472528">
+                                                    <color>
+                                                        <Color red="0.5684210658073425" green="0.3150526285171509" blue="0.0442105270922184" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.35439560439560436">
+                                                    <color>
+                                                        <Color red="0.3052631616592407" green="0.20576998591423035" blue="0.20576998591423035" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.45329670329670346">
+                                                    <color>
+                                                        <Color red="0.557894766330719" green="0.40361273288726807" blue="0.22729045152664185" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.5604395604395604">
+                                                    <color>
+                                                        <Color red="0.5052631497383118" green="0.2818557620048523" blue="0.043040934950113297" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.6346153846153846">
+                                                    <color>
+                                                        <Color red="0.557894766330719" green="0.3501650393009186" blue="0.1281091570854187" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.7125132931584544">
+                                                    <color>
+                                                        <Color red="0.38947367668151855" green="0.22459648549556732" blue="0.023079922422766685" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.8791208791208791">
+                                                    <color>
+                                                        <Color red="0.38947367668151855" green="0.26493826508522034" blue="0.12261208891868591" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="0.9969278033794162">
+                                                    <color>
+                                                        <Color red="0.8105263113975525" green="0.6424171328544617" blue="0.3061988353729248" />
+                                                    </color>
+                                                </Stop>
+                                                <Stop offset="1.0">
+                                                    <color>
+                                                        <Color red="0.5368421077728271" green="0.5008869171142578" blue="0.105380117893219" />
+                                                    </color>
+                                                </Stop>
+                                            </stops>
+                                        </RadialGradient>
+                                    </textFill>
+                                    <effect>
+                                        <InnerShadow choke="0.5" height="80.0" radius="39.5" width="80.0">
+                                            <color>
+                                                <Color red="0.47058823704719543" green="0.8117647171020508" blue="0.9803921580314636" />
+                                            </color>
+                                        </InnerShadow>
+                                    </effect></Button>
+                            </children>
+                        </VBox>
+                        <HBox prefHeight="40.0" prefWidth="270.0" />
+                    </children>
+                </VBox>
+            </left>
+         <center>
+            <ImageView fitHeight="410.0" fitWidth="353.0" opacity="0.71" pickOnBounds="true" smooth="false" BorderPane.alignment="CENTER">
+               <image>
+                  <Image url="@../../../../../../logo.png" />
+               </image>
+            </ImageView>
+         </center>
+        </BorderPane>
+        <Accordion layoutX="-218.0" layoutY="-12.0">
+            <panes>
+                <TitledPane animated="false" text="untitled 1" />
+            </panes>
+        </Accordion>
+    </children>
+</Pane>
