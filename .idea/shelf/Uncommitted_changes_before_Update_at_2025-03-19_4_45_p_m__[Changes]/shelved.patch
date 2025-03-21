@@ -1,0 +1,367 @@
+Index: src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bridgeorbust.physicsSimulation;\r\n\r\npublic class Beam {\r\n    public Pin pin1, pin2;\r\n    private double restLength;\r\n    private double stiffness;\r\n    private double mass;\r\n    private boolean broken = false;\r\n    private boolean physical=false;\r\n    private double maxLength=250;\r\n    private double airFrictionCoefficient = 3;\r\n    private double redColorCoefficient;\r\n    private double greenColorCoefficient;\r\n    public Beam(){\r\n\r\n    }\r\n    public Beam(Pin p1, Pin p2, double stiffness, double mass) {\r\n        this.pin1 = p1;\r\n        this.pin2 = p2;\r\n        this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();\r\n        this.stiffness = stiffness;\r\n        this.mass = mass;\r\n\r\n        p1.addBeam(this);\r\n        p2.addBeam(this);\r\n    }\r\n    public Beam(Pin p1, Pin p2, double stiffness, double mass,boolean physical) {\r\n        this.pin1 = p1;\r\n        this.pin2 = p2;\r\n        this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();\r\n        this.stiffness = stiffness;\r\n        this.mass = mass;\r\n        this.physical=physical;\r\n\r\n        p1.addBeam(this);\r\n        p2.addBeam(this);\r\n    }\r\n\r\n    public void setPhysical(boolean physical) {\r\n        this.physical = physical;\r\n    }\r\n\r\n    public double getMaxLength() {\r\n        return maxLength;\r\n    }\r\n\r\n    public boolean isPhysical() {\r\n        return physical;\r\n    }\r\n\r\n    public void addForceAndMassIfConnected(Pin pin, Vector2D forceSum, double massSum) {\r\n        if(this.isBroken() == false) {\r\n            if (pin == pin1 || pin == pin2) {\r\n                pin.setForceSum(forceSum.add(getForceAtPin(pin)));\r\n                pin.setMassSum(massSum + mass / 2.0);\r\n            }\r\n        }\r\n    }\r\n\r\n    public Vector2D getForceAtPin(Pin pin) {\r\n        if(this.isBroken() == false) {\r\n            if (pin1 == null || pin2 == null) return new Vector2D();\r\n\r\n            Vector2D currentLength = pin2.getPosition().subtract(pin1.getPosition());\r\n            Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - restLength);\r\n\r\n            Vector2D forceBeam = displacement.multiply(-stiffness);\r\n            Vector2D forceGravity = new Vector2D(0, mass * 60);\r\n            Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);\r\n            System.out.println(forceBeam.magnitude());\r\n            if(forceBeam.magnitude() > 0) {\r\n                this.redColorCoefficient = (forceBeam.magnitude() / 5000) * 255;\r\n\r\n            } else if(forceBeam.magnitude() < 0) {\r\n                this.greenColorCoefficient = (forceBeam.magnitude() / -5000) * 255;\r\n            }\r\n\r\n            \r\n            \r\n//        System.out.println(redColorCoefficient);\r\n//        System.out.println(forceBeam.magnitude());\r\n            if (forceBeam.magnitude() > 3800 || forceBeam.magnitude() < -3800) { // Arbitrary break limit\r\n                broken = true;\r\n            }\r\n//        } else if(forceBeam.magnitude() < 2000 || forceBeam.magnitude() > -2000){\r\n//            broken = false;\r\n//        }\r\n\r\n//        Vector2D totalForce = forceBeam.add(forceAirFriction);\r\n\r\n//        return pin == pin1 ? forceBeam.multiply(-1).add(forceGravity.multiply(0.5)) : forceBeam.add(forceGravity.multiply(0.5));\r\n            if (pin == pin1) {\r\n                return forceBeam.multiply(-1).add(forceGravity.multiply(0.5)).add(forceAirFriction);\r\n            } else if (pin == pin2) {\r\n                return forceBeam.add(forceGravity.multiply(0.5)).add(forceAirFriction);\r\n            } else {\r\n                return new Vector2D();\r\n            }\r\n//        if (pin == pin1) {\r\n//            return totalForce.multiply(-1).add(forceGravity.multiply(0.5));\r\n//        } else if (pin == pin2) {\r\n//            return totalForce.add(forceGravity.multiply(0.5));\r\n//        } else {\r\n//            return new Vector2D();\r\n//        }\r\n        }\r\n        return new Vector2D();\r\n    }\r\n\r\n    public boolean isBroken() {\r\n        return broken;\r\n    }\r\n\r\n    public double getRedColorCoefficient() {\r\n        return redColorCoefficient;\r\n    }\r\n\r\n\r\n\r\n    public void setRedColorCoefficient(double redColorCoefficient) {\r\n        this.redColorCoefficient = redColorCoefficient;\r\n    }\r\n\r\n    public double getGreenColorCoefficient() {\r\n        return greenColorCoefficient;\r\n    }\r\n\r\n    public void setGreenColorCoefficient(double greenColorCoefficient) {\r\n        this.greenColorCoefficient = greenColorCoefficient;\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java b/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java
+--- a/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java	(revision 4297475368c1fb5de23968229a155246a28b6a5e)
++++ b/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java	(date 1742416665657)
+@@ -5,6 +5,7 @@
+     private double restLength;
+     private double stiffness;
+     private double mass;
++    private double massPerLength;
+     private boolean broken = false;
+     private boolean physical=false;
+     private double maxLength=250;
+@@ -24,12 +25,12 @@
+         p1.addBeam(this);
+         p2.addBeam(this);
+     }
+-    public Beam(Pin p1, Pin p2, double stiffness, double mass,boolean physical) {
++    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength,boolean physical) {
+         this.pin1 = p1;
+         this.pin2 = p2;
+         this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
+         this.stiffness = stiffness;
+-        this.mass = mass;
++        this.mass = massPerLength*this.restLength;
+         this.physical=physical;
+ 
+         p1.addBeam(this);
+@@ -70,25 +71,13 @@
+             System.out.println(forceBeam.magnitude());
+             if(forceBeam.magnitude() > 0) {
+                 this.redColorCoefficient = (forceBeam.magnitude() / 5000) * 255;
+-
+             } else if(forceBeam.magnitude() < 0) {
+                 this.greenColorCoefficient = (forceBeam.magnitude() / -5000) * 255;
+             }
+ 
+-            
+-            
+-//        System.out.println(redColorCoefficient);
+-//        System.out.println(forceBeam.magnitude());
+             if (forceBeam.magnitude() > 3800 || forceBeam.magnitude() < -3800) { // Arbitrary break limit
+                 broken = true;
+             }
+-//        } else if(forceBeam.magnitude() < 2000 || forceBeam.magnitude() > -2000){
+-//            broken = false;
+-//        }
+-
+-//        Vector2D totalForce = forceBeam.add(forceAirFriction);
+-
+-//        return pin == pin1 ? forceBeam.multiply(-1).add(forceGravity.multiply(0.5)) : forceBeam.add(forceGravity.multiply(0.5));
+             if (pin == pin1) {
+                 return forceBeam.multiply(-1).add(forceGravity.multiply(0.5)).add(forceAirFriction);
+             } else if (pin == pin2) {
+@@ -128,5 +117,8 @@
+     public void setGreenColorCoefficient(double greenColorCoefficient) {
+         this.greenColorCoefficient = greenColorCoefficient;
+     }
++    public void createMass(){
++        this.mass=this.restLength*this.massPerLength;
++    }
+ }
+ 
+Index: src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bridgeorbust.physicsSimulation;\r\n\r\n\r\n\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\n\r\npublic class Ball {\r\n    private Vector2D position;\r\n    private Vector2D oldPosition;\r\n\r\n    private Vector2D acceleration;\r\n    private double mass;\r\n\r\n//    private List<Beam> beams;\r\n    private double radius;\r\n\r\n    public Ball(double x, double y, double mass,  double radius) {\r\n        this.position = new Vector2D(x, y);\r\n\r\n        this.oldPosition = new Vector2D(x, y);\r\n        this.mass = 0.0;\r\n        this.acceleration = new Vector2D();\r\n        this.radius = radius;\r\n\r\n    }\r\n\r\n    public void update(double dt) {\r\n\r\n        double velocity_x = this.position.x - this.oldPosition.x;\r\n        double velocity_y = this.position.y - this.oldPosition.y;\r\n\r\n\r\n        this.oldPosition.x = (this.position.x);\r\n        this.oldPosition.y = (this.position.y);\r\n\r\n        // Verlet integration equation\r\n\r\n        this.position.x = (this.position.x + velocity_x + this.acceleration.x * dt);\r\n        this.position.y = (this.position.y + velocity_y + this.acceleration.y * dt);\r\n\r\n        // Reset acceleration\r\n        this.acceleration.x = 0;\r\n\r\n        this.acceleration.y = 0;\r\n        System.out.println(this.position.x + \" \" + this.position.y);\r\n    }\r\n\r\n    void accelerate(double ax, double ay) {\r\n        this.acceleration.x = (this.acceleration.x + ax);\r\n\r\n        this.acceleration.y = (this.acceleration.y + ay);\r\n    }\r\n\r\n    void checkCollisions(Beam beam) {\r\n        if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)\r\n                || (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) {\r\n\r\n            if (this.position.y >= beam.pin1.getPosition().y - this.radius || this.position.y >= beam.pin2.getPosition().y - (this.radius)) {\r\n\r\n\r\n                if (this.position.y >= beam.pin1.getPosition().y - (2 * this.radius) || this.position.y >= beam.pin2.getPosition().y - (2 * this.radius)) {\r\n\r\n                    if (trulyUnder(beam)) {\r\n                    }\r\n\r\n                }\r\n            }\r\n        }\r\n    }\r\n    private boolean trulyUnder(Beam beam){\r\n        double deltaX,deltaY,relativeLength,ratio,relativeHeight,yLimit;\r\n        Pin leadingPinX,followingPinX, leadingPinY,followingPinY;\r\n        if(beam.pin1.getPosition().x>=beam.pin2.getPosition().x){\r\n            leadingPinX=beam.pin2;\r\n            followingPinX=beam.pin1;\r\n        }\r\n        else {\r\n            leadingPinX = beam.pin1;\r\n            followingPinX = beam.pin2;\r\n        }\r\n        deltaX=followingPinX.getPosition().x-leadingPinX.getPosition().x;\r\n        deltaY=followingPinX.getPosition().y-leadingPinX.getPosition().y;\r\n        relativeLength=this.position.x+this.radius-leadingPinX.getPosition().x;\r\n        relativeHeight=deltaY*relativeLength/deltaX;\r\n        yLimit=leadingPinX.getPosition().y+relativeHeight-this.radius;\r\n        if(this.position.y>yLimit){\r\n            this.position.y= yLimit;\r\n            this.oldPosition.y=yLimit;\r\n            return true;\r\n        }\r\n        else\r\n            return false;\r\n    }\r\n\r\n    public Vector2D getPosition() {\r\n        return position;\r\n    }\r\n\r\n    public void setPosition(Vector2D position) {\r\n        this.position = position;\r\n    }\r\n\r\n    public double getRadius() {\r\n        return radius;\r\n    }\r\n\r\n    public void setRadius(double radius) {\r\n        this.radius = radius;\r\n    }\r\n\r\n    public Vector2D getOldPosition() {\r\n        return oldPosition;\r\n    }\r\n\r\n    public void setOldPosition(Vector2D oldPosition) {\r\n        this.oldPosition = oldPosition;\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java b/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java
+--- a/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java	(revision 4297475368c1fb5de23968229a155246a28b6a5e)
++++ b/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java	(date 1742414865071)
+@@ -27,7 +27,7 @@
+ 
+     public void update(double dt) {
+ 
+-        double velocity_x = this.position.x - this.oldPosition.x;
++        double velocity_x = 2;//this.position.x - this.oldPosition.x;
+         double velocity_y = this.position.y - this.oldPosition.y;
+ 
+ 
+Index: src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.bridgeorbust.physicsSimulation;\r\n//wow this is such a great project\r\n\r\nimport javafx.animation.AnimationTimer;\r\nimport javafx.application.Application;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.control.Button;\r\nimport javafx.scene.control.RadioButton;\r\nimport javafx.scene.control.ToggleGroup;\r\nimport javafx.scene.image.Image;\r\nimport javafx.scene.image.ImageView;\r\nimport javafx.scene.input.MouseEvent;\r\nimport javafx.scene.layout.HBox;\r\nimport javafx.scene.layout.Pane;\r\nimport javafx.scene.paint.Color;\r\nimport javafx.stage.Stage;\r\nimport java.util.ArrayList;\r\nimport java.util.Iterator;\r\nimport java.util.List;\r\n\r\npublic class BridgeSimulation extends Application {\r\n    private List<Pin> pins = new ArrayList<>();\r\n    private List<Beam> beams = new ArrayList<>();\r\n//    private List<Beam> physicalBeamsOverCar = new ArrayList<>();\r\n    private Pin firstPin = null;\r\n    private double cursorX = 0;\r\n    private double cursorY = 0;\r\n    boolean play = false;\r\n    boolean roadMode = false;\r\n//    Car car;\r\n    public Ball ball;\r\n    //this is refresh test\r\n\r\n    @Override\r\n    public void start(Stage stage) {\r\n        Canvas canvas = new Canvas(1000, 600);\r\n        GraphicsContext gc = canvas.getGraphicsContext2D();\r\n//        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));\r\n\r\n        canvas.setOnMouseClicked(this::handleMouseClick);\r\n        canvas.setOnMouseMoved(this::handleMouseMove);\r\n\r\n\r\n        ball = new Ball(215, 100, 10, 20);\r\n        Pane pane = new Pane();\r\n        pane.getChildren().add(canvas);\r\n\r\n        ImageView playPause = new ImageView(new Image(\"file:play.png\"));\r\n        playPause.setX(50);\r\n        playPause.setY(20);\r\n        playPause.setFitWidth(30);  // Resize if needed\r\n        playPause.setFitHeight(30);\r\n\r\n        HBox controls = new HBox();\r\n        controls.setSpacing(10);\r\n        RadioButton roadButton = new RadioButton(\"Road\");\r\n        RadioButton trussButton = new RadioButton(\"Truss\");\r\n        ToggleGroup buttons = new ToggleGroup();\r\n        roadButton.setToggleGroup(buttons);\r\n        trussButton.setToggleGroup(buttons);\r\n        buttons.selectToggle(trussButton);\r\n        controls.getChildren().addAll(roadButton, trussButton);\r\n        controls.setLayoutX(canvas.getWidth() - 120);\r\n        controls.setLayoutY(10);\r\n\r\n        Button resetButton = new Button(\"Reset\");\r\n        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);\r\n        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() -50);\r\n\r\n//        scene.widthProperty().addListener((obs, oldVal, newVal) -> {\r\n//            resetButton.setLayoutX(newVal.doubleValue() - resetButton.getWidth() - 10);\r\n//        });\r\n//\r\n//        scene.heightProperty().addListener((obs, oldVal, newVal) -> {\r\n//            resetButton.setLayoutY(newVal.doubleValue() - resetButton.getHeight() - 10);\r\n//        });\r\n\r\n\r\n\r\n        pane.getChildren().addAll(playPause, controls, resetButton);\r\n\r\n        Scene scene = new Scene(pane);\r\n        setupBridge(gc);\r\n\r\n        playPause.setOnMouseClicked(e -> {\r\n            if (play) {\r\n                playPause.setImage(new Image(\"file:play.png\"));\r\n                play = false;\r\n            } else {\r\n                playPause.setImage(new Image(\"file:pause.png\"));\r\n                play = true;\r\n            }\r\n        });\r\n        trussButton.setOnAction(e -> roadMode = false);\r\n        roadButton.setOnAction(e -> roadMode = true);\r\n        resetButton.setOnAction(e -> {\r\n            pins.clear();\r\n            beams.clear();\r\n            setupBridge(gc);\r\n            ball.setPosition(new Vector2D(0, 0));\r\n            ball.setOldPosition(new Vector2D(0, 0));\r\n        });\r\n\r\n        new AnimationTimer() {\r\n            long lastTime = System.nanoTime();\r\n\r\n            @Override\r\n            public void handle(long now) {\r\n                double deltaTime = (now - lastTime) / 1e9;\r\n                lastTime = now;\r\n\r\n\r\n                if (play) {\r\n                    updateSimulation(deltaTime);\r\n\r\n\r\n                }\r\n                render(gc);\r\n            }\r\n        }.start();\r\n\r\n        stage.setScene(scene);\r\n        stage.setTitle(\"Bridge Simulation\");\r\n        stage.show();\r\n    }\r\n\r\n    private void setupBridge(GraphicsContext gc) {\r\n        level1();\r\n        for (Pin pin : pins) {\r\n            if (pin.isPositionFixed()) {\r\n                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {\r\n                    beams.add(new Beam(new Pin(0, pin.getPosition().y, true), pin, 1000, 0.0001, true));\r\n                    gc.setFill(Color.GREEN);\r\n                } else {\r\n                    beams.add(new Beam(pin, new Pin(gc.getCanvas().getWidth(), pin.getPosition().y, true), 1000, 0.0001, true));\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    private void level1() {//fix numeration!\r\n        Pin p1 = new Pin(200, 300, true);\r\n        Pin p4 = new Pin(800, 300, true);\r\n        Pin p5 = new Pin(200, 400, true);\r\n        Pin p6 = new Pin(800, 400, true);\r\n\r\n        pins.add(p1);\r\n        pins.add(p4);\r\n        pins.add(p5);\r\n        pins.add(p6);\r\n\r\n//        car(100);\r\n    }\r\n\r\n    private void level2() {//fix numeration!\r\n        Pin p1 = new Pin(150, 300, true);\r\n        Pin p2 = new Pin(850, 300, true);\r\n        Pin p3 = new Pin(400, 550, true);\r\n\r\n        pins.add(p1);\r\n        pins.add(p2);\r\n        pins.add(p3);\r\n//        car(100);\r\n    }\r\n\r\n    private void handleMouseClick(MouseEvent event) {\r\n        double x = event.getX();\r\n        double y = event.getY();\r\n\r\n        Pin clickedPin = getPinAt(x, y);\r\n\r\n        if (y < 100) {\r\n        } else if (firstPin == null) {\r\n            if (clickedPin != null) {\r\n                firstPin = clickedPin;\r\n            } else {\r\n                firstPin = new Pin(x, y, false);\r\n                pins.add(firstPin);\r\n            }\r\n        } else {\r\n            double deltaX = x - firstPin.getPosition().x;\r\n            double deltaY = y - firstPin.getPosition().y;\r\n            if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= new Beam().getMaxLength()) {\r\n                Pin secondPin = (clickedPin != null ? clickedPin : new Pin(x, y, false));\r\n                if (clickedPin == null) {\r\n                    pins.add(secondPin);\r\n                }\r\n\r\n                Beam beam = new Beam(firstPin, secondPin, 1000, 10, roadMode);\r\n\r\n                Beam beam2 = new Beam(firstPin, secondPin, 1200, 10, roadMode);\r\n\r\n                beams.add(beam);\r\n                firstPin = null;\r\n            }\r\n        }\r\n    }\r\n\r\n//    private void car(double mass) {\r\n//        this.car = new Car(new Pin(15, 0, false), new Pin(70, 0, false), 10000, mass);\r\n//        pins.add(car.pin1);\r\n//        pins.add(car.pin2);\r\n//        //beams.add(car);\r\n//    }\r\n\r\n    private void handleMouseMove(MouseEvent event) {\r\n        cursorX = event.getX();\r\n        cursorY = event.getY();\r\n    }\r\n\r\n    private Pin getPinAt(double x, double y) {\r\n        for (Pin pin : pins) {\r\n            Vector2D pos = pin.getPosition();\r\n            if (pos.subtract(new Vector2D(x, y)).magnitude() < 10) {\r\n                return pin;\r\n            }\r\n        }\r\n        return null;\r\n    }\r\n\r\n    private void updateSimulation(double deltaTime) {\r\n        for (Pin pin : pins) {\r\n            pin.calculateForces();\r\n        }\r\n        for (Pin pin : pins) {\r\n            pin.update(deltaTime);\r\n        }\r\n        for (Beam beam : beams) {\r\n            if (beam.isPhysical()){\r\n                for(int i = 0; i < 1000; i++){\r\n                    ball.checkCollisions(beam);\r\n                }\r\n\r\n            }\r\n\r\n\r\n            if(beam.isBroken()){\r\n                destroyBeam(beam);\r\n            }\r\n        }\r\n        ball.accelerate(1, 9.8);\r\n        ball.update(deltaTime);\r\n\r\n//        if (carIsUnderPhysical()) {\r\n//            //System.out.println(\"correction made\");\r\n//        }\r\n    }\r\n\r\n//    private boolean carIsUnderPhysical() {\r\n//        boolean under=false;\r\n//\r\n//        Beam overBeam;\r\n//        double deltaX,deltaY,relativePosition,ratio;\r\n//\r\n//        for (Beam beam : beams) {\r\n//            if (beam.isPhysical()) {\r\n//                //wheel1\r\n//                if ((car.pin1.getPosition().x > beam.pin1.getPosition().x && car.pin1.getPosition().x < beam.pin2.getPosition().x)//if wheel 1 is between two pins of a beam\r\n//                        | (car.pin1.getPosition().x <= beam.pin1.getPosition().x && car.pin1.getPosition().x >= beam.pin2.getPosition().x)) { //Same as above but in reverse order\r\n//                    if(car.pin1.getPosition().y>beam.pin1.getPosition().y-15 | car.pin1.getPosition().y>beam.pin2.getPosition().y-15){\r\n//                        overBeam=beam;\r\n//                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;\r\n//                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;\r\n//                        relativePosition=overBeam.pin1.getPosition().x-car.pin1.getPosition().x;\r\n//                        ratio=relativePosition/deltaX;\r\n//                        car.pin1.setY(overBeam.pin1.getPosition().y+(deltaY*ratio)-15);\r\n//                        System.out.println(\"1. r=\"+ratio+\" dY*r=\"+deltaY*ratio);\r\n//                        under=true;\r\n//                    }\r\n//                }\r\n//                //wheel2\r\n//                if ((car.pin2.getPosition().x > beam.pin1.getPosition().x && car.pin2.getPosition().x < beam.pin2.getPosition().x)\r\n//                        | (car.pin2.getPosition().x <= beam.pin1.getPosition().x && car.pin2.getPosition().x >= beam.pin2.getPosition().x)) {\r\n//                    if(car.pin2.getPosition().y>beam.pin1.getPosition().y-15 | car.pin2.getPosition().y>beam.pin2.getPosition().y-15){\r\n//                        overBeam=beam;\r\n//                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;\r\n//                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;\r\n//                        relativePosition=overBeam.pin1.getPosition().x-car.pin2.getPosition().x;\r\n//                        ratio=relativePosition/deltaX;\r\n//                        System.out.println(\"2. r=\"+ratio+\" dY*r=\"+deltaY*ratio);\r\n//                        car.pin2.setY(car.pin2.getPosition().y+(deltaY*ratio)-15);\r\n//\r\n//                        under=true;\r\n//                    }\r\n//                }\r\n//            }\r\n//        }\r\n//        return under;\r\n//    }\r\n\r\n    private void destroyBeam(Beam beam) {\r\n//         Remove the specified beam from the list of beams\r\n        beams.remove(beam);\r\n        beam.pin1.removeBeam(beam);\r\n        beam.pin2.removeBeam(beam);\r\n\r\n//       if(beam.pin1.getConnectedBeamsSize() < 4) {\r\n//           if(beam.pin1.isPositionFixed() == false){\r\n//               pins.remove(beam.pin1);\r\n//               beam.pin1 = null;\r\n//           }\r\n//       }\r\n//       if (beam.pin2.getConnectedBeamsSize() < 4) {\r\n//              if(beam.pin2.isPositionFixed() == false){\r\n//                pins.remove(beam.pin2);\r\n//                beam.pin2 = null;\r\n//              }\r\n//       }\r\n//        beam.pin1.removeBeam(beam);\r\n//        beam.pin2.removeBeam(beam);\r\n//        beams.remove(beam);\r\n//\r\n//        beam = null;\r\n\r\n\r\n        // Remove pins that are not connected to any remaining beams\r\n\r\n\r\n    }\r\n\r\n    private void render(GraphicsContext gc) {\r\n        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());\r\n\r\n        for (Pin pin : pins) {\r\n            if (pin.isPositionFixed()) {\r\n                gc.setFill(Color.GREEN);\r\n                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {\r\n                    gc.fillRect(0, pin.getPosition().y, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)\r\n                } else {\r\n                    gc.fillRect(pin.getPosition().x, pin.getPosition().y, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)\r\n                }\r\n            }\r\n            gc.setFill(Color.BLUE);\r\n            Vector2D pos = pin.getPosition();\r\n            gc.fillOval(pos.x - 5, pos.y - 5, 10, 10);\r\n        }\r\n        gc.setStroke(Color.BLACK);\r\n        for (Beam beam : beams) {\r\n            Vector2D pos1 = beam.pin1.getPosition();\r\n            Vector2D pos2 = beam.pin2.getPosition();\r\n            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),(int) beam.getGreenColorCoefficient(), 0));\r\n            gc.setLineWidth(2);\r\n//            gc.setStroke(Color.BLACK);\r\n            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);\r\n        }\r\n\r\n        if (firstPin != null) {\r\n            gc.setStroke(Color.BLACK);\r\n            Vector2D pos1 = firstPin.getPosition();\r\n\r\n            double deltaX = cursorX - pos1.x;\r\n            double deltaY = cursorY - pos1.y;\r\n            double magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);\r\n            double ratio = new Beam().getMaxLength() / magnitude;\r\n            Vector2D pos2 = ratio >= 1 ? new Vector2D(cursorX, cursorY) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);\r\n            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);\r\n        }\r\n\r\n//        gc.setFill(Color.GRAY);\r\n//        gc.fillOval(car.pin1.getPosition().x - 15, car.pin1.getPosition().y - 15, 30, 30);\r\n//        gc.fillOval(car.pin2.getPosition().x - 15, car.pin2.getPosition().y - 15, 30, 30);\r\n\r\n        gc.setFill(Color.RED);\r\n        gc.fillOval(ball.getPosition().x , ball.getPosition().y , ball.getRadius(), ball.getRadius());\r\n    }\r\n\r\n    public static void main(String[] args) {\r\n        launch();\r\n    }\r\n}\r\n\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java b/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java
+--- a/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java	(revision 4297475368c1fb5de23968229a155246a28b6a5e)
++++ b/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java	(date 1742417152791)
+@@ -16,6 +16,7 @@
+ import javafx.scene.layout.Pane;
+ import javafx.scene.paint.Color;
+ import javafx.stage.Stage;
++
+ import java.util.ArrayList;
+ import java.util.Iterator;
+ import java.util.List;
+@@ -23,13 +24,13 @@
+ public class BridgeSimulation extends Application {
+     private List<Pin> pins = new ArrayList<>();
+     private List<Beam> beams = new ArrayList<>();
+-//    private List<Beam> physicalBeamsOverCar = new ArrayList<>();
++    //    private List<Beam> physicalBeamsOverCar = new ArrayList<>();
+     private Pin firstPin = null;
+     private double cursorX = 0;
+     private double cursorY = 0;
+     boolean play = false;
+     boolean roadMode = false;
+-//    Car car;
++    //    Car car;
+     public Ball ball;
+     //this is refresh test
+ 
+@@ -67,7 +68,7 @@
+ 
+         Button resetButton = new Button("Reset");
+         resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
+-        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() -50);
++        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() - 50);
+ 
+ //        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
+ //            resetButton.setLayoutX(newVal.doubleValue() - resetButton.getWidth() - 10);
+@@ -78,7 +79,6 @@
+ //        });
+ 
+ 
+-
+         pane.getChildren().addAll(playPause, controls, resetButton);
+ 
+         Scene scene = new Scene(pane);
+@@ -171,7 +171,7 @@
+ 
+         Pin clickedPin = getPinAt(x, y);
+ 
+-        if (y < 100) {
++        if (y < 80) {
+         } else if (firstPin == null) {
+             if (clickedPin != null) {
+                 firstPin = clickedPin;
+@@ -188,9 +188,8 @@
+                     pins.add(secondPin);
+                 }
+ 
+-                Beam beam = new Beam(firstPin, secondPin, 1000, 10, roadMode);
+-
+-                Beam beam2 = new Beam(firstPin, secondPin, 1200, 10, roadMode);
++                Beam beam = new Beam(firstPin, secondPin, 1000, 0.01, roadMode);
++//                Beam beam2 = new Beam(firstPin, secondPin, 1000, 0.01, roadMode);
+ 
+                 beams.add(beam);
+                 firstPin = null;
+@@ -228,67 +227,18 @@
+             pin.update(deltaTime);
+         }
+         for (Beam beam : beams) {
+-            if (beam.isPhysical()){
+-                for(int i = 0; i < 1000; i++){
+-                    ball.checkCollisions(beam);
+-                }
++            if (beam.isPhysical()) {
++                ball.checkCollisions(beam);
++            }
+ 
+-            }
+-
+ 
+-            if(beam.isBroken()){
++            if (beam.isBroken()) {
+                 destroyBeam(beam);
+             }
+         }
+-        ball.accelerate(1, 9.8);
++        ball.accelerate(0, 9.8);
+         ball.update(deltaTime);
+-
+-//        if (carIsUnderPhysical()) {
+-//            //System.out.println("correction made");
+-//        }
+     }
+-
+-//    private boolean carIsUnderPhysical() {
+-//        boolean under=false;
+-//
+-//        Beam overBeam;
+-//        double deltaX,deltaY,relativePosition,ratio;
+-//
+-//        for (Beam beam : beams) {
+-//            if (beam.isPhysical()) {
+-//                //wheel1
+-//                if ((car.pin1.getPosition().x > beam.pin1.getPosition().x && car.pin1.getPosition().x < beam.pin2.getPosition().x)//if wheel 1 is between two pins of a beam
+-//                        | (car.pin1.getPosition().x <= beam.pin1.getPosition().x && car.pin1.getPosition().x >= beam.pin2.getPosition().x)) { //Same as above but in reverse order
+-//                    if(car.pin1.getPosition().y>beam.pin1.getPosition().y-15 | car.pin1.getPosition().y>beam.pin2.getPosition().y-15){
+-//                        overBeam=beam;
+-//                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+-//                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+-//                        relativePosition=overBeam.pin1.getPosition().x-car.pin1.getPosition().x;
+-//                        ratio=relativePosition/deltaX;
+-//                        car.pin1.setY(overBeam.pin1.getPosition().y+(deltaY*ratio)-15);
+-//                        System.out.println("1. r="+ratio+" dY*r="+deltaY*ratio);
+-//                        under=true;
+-//                    }
+-//                }
+-//                //wheel2
+-//                if ((car.pin2.getPosition().x > beam.pin1.getPosition().x && car.pin2.getPosition().x < beam.pin2.getPosition().x)
+-//                        | (car.pin2.getPosition().x <= beam.pin1.getPosition().x && car.pin2.getPosition().x >= beam.pin2.getPosition().x)) {
+-//                    if(car.pin2.getPosition().y>beam.pin1.getPosition().y-15 | car.pin2.getPosition().y>beam.pin2.getPosition().y-15){
+-//                        overBeam=beam;
+-//                        deltaX=overBeam.pin1.getPosition().x-overBeam.pin2.getPosition().x;
+-//                        deltaY=overBeam.pin1.getPosition().y-overBeam.pin2.getPosition().y;
+-//                        relativePosition=overBeam.pin1.getPosition().x-car.pin2.getPosition().x;
+-//                        ratio=relativePosition/deltaX;
+-//                        System.out.println("2. r="+ratio+" dY*r="+deltaY*ratio);
+-//                        car.pin2.setY(car.pin2.getPosition().y+(deltaY*ratio)-15);
+-//
+-//                        under=true;
+-//                    }
+-//                }
+-//            }
+-//        }
+-//        return under;
+-//    }
+ 
+     private void destroyBeam(Beam beam) {
+ //         Remove the specified beam from the list of beams
+@@ -340,7 +290,7 @@
+         for (Beam beam : beams) {
+             Vector2D pos1 = beam.pin1.getPosition();
+             Vector2D pos2 = beam.pin2.getPosition();
+-            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),(int) beam.getGreenColorCoefficient(), 0));
++            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), (int) beam.getGreenColorCoefficient(), 0));
+             gc.setLineWidth(2);
+ //            gc.setStroke(Color.BLACK);
+             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+@@ -363,7 +313,7 @@
+ //        gc.fillOval(car.pin2.getPosition().x - 15, car.pin2.getPosition().y - 15, 30, 30);
+ 
+         gc.setFill(Color.RED);
+-        gc.fillOval(ball.getPosition().x , ball.getPosition().y , ball.getRadius(), ball.getRadius());
++        gc.fillOval(ball.getPosition().x, ball.getPosition().y, ball.getRadius(), ball.getRadius());
+     }
+ 
+     public static void main(String[] args) {
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"91190871-3849-461b-8f03-dc2c5ace9180\" name=\"Changes\" comment=\"Beam destroy become red part 2\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;,\r\n    &quot;assignee&quot;: &quot;raphaelvermeil&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GitHubPullRequestState\"><![CDATA[{\r\n  \"prStates\": [\r\n    {\r\n      \"id\": {\r\n        \"id\": \"PR_kwDONw9iBM6NCxxQ\",\r\n        \"number\": 2\r\n      },\r\n      \"lastSeen\": 1741709287081\r\n    },\r\n    {\r\n      \"id\": {\r\n        \"id\": \"PR_kwDONw9iBM6PTab3\",\r\n        \"number\": 3\r\n      },\r\n      \"lastSeen\": 1742403686186\r\n    }\r\n  ]\r\n}]]></component>\r\n  <component name=\"GithubPullRequestsUISettings\">{\r\n  &quot;selectedUrlAndAccountId&quot;: {\r\n    &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,\r\n    &quot;accountId&quot;: &quot;5c663360-e097-4f43-b941-b459c4ce9b30&quot;\r\n  }\r\n}</component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"generalSettings\">\r\n      <MavenGeneralSettings>\r\n        <option name=\"mavenHomeTypeForPersistence\" value=\"WRAPPER\" />\r\n      </MavenGeneralSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectColorInfo\">{\r\n  &quot;associatedIndex&quot;: 8\r\n}</component>\r\n  <component name=\"ProjectId\" id=\"2sGpF0nnjcdZcYrBJRKgrbLPMbU\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\"><![CDATA[{\r\n  \"keyToString\": {\r\n    \"Application.BridgeSimulation.executor\": \"Run\",\r\n    \"Application.GravitySimulation.executor\": \"Run\",\r\n    \"Application.HelloApplication.executor\": \"Run\",\r\n    \"Application.PendulumSimulation.executor\": \"Run\",\r\n    \"Application.SimplePhysicsEngine.executor\": \"Run\",\r\n    \"Application.SolveLinearSystem.executor\": \"Run\",\r\n    \"RunOnceActivity.ShowReadmeOnStart\": \"true\",\r\n    \"git-widget-placeholder\": \"master\",\r\n    \"kotlin-language-version-configured\": \"true\",\r\n    \"node.js.detected.package.eslint\": \"true\",\r\n    \"node.js.detected.package.tslint\": \"true\",\r\n    \"node.js.selected.package.eslint\": \"(autodetect)\",\r\n    \"node.js.selected.package.tslint\": \"(autodetect)\",\r\n    \"nodejs_package_manager_path\": \"npm\",\r\n    \"vue.rearranger.settings.migration\": \"true\"\r\n  }\r\n}]]></component>\r\n  <component name=\"SharedIndexes\">\r\n    <attachedChunks>\r\n      <set>\r\n        <option value=\"bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.24807.4\" />\r\n        <option value=\"bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4\" />\r\n      </set>\r\n    </attachedChunks>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"91190871-3849-461b-8f03-dc2c5ace9180\" name=\"Changes\" comment=\"\" />\r\n      <created>1738091660854</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1738091660854</updated>\r\n      <workItem from=\"1738091661787\" duration=\"7589000\" />\r\n      <workItem from=\"1738116294874\" duration=\"801000\" />\r\n      <workItem from=\"1738159763410\" duration=\"2004000\" />\r\n      <workItem from=\"1738171045069\" duration=\"308000\" />\r\n      <workItem from=\"1738180014606\" duration=\"752000\" />\r\n      <workItem from=\"1738186204078\" duration=\"6763000\" />\r\n      <workItem from=\"1738199224735\" duration=\"817000\" />\r\n      <workItem from=\"1738203306089\" duration=\"2477000\" />\r\n      <workItem from=\"1738250901109\" duration=\"783000\" />\r\n      <workItem from=\"1738257521639\" duration=\"819000\" />\r\n      <workItem from=\"1738262205419\" duration=\"2414000\" />\r\n      <workItem from=\"1738289892497\" duration=\"9751000\" />\r\n      <workItem from=\"1738335713543\" duration=\"1353000\" />\r\n      <workItem from=\"1738690180140\" duration=\"5892000\" />\r\n      <workItem from=\"1738973072318\" duration=\"864000\" />\r\n      <workItem from=\"1739026386604\" duration=\"855000\" />\r\n      <workItem from=\"1739047594409\" duration=\"4919000\" />\r\n      <workItem from=\"1739234982887\" duration=\"1146000\" />\r\n      <workItem from=\"1739394355635\" duration=\"1922000\" />\r\n      <workItem from=\"1740157167797\" duration=\"4420000\" />\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"Create Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738092280425</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738092280425</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"Create Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738092311496</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738092311496</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"Create Project\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738251035791</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738251035791</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"Other Stuff\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1738300532598</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1738300532598</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"wow this is my frist time commiting\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1740431227095</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1740431227095</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"play pause\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1740509137013</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1740509137013</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1740630044025</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1740630044025</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"refresh\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1741712557811</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1741712557811</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00009\" summary=\"refresh test #2\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1741713369006</created>\r\n      <option name=\"number\" value=\"00009\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00009\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1741713369006</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00010\" summary=\"Added verlet red ball\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1742315274683</created>\r\n      <option name=\"number\" value=\"00010\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00010\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1742315274684</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00011\" summary=\"Added calc to ball\">\r\n      <option name=\"closed\" value=\"true\" />\r\n      <created>1742316166090</created>\r\n      <option name=\"number\" value=\"00011\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00011\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1742316166091</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"12\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"TypeScriptGeneratedFilesManager\">\r\n    <option name=\"version\" value=\"3\" />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"RECENT_FILTERS\">\r\n      <map>\r\n        <entry key=\"Branch\">\r\n          <value>\r\n            <list>\r\n              <RecentGroup>\r\n                <option name=\"FILTER_VALUES\">\r\n                  <option value=\"noah\" />\r\n                </option>\r\n              </RecentGroup>\r\n              <RecentGroup>\r\n                <option name=\"FILTER_VALUES\">\r\n                  <option value=\"origin/TitleScreenKian\" />\r\n                </option>\r\n              </RecentGroup>\r\n              <RecentGroup>\r\n                <option name=\"FILTER_VALUES\">\r\n                  <option value=\"HEAD\" />\r\n                </option>\r\n              </RecentGroup>\r\n              <RecentGroup>\r\n                <option name=\"FILTER_VALUES\">\r\n                  <option value=\"master\" />\r\n                </option>\r\n              </RecentGroup>\r\n              <RecentGroup>\r\n                <option name=\"FILTER_VALUES\">\r\n                  <option value=\"origin/master\" />\r\n                </option>\r\n              </RecentGroup>\r\n            </list>\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"Create Project\" />\r\n    <MESSAGE value=\"Other Stuff\" />\r\n    <MESSAGE value=\"Physics Algorithm solved\" />\r\n    <MESSAGE value=\"wow this is my frist time commiting\" />\r\n    <MESSAGE value=\"play pause\" />\r\n    <MESSAGE value=\"refresh\" />\r\n    <MESSAGE value=\"refresh test #2\" />\r\n    <MESSAGE value=\"Added verlet red ball\" />\r\n    <MESSAGE value=\"waza\" />\r\n    <MESSAGE value=\"Added calc to ball\" />\r\n    <MESSAGE value=\"Beam destroy become red part 2\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"Beam destroy become red part 2\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision 4297475368c1fb5de23968229a155246a28b6a5e)
++++ b/.idea/workspace.xml	(date 1742416666173)
+@@ -4,7 +4,7 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Beam destroy become red part 2">
++    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Added verlet red ball">
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
+@@ -36,24 +36,6 @@
+     &quot;assignee&quot;: &quot;raphaelvermeil&quot;
+   }
+ }</component>
+-  <component name="GitHubPullRequestState"><![CDATA[{
+-  "prStates": [
+-    {
+-      "id": {
+-        "id": "PR_kwDONw9iBM6NCxxQ",
+-        "number": 2
+-      },
+-      "lastSeen": 1741709287081
+-    },
+-    {
+-      "id": {
+-        "id": "PR_kwDONw9iBM6PTab3",
+-        "number": 3
+-      },
+-      "lastSeen": 1742403686186
+-    }
+-  ]
+-}]]></component>
+   <component name="GithubPullRequestsUISettings">{
+   &quot;selectedUrlAndAccountId&quot;: {
+     &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
+@@ -78,25 +60,25 @@
+     <option name="hideEmptyMiddlePackages" value="true" />
+     <option name="showLibraryContents" value="true" />
+   </component>
+-  <component name="PropertiesComponent"><![CDATA[{
+-  "keyToString": {
+-    "Application.BridgeSimulation.executor": "Run",
+-    "Application.GravitySimulation.executor": "Run",
+-    "Application.HelloApplication.executor": "Run",
+-    "Application.PendulumSimulation.executor": "Run",
+-    "Application.SimplePhysicsEngine.executor": "Run",
+-    "Application.SolveLinearSystem.executor": "Run",
+-    "RunOnceActivity.ShowReadmeOnStart": "true",
+-    "git-widget-placeholder": "master",
+-    "kotlin-language-version-configured": "true",
+-    "node.js.detected.package.eslint": "true",
+-    "node.js.detected.package.tslint": "true",
+-    "node.js.selected.package.eslint": "(autodetect)",
+-    "node.js.selected.package.tslint": "(autodetect)",
+-    "nodejs_package_manager_path": "npm",
+-    "vue.rearranger.settings.migration": "true"
++  <component name="PropertiesComponent">{
++  &quot;keyToString&quot;: {
++    &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
++    &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
++    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
++    &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
++    &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,
++    &quot;Application.SolveLinearSystem.executor&quot;: &quot;Run&quot;,
++    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
++    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
++    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
++    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
++    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
++    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
++    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
++    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+   }
+-}]]></component>
++}</component>
+   <component name="SharedIndexes">
+     <attachedChunks>
+       <set>
+@@ -214,15 +196,7 @@
+       <option name="project" value="LOCAL" />
+       <updated>1742315274684</updated>
+     </task>
+-    <task id="LOCAL-00011" summary="Added calc to ball">
+-      <option name="closed" value="true" />
+-      <created>1742316166090</created>
+-      <option name="number" value="00011" />
+-      <option name="presentableId" value="LOCAL-00011" />
+-      <option name="project" value="LOCAL" />
+-      <updated>1742316166091</updated>
+-    </task>
+-    <option name="localTasksCounter" value="12" />
++    <option name="localTasksCounter" value="11" />
+     <servers />
+   </component>
+   <component name="TypeScriptGeneratedFilesManager">
+@@ -283,9 +257,6 @@
+     <MESSAGE value="refresh" />
+     <MESSAGE value="refresh test #2" />
+     <MESSAGE value="Added verlet red ball" />
+-    <MESSAGE value="waza" />
+-    <MESSAGE value="Added calc to ball" />
+-    <MESSAGE value="Beam destroy become red part 2" />
+-    <option name="LAST_COMMIT_MESSAGE" value="Beam destroy become red part 2" />
++    <option name="LAST_COMMIT_MESSAGE" value="Added verlet red ball" />
+   </component>
+ </project>
+\ No newline at end of file
