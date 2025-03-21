@@ -6,24 +6,26 @@ public class Beam {
     private double stiffness;
     private double mass;
     private double massPerLength;
-    private double breakLimit=3300;
+    private double breakLimit = 3300;
     private boolean broken = false;
-    private boolean physical=false;
-    private double maxLength=250;
+    private boolean physical = false;
+    private double maxLength = 250;
     private double airFrictionCoefficient = 3;
     private double redColorCoefficient;
     private double blueColorCoefficient;
-    public Beam(){
+
+    public Beam() {
 
     }
-    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength,boolean physical) {
+
+    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength, boolean physical) {
         this.pin1 = p1;
         this.pin2 = p2;
         this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
         this.stiffness = stiffness;
-        this.massPerLength=massPerLength;
+        this.massPerLength = massPerLength;
         createMass();
-        this.physical=physical;
+        this.physical = physical;
 
         p1.addBeam(this);
         p2.addBeam(this);
@@ -42,7 +44,7 @@ public class Beam {
     }
 
     public void addForceAndMassIfConnected(Pin pin, Vector2D forceSum, double massSum) {
-        if(this.isBroken() == false) {
+        if (this.isBroken() == false) {
             if (pin == pin1 || pin == pin2) {
                 pin.setForceSum(forceSum.add(getForceAtPin(pin)));
                 pin.setMassSum(massSum + mass / 2.0);
@@ -51,7 +53,7 @@ public class Beam {
     }
 
     public Vector2D getForceAtPin(Pin pin) {
-        if(this.isBroken() == false) {
+        if (this.isBroken() == false) {
             if (pin1 == null || pin2 == null) return new Vector2D();
 
             Vector2D currentLength = pin2.getPosition().subtract(pin1.getPosition());
@@ -61,10 +63,10 @@ public class Beam {
             Vector2D forceGravity = new Vector2D(0, mass * 60);
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
             System.out.println();
-            if(currentLength.magnitude() > restLength) {
+            if (currentLength.magnitude() > restLength) {
                 this.redColorCoefficient = (forceBeam.magnitude() / breakLimit) * 255;
 
-            } else if(currentLength.magnitude() < restLength) {
+            } else if (currentLength.magnitude() < restLength) {
                 this.blueColorCoefficient = (forceBeam.magnitude() / breakLimit) * 255;
             }
 
@@ -82,6 +84,13 @@ public class Beam {
         return new Vector2D();
     }
 
+    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight){
+        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();;
+        this.maxLength = maxLength * newWidth / previousWidth;
+        this.massPerLength = massPerLength * newHeight / previousHeight;
+        createMass();
+    }
+
     public boolean isBroken() {
         return broken;
     }
@@ -89,7 +98,6 @@ public class Beam {
     public double getRedColorCoefficient() {
         return redColorCoefficient;
     }
-
 
 
     public void setRedColorCoefficient(double redColorCoefficient) {
@@ -103,8 +111,33 @@ public class Beam {
     public void setblueColorCoefficient(double blueColorCoefficient) {
         this.blueColorCoefficient = blueColorCoefficient;
     }
-    public void createMass(){
-        this.mass=this.restLength*this.massPerLength;
+
+    public void createMass() {
+        this.mass = this.restLength * this.massPerLength;
+    }
+
+    public double getRestLength() {
+        return restLength;
+    }
+
+    public void setRestLength() {
+        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();;
+    }
+
+    public double getMass() {
+        return mass;
+    }
+
+    public void setMass(double mass) {
+        this.mass = mass;
+    }
+
+    public double getMassPerLength() {
+        return massPerLength;
+    }
+
+    public void setMassPerLength(double massPerLength) {
+        this.massPerLength = massPerLength;
     }
 }
 
