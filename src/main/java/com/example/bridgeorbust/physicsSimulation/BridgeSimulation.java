@@ -24,7 +24,7 @@ import java.util.List;
 public class BridgeSimulation extends Application {
     private List<Pin> pins = new ArrayList<>();
     private List<Beam> beams = new ArrayList<>();
-    //    private List<Beam> physicalBeamsOverCar = new ArrayList<>();
+    private List<Pin> startPins = new ArrayList<>();
     private Pin firstPin = null;
     private double cursorX = 0;
     private double cursorY = 0;
@@ -33,11 +33,14 @@ public class BridgeSimulation extends Application {
     public Ball ball;
     private Beam previousBeam = null;
     private int mouseCounter = 0;
+    private double previousWindowWidth;
+    private double previousWindowHeight;
+    private double maxLength = 250;
     //this is refresh test
 
     @Override
     public void start(Stage stage) {
-        Canvas canvas = new Canvas(1000, 600);
+        Canvas canvas = new Canvas();
         GraphicsContext gc = canvas.getGraphicsContext2D();
 //        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
 
@@ -47,7 +50,11 @@ public class BridgeSimulation extends Application {
 
         ball = new Ball(215, 100, 10, 20);
         Pane pane = new Pane();
-        pane.getChildren().add(canvas);
+
+
+        // Bind the canvas size to the pane size
+        canvas.widthProperty().bind(pane.widthProperty());
+        canvas.heightProperty().bind(pane.heightProperty());
 
         ImageView playPause = new ImageView(new Image("file:play.png"));
         playPause.setX(50);
@@ -67,33 +74,24 @@ public class BridgeSimulation extends Application {
         controls.setLayoutX(canvas.getWidth() - 120);
         controls.setLayoutY(10);
 
+
         Button resetButton = new Button("Reset");
         resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
-        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() -50);
+        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() - 50);
 
         Button undoButton = new Button("Undo");
         undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 70);
         undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
 
-//        scene.widthProperty().addListener((obs, oldVal, newVal) -> {
-//            resetButton.setLayoutX(newVal.doubleValue() - resetButton.getWidth() - 10);
-//        });
-//
-//        scene.heightProperty().addListener((obs, oldVal, newVal) -> {
-//            resetButton.setLayoutY(newVal.doubleValue() - resetButton.getHeight() - 10);
-//        });
+        pane.getChildren().addAll(canvas, playPause, controls, resetButton, undoButton);
 
-
-
-        pane.getChildren().addAll(playPause, controls, resetButton, undoButton);
-
-        Scene scene = new Scene(pane);
+        Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
 
         playPause.setOnMouseClicked(e -> {
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
-                for (Beam beam:beams){
+                for (Beam beam : beams) {
                     beam.pin1.resetToInit();
                     beam.pin2.resetToInit();
                 }
@@ -116,11 +114,12 @@ public class BridgeSimulation extends Application {
                 play = false;
             }
             firstPin = null;
+            mouseCounter = 0;
         });
         undoButton.setOnAction(e -> {
 
             Beam beam = beams.get(beams.size() - 1);
-            if(mouseCounter>0) {
+            if (mouseCounter > 0) {
                 destroyBeam(beam);
 
                 if (beam.pin1.getConnectedBeamsSize() < 1) {
@@ -147,38 +146,83 @@ public class BridgeSimulation extends Application {
             }
 
         }.start();
+        previousWindowWidth = canvas.getWidth();
+        previousWindowHeight = canvas.getHeight();
+        updateOnResize(canvas, playPause, controls, resetButton, undoButton);
+
+        // Add listeners to update button positions when the canvas size changes
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
 
         stage.setScene(scene);
         stage.setTitle("Bridge Simulation");
         stage.show();
     }
 
-    private void setupBridge(GraphicsContext gc) {
-        level1();
+
+    private void updateOnResize(Canvas canvas, ImageView playPause, HBox controls, Button resetButton, Button undoButton) {
+        playPause.setX(50);
+        playPause.setY(20);
+        for (Pin pin:startPins){
+            pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
+        }
         for (Pin pin : pins) {
-            if (pin.isPositionFixed()) {
-                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
-                    beams.add(new Beam(new Pin(0, pin.getPosition().y, true), pin, 1000, 0.0001, true));
-                    gc.setFill(Color.GREEN);
-                } else {
-                    beams.add(new Beam(pin, new Pin(gc.getCanvas().getWidth(), pin.getPosition().y, true), 1000, 0.0001, true));
-                }
+            if (pin.isStartPin() == false) {
+                pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
             }
         }
+        for(Beam beam: beams){
+            beam.beamSizeBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight());
+
+        }
+        this.maxLength = maxLength * canvas.getWidth() / previousWindowWidth;
+
+        controls.setLayoutX(canvas.getWidth() - 120);
+        controls.setLayoutY(10);
+
+        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
+        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() - 50);
+
+        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 70);
+        undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
+
+        previousWindowWidth = canvas.getWidth();
+        previousWindowHeight = canvas.getHeight();
+    }
+
+    private void setupBridge(GraphicsContext gc) {
+        if(startPins.isEmpty())
+            level1();
+        List<Pin> newPins = new ArrayList<Pin>();
+        pins.addAll(startPins);
+        for (Pin pin : pins) {
+            if (pin.isPositionFixed()) {
+                Pin pin2 = null;
+                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
+                    pin2 = new Pin(0, pin.getPosition().y, true);
+                    beams.add(new Beam(pin2, pin, 1000, 0.0001, true));
+                    gc.setFill(Color.GREEN);
+                } else {
+                    pin2 = new Pin(gc.getCanvas().getWidth(), pin.getPosition().y, true);
+                    beams.add(new Beam(pin, pin2, 1000, 0.0001, true));
+
+                }
+                newPins.add(pin2);//newPins.removeAll(null);
+            }
+        }
+        pins.addAll(newPins);
     }
 
     private void level1() {//fix numeration!
-        Pin p1 = new Pin(200, 300, true);
-        Pin p4 = new Pin(800, 300, true);
-        Pin p5 = new Pin(200, 400, true);
-        Pin p6 = new Pin(800, 400, true);
+        Pin p1 = new Pin(200, 300, true, true);
+        Pin p4 = new Pin(800, 300, true, true);
+        Pin p5 = new Pin(200, 400, true, true);
+        Pin p6 = new Pin(800, 400, true, true);
 
-        pins.add(p1);
-        pins.add(p4);
-        pins.add(p5);
-        pins.add(p6);
-
-//        car(100);
+        startPins.add(p1);
+        startPins.add(p4);
+        startPins.add(p5);
+        startPins.add(p6);
     }
 
     private void level2() {//fix numeration!
@@ -198,10 +242,9 @@ public class BridgeSimulation extends Application {
 
         Pin clickedPin = getPinAt(x, y);
 
-        if (y < 80||play) {
+        if (y < 80 || play) {
             System.out.println("Cannot build.");
-        }
-        else if (firstPin == null) {
+        } else if (firstPin == null) {
             if (clickedPin != null) {
                 firstPin = clickedPin;
             } else {
@@ -211,7 +254,7 @@ public class BridgeSimulation extends Application {
         } else {
             double deltaX = x - firstPin.getPosition().x;
             double deltaY = y - firstPin.getPosition().y;
-            if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= new Beam().getMaxLength()) {
+            if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= this.maxLength) {
                 Pin secondPin = (clickedPin != null ? clickedPin : new Pin(x, y, false));
                 if (clickedPin == null) {
                     pins.add(secondPin);
@@ -253,7 +296,7 @@ public class BridgeSimulation extends Application {
         for (Pin pin : pins) {
             pin.calculateForces();
         }
-        for(Pin pin : pins){
+        for (Pin pin : pins) {
             pin.update(deltaTime);
         }
         for (Beam beam : beams) {
@@ -298,7 +341,7 @@ public class BridgeSimulation extends Application {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
 
-            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(),0, (int)beam.getblueColorCoefficient()));
+            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
             gc.setLineWidth(4);
 //            gc.setStroke(Color.BLACK);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
@@ -311,7 +354,7 @@ public class BridgeSimulation extends Application {
             double deltaX = cursorX - pos1.x;
             double deltaY = cursorY - pos1.y;
             double magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            double ratio = new Beam().getMaxLength() / magnitude;
+            double ratio = this.maxLength / magnitude;
             Vector2D pos2 = ratio >= 1 ? new Vector2D(cursorX, cursorY) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }

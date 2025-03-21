@@ -11,6 +11,7 @@ public class Pin {
     private double massSum;
     private boolean positionFixed;
     private List<Beam> connectedBeams;
+    private boolean isStartPin;
 
     public Pin(double x, double y, boolean fixed) {
         this.position = new Vector2D(x, y);
@@ -20,6 +21,20 @@ public class Pin {
         this.massSum = 0.0;
         this.positionFixed = fixed;
         this.connectedBeams = new ArrayList<>();
+        this.isStartPin=false;
+    }
+    public Pin(double x, double y, boolean fixed,boolean isStartPin) {
+        this.position = new Vector2D(x, y);
+        this.initialPosition= new Vector2D(x,y);
+        this.velocity = new Vector2D();
+        this.forceSum = new Vector2D();
+        this.massSum = 0.0;
+        this.positionFixed = fixed;
+        this.connectedBeams = new ArrayList<>();
+        this.isStartPin=isStartPin;
+    }
+    public boolean isStartPin(){
+        return isStartPin;
     }
     public void resetToInit(){
         this.position=this.initialPosition;
@@ -39,6 +54,16 @@ public class Pin {
             position = position.add(velocity.multiply(deltaTime));
         }
     }
+
+    public void positionBinding(double previousWidth, double previousHeight, double newWidth, double newHeight, boolean play){
+        double x = this.position.x * newWidth / previousWidth;
+        double y = this.position.y * newHeight / previousHeight;
+        position = new Vector2D(x, y);
+
+        if (!play)
+            initialPosition=position;
+    }
+
     public void setX(double x){
         this.position=new Vector2D(x, position.y);
 
@@ -58,6 +83,10 @@ public class Pin {
 
     public Vector2D getPosition() {
         return position;
+    }
+
+    public void setPosition(Vector2D position) {
+        this.position = position;
     }
 
     public Vector2D getForceSum() {
