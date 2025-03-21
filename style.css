@@ -1,0 +1,13 @@
+/* style.css */
+/* This CSS file styles the menu buttons to have a pill (oval) shape and a drop shadow */
+
+.menu-button {
+    -fx-background-color: white;         /* Button background color */
+    -fx-text-fill: #3A6866;                /* Button text color */
+    -fx-font-size: 24px;                  /* Font size for the button text */
+    -fx-font-weight: bold;                /* Bold text style */
+    -fx-padding: 15px 50px;               /* Padding with extra horizontal space for an elongated (pill) shape */
+    -fx-background-radius: 1600px;        /* Large radius ensures a fully rounded, pill-like appearance */
+    -fx-border-radius: 1500px;            /* Ensures the border matches the pill shape */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 2, 2); /* Adds a drop shadow for depth */
+}
