@@ -4,10 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="iowqdsn">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/GameTitleScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/TitleScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-02-25_1_51_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-02-25_1_51_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-02-25_1_55_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-02-25_1_55_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-02-25_2_30_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-02-25_2_30_p_m___Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/SolveLinearSystem.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/bridgeorbust/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/bridgeorbust/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,7 +35,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="master" />
+        <entry key="$PROJECT_DIR$" value="TitleScreenKian" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -38,7 +49,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
-    &quot;accountId&quot;: &quot;5c663360-e097-4f43-b941-b459c4ce9b30&quot;
+    &quot;accountId&quot;: &quot;ef65ce83-6902-468d-aaae-ec537a1addcb&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -62,13 +73,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.BridgeSimulation.executor": "Run",
+    "Application.GameTitleScreen.executor": "Run",
     "Application.GravitySimulation.executor": "Run",
     "Application.HelloApplication.executor": "Run",
     "Application.PendulumSimulation.executor": "Run",
     "Application.SimplePhysicsEngine.executor": "Run",
     "Application.SolveLinearSystem.executor": "Run",
+    "Application.TitleScreen.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "noah",
+    "git-widget-placeholder": "test",
     "kotlin-language-version-configured": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -78,6 +91,12 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -155,19 +174,22 @@
       <option name="project" value="LOCAL" />
       <updated>1740509137013</updated>
     </task>
-    <task id="LOCAL-00007" summary="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge">
-      <option name="closed" value="true" />
-      <created>1740630044025</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1740630044025</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Create Project" />
@@ -175,7 +197,6 @@
     <MESSAGE value="Physics Algorithm solved" />
     <MESSAGE value="wow this is my frist time commiting" />
     <MESSAGE value="play pause" />
-    <MESSAGE value="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge" />
-    <option name="LAST_COMMIT_MESSAGE" value="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge" />
+    <option name="LAST_COMMIT_MESSAGE" value="play pause" />
   </component>
 </project>

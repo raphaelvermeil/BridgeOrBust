@@ -91,6 +91,7 @@ public class BridgeSimulation extends Application {
 
                 render(gc);
             }
+
         }.start();
 
         stage.setScene(scene);
@@ -209,10 +210,9 @@ public class BridgeSimulation extends Application {
         for (Pin pin : pins) {
             pin.calculateForces();
         }
-        for (Pin pin : pins) {
+        for(Pin pin : pins){
             pin.update(deltaTime);
         }
-
 
     }
 
