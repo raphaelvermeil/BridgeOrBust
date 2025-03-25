@@ -6,7 +6,7 @@ public class Beam {
     private double stiffness;
     private double mass;
     private double massPerLength;
-    private double breakLimit = 3300;
+    private double breakLimit = 4000;
     private boolean broken = false;
     private boolean physical = false;
     private double maxLength = 250;
