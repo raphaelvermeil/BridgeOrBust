@@ -79,6 +79,7 @@ public class Ball {
             leadingPinX = beam.pin1;
             followingPinX = beam.pin2;
         }
+
         deltaX=followingPinX.getPosition().x-leadingPinX.getPosition().x;
         deltaY=followingPinX.getPosition().y-leadingPinX.getPosition().y;
         relativeLength=this.position.x+this.radius-leadingPinX.getPosition().x;

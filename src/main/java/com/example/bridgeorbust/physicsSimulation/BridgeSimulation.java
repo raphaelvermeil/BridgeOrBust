@@ -15,6 +15,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -28,11 +30,14 @@ public class BridgeSimulation extends Application {
     private Pin firstPin = null;
     private double cursorX = 0;
     private double cursorY = 0;
-    boolean play = false;
-    boolean roadMode = false;
+    private boolean play = false;
+    private boolean roadMode = false;
+    private boolean lost=false;
     public Ball ball;
     private Beam previousBeam = null;
     private int mouseCounter = 0;
+    private double lostArbitraryLimit;
+    private double winArbitraryLimit;
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
@@ -95,6 +100,9 @@ public class BridgeSimulation extends Application {
                     beam.pin1.resetToInit();
                     beam.pin2.resetToInit();
                 }
+                ball.setPosition(new Vector2D(0, 0));
+                ball.setOldPosition(new Vector2D(0, 0));
+                this.lost=false;
                 play = false;
             } else {
                 playPause.setImage(new Image("file:pause.png"));
@@ -138,10 +146,10 @@ public class BridgeSimulation extends Application {
                 double deltaTime = (now - lastTime) / 1e9;
                 lastTime = now;
 
-
-                if (play) {
+                if (play&&!lost) {
                     updateSimulation(deltaTime);
                 }
+
                 render(gc);
             }
 
@@ -186,6 +194,9 @@ public class BridgeSimulation extends Application {
         undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 70);
         undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
 
+        this.winArbitraryLimit*= canvas.getWidth()/this.previousWindowWidth;
+        this.lostArbitraryLimit*= canvas.getHeight()/this.previousWindowHeight;
+
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
     }
@@ -219,6 +230,9 @@ public class BridgeSimulation extends Application {
         Pin p5 = new Pin(200, 400, true, true);
         Pin p6 = new Pin(800, 400, true, true);
 
+        this.lostArbitraryLimit=500;
+        this.winArbitraryLimit=900;
+
         startPins.add(p1);
         startPins.add(p4);
         startPins.add(p5);
@@ -229,6 +243,8 @@ public class BridgeSimulation extends Application {
         Pin p1 = new Pin(150, 300, true);
         Pin p2 = new Pin(850, 300, true);
         Pin p3 = new Pin(400, 550, true);
+
+        this.lostArbitraryLimit=670;
 
         pins.add(p1);
         pins.add(p2);
@@ -260,7 +276,7 @@ public class BridgeSimulation extends Application {
                     pins.add(secondPin);
                 }
 
-                Beam beam = new Beam(firstPin, secondPin, 800, 0.03, roadMode);
+                Beam beam = new Beam(firstPin, secondPin, 800, 0.018, roadMode);
                 beams.add(beam);
                 previousBeam = beam;
                 firstPin = null;
@@ -291,7 +307,18 @@ public class BridgeSimulation extends Application {
         }
         return null;
     }
-
+    private void checkWin(){
+        if(ball.getPosition().y>lostArbitraryLimit){
+            this.lost=true;
+            System.out.println("you lost");
+        }
+        if (ball.getPosition().x>winArbitraryLimit){
+            win();
+        }
+    }
+    private void win(){
+        System.out.println("You win");
+    }
     private void updateSimulation(double deltaTime) {
         for (Pin pin : pins) {
             pin.calculateForces();
@@ -310,6 +337,7 @@ public class BridgeSimulation extends Application {
         }
         ball.accelerate(0, 9.8);
         ball.update(deltaTime);
+        checkWin();
     }
 
     private void destroyBeam(Beam beam) {
@@ -365,6 +393,24 @@ public class BridgeSimulation extends Application {
 
         gc.setFill(Color.RED);
         gc.fillOval(ball.getPosition().x, ball.getPosition().y, ball.getRadius(), ball.getRadius());
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(1);
+        for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
+            gc.strokeLine(x, this.lostArbitraryLimit, x + 15, this.lostArbitraryLimit);
+        }
+
+        if(lost){
+            String text="LOST";
+            gc.setFont( Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
+            gc.setFill(Color.DARKRED);
+            double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
+            double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
+
+            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
+            double y = (gc.getCanvas().getHeight() - textHeight) / 2 + textHeight; // Adjust for baseline alignment
+
+            gc.fillText(text, x, y);
+        }
     }
 
     public static void main(String[] args) {
