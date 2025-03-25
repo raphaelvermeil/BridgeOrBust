@@ -30,7 +30,8 @@ public class BridgeSimulation extends Application {
     private double cursorY = 0;
     boolean play = false;
     boolean roadMode = false;
-    public Ball ball;
+    public Ball ball1;
+//    public Ball ball2;
     private Beam previousBeam = null;
     private int mouseCounter = 0;
     private double previousWindowWidth;
@@ -48,7 +49,8 @@ public class BridgeSimulation extends Application {
         canvas.setOnMouseMoved(this::handleMouseMove);
 
 
-        ball = new Ball(215, 100, 10, 20);
+        ball1 = new Ball(50, 100, 10, 20);
+//        ball2 = new Ball(80, 100, 10, 20);
         Pane pane = new Pane();
 
 
@@ -111,7 +113,10 @@ public class BridgeSimulation extends Application {
                     beam.pin1.resetToInit();
                     beam.pin2.resetToInit();
                 }
+                ball1.setPosition(new Vector2D(0, 0));
+                ball1.setOldPosition(new Vector2D(0, 0));
                 play = false;
+
             } else {
                 playPause.setImage(new Image("file:pause.png"));
                 play = true;
@@ -123,8 +128,8 @@ public class BridgeSimulation extends Application {
             pins.clear();
             beams.clear();
             setupBridge(gc);
-            ball.setPosition(new Vector2D(0, 0));
-            ball.setOldPosition(new Vector2D(0, 0));
+            ball1.setPosition(new Vector2D(0, 0));
+            ball1.setOldPosition(new Vector2D(0, 0));
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 play = false;
@@ -332,15 +337,25 @@ public class BridgeSimulation extends Application {
         }
         for (Beam beam : beams) {
             if (beam.isPhysical()) {
-                ball.checkCollisions(beam);
+                ball1.checkCollisions(beam);
             }
 
             if (beam.isBroken()) {
                 destroyBeam(beam);
             }
         }
-        ball.accelerate(0, 9.8);
-        ball.update(deltaTime);
+        ball1.accelerate(0, 9.8);
+        ball1.update(deltaTime);
+//        ball2.accelerate(0, 9.8);
+//        ball2.update(deltaTime);
+        // Constraint to ensure the balls are not more than 15 pixels apart
+//        Vector2D distance = ball1.getPosition().subtract(ball2.getPosition());
+//        double distanceMagnitude = distance.magnitude();
+//        if (distanceMagnitude > 30) {
+//            Vector2D correction = distance.normalize().multiply((distanceMagnitude - 15) / 2);
+//            ball1.setPosition(ball1.getPosition().subtract(correction));
+//            ball2.setPosition(ball2.getPosition().add(correction));
+//        }
     }
 
     private void destroyBeam(Beam beam) {
@@ -395,7 +410,8 @@ public class BridgeSimulation extends Application {
 //        gc.fillOval(car.pin2.getPosition().x - 15, car.pin2.getPosition().y - 15, 30, 30);
 
         gc.setFill(Color.RED);
-        gc.fillOval(ball.getPosition().x, ball.getPosition().y, ball.getRadius(), ball.getRadius());
+        gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
+//        gc.fillOval(ball2.getPosition().x, ball2.getPosition().y, ball2.getRadius(), ball2.getRadius());
     }
 
     public static void main(String[] args) {
