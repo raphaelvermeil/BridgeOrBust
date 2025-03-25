@@ -33,7 +33,7 @@ public class BridgeSimulation extends Application {
     private boolean play = false;
     private boolean roadMode = false;
     private boolean lost=false;
-    public Ball ball;
+    public Ball ball1;
     private Beam previousBeam = null;
     private int mouseCounter = 0;
     private double lostArbitraryLimit;
@@ -53,7 +53,8 @@ public class BridgeSimulation extends Application {
         canvas.setOnMouseMoved(this::handleMouseMove);
 
 
-        ball = new Ball(215, 100, 10, 20);
+        ball1 = new Ball(50, 100, 10, 20);
+//        ball2 = new Ball(80, 100, 10, 20);
         Pane pane = new Pane();
 
 
@@ -77,21 +78,37 @@ public class BridgeSimulation extends Application {
         buttons.selectToggle(trussButton);
         controls.getChildren().addAll(roadButton, trussButton);
         controls.setLayoutX(canvas.getWidth() - 120);
-        controls.setLayoutY(10);
+        controls.setLayoutY(100);
 
+        ImageView resetImage = new ImageView(new Image("file:restart-icon.png"));
+        Button resetButton = new Button("", resetImage);
+        resetImage.setFitWidth(30);
+        resetImage.setFitHeight(30);
+        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 20);
+        resetButton.setLayoutY(20);
 
-        Button resetButton = new Button("Reset");
-        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
-        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() - 50);
+        ImageView undoImage = new ImageView(new Image("file:undo-icon.png"));
+        undoImage.setFitWidth(30);
+        undoImage.setFitHeight(30);
+        Button undoButton = new Button("", undoImage);
 
-        Button undoButton = new Button("Undo");
-        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 70);
+        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth());
         undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
 
-        pane.getChildren().addAll(canvas, playPause, controls, resetButton, undoButton);
+        ImageView gearImage = new ImageView(new Image("file:settings-icon.png"));
+        Button gearButton = new Button("", gearImage);
+        gearImage.setFitWidth(30);
+        gearImage.setFitHeight(30);
+        gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 20);
+        gearButton.setLayoutY(canvas.getHeight() - gearButton.getHeight() - 20);
+
+        pane.getChildren().addAll(canvas, playPause, controls, resetButton, undoButton, gearButton);
 
         Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
+
+        stage.setMinWidth(400);
+        stage.setMinHeight(300);
 
         playPause.setOnMouseClicked(e -> {
             if (play) {
@@ -100,10 +117,11 @@ public class BridgeSimulation extends Application {
                     beam.pin1.resetToInit();
                     beam.pin2.resetToInit();
                 }
-                ball.setPosition(new Vector2D(0, 0));
-                ball.setOldPosition(new Vector2D(0, 0));
+                ball1.setPosition(new Vector2D(0, 0));
+                ball1.setOldPosition(new Vector2D(0, 0));
                 this.lost=false;
                 play = false;
+
             } else {
                 playPause.setImage(new Image("file:pause.png"));
                 play = true;
@@ -115,8 +133,8 @@ public class BridgeSimulation extends Application {
             pins.clear();
             beams.clear();
             setupBridge(gc);
-            ball.setPosition(new Vector2D(0, 0));
-            ball.setOldPosition(new Vector2D(0, 0));
+            ball1.setPosition(new Vector2D(0, 0));
+            ball1.setOldPosition(new Vector2D(0, 0));
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 play = false;
@@ -126,16 +144,27 @@ public class BridgeSimulation extends Application {
         });
         undoButton.setOnAction(e -> {
 
-            Beam beam = beams.get(beams.size() - 1);
-            if (mouseCounter > 0) {
-                destroyBeam(beam);
+            if(firstPin == null){
+                Beam beam = beams.get(beams.size() - 1);
+                if (mouseCounter > 0) {
+                    destroyBeam(beam);
 
-                if (beam.pin1.getConnectedBeamsSize() < 1) {
-                    pins.remove(beam.pin1);
-                } else if (beam.pin2.getConnectedBeamsSize() < 1) {
-                    pins.remove(beam.pin2);
+                    if (beam.pin1.getConnectedBeamsSize() < 1) {
+                        pins.remove(beam.pin1);
+                    } else if (beam.pin2.getConnectedBeamsSize() < 1) {
+                        pins.remove(beam.pin2);
+                    }
+                }
+            } else {
+                firstPin = null;
+            }
+
+            for (Pin pin : pins) {
+                if(pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()){
+                    pins.remove(pin);
                 }
             }
+
         });
 
         new AnimationTimer() {
@@ -156,11 +185,15 @@ public class BridgeSimulation extends Application {
         }.start();
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
-        updateOnResize(canvas, playPause, controls, resetButton, undoButton);
+        updateOnResize(canvas, playPause, controls, resetButton, undoButton, gearButton);
 
         // Add listeners to update button positions when the canvas size changes
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
+
+            canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton, gearButton));
+            canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton, gearButton));
+
+//        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
+//        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
 
         stage.setScene(scene);
         stage.setTitle("Bridge Simulation");
@@ -168,7 +201,7 @@ public class BridgeSimulation extends Application {
     }
 
 
-    private void updateOnResize(Canvas canvas, ImageView playPause, HBox controls, Button resetButton, Button undoButton) {
+    private void updateOnResize(Canvas canvas, ImageView playPause, HBox controls, Button resetButton, Button undoButton, Button gearButton) {
         playPause.setX(50);
         playPause.setY(20);
         for (Pin pin:startPins){
@@ -185,14 +218,17 @@ public class BridgeSimulation extends Application {
         }
         this.maxLength = maxLength * canvas.getWidth() / previousWindowWidth;
 
-        controls.setLayoutX(canvas.getWidth() - 120);
-        controls.setLayoutY(10);
+        controls.setLayoutX(50);
+        controls.setLayoutY(canvas.getHeight() - 50);
 
-        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 70);
-        resetButton.setLayoutY(canvas.getHeight() - resetButton.getHeight() - 50);
+        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth()-225);
+        resetButton.setLayoutY(30);
 
-        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 70);
-        undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
+        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 150);
+        undoButton.setLayoutY(30);
+
+        gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 75);
+        gearButton.setLayoutY(30);
 
         this.winArbitraryLimit*= canvas.getWidth()/this.previousWindowWidth;
         this.lostArbitraryLimit*= canvas.getHeight()/this.previousWindowHeight;
@@ -286,13 +322,6 @@ public class BridgeSimulation extends Application {
         }
     }
 
-//    private void car(double mass) {
-//        this.car = new Car(new Pin(15, 0, false), new Pin(70, 0, false), 10000, mass);
-//        pins.add(car.pin1);
-//        pins.add(car.pin2);
-//        //beams.add(car);
-//    }
-
     private void handleMouseMove(MouseEvent event) {
         cursorX = event.getX();
         cursorY = event.getY();
@@ -308,11 +337,11 @@ public class BridgeSimulation extends Application {
         return null;
     }
     private void checkWin(){
-        if(ball.getPosition().y>lostArbitraryLimit){
+        if(ball1.getPosition().y>lostArbitraryLimit){
             this.lost=true;
             System.out.println("you lost");
         }
-        if (ball.getPosition().x>winArbitraryLimit){
+        if (ball1.getPosition().x>winArbitraryLimit){
             win();
         }
     }
@@ -322,21 +351,25 @@ public class BridgeSimulation extends Application {
     private void updateSimulation(double deltaTime) {
         for (Pin pin : pins) {
             pin.calculateForces();
+            System.out.println(pin.getConnectedBeamsSize());
+            if(pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()){
+                pins.remove(pin);
+            }
         }
         for (Pin pin : pins) {
             pin.update(deltaTime);
         }
         for (Beam beam : beams) {
             if (beam.isPhysical()) {
-                ball.checkCollisions(beam);
+                ball1.checkCollisions(beam);
             }
 
             if (beam.isBroken()) {
                 destroyBeam(beam);
             }
         }
-        ball.accelerate(0, 9.8);
-        ball.update(deltaTime);
+        ball1.accelerate(0, 9.8);
+        ball1.update(deltaTime);
         checkWin();
     }
 
@@ -392,7 +425,7 @@ public class BridgeSimulation extends Application {
 //        gc.fillOval(car.pin2.getPosition().x - 15, car.pin2.getPosition().y - 15, 30, 30);
 
         gc.setFill(Color.RED);
-        gc.fillOval(ball.getPosition().x, ball.getPosition().y, ball.getRadius(), ball.getRadius());
+        gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball.getRadius());
         gc.setStroke(Color.RED);
         gc.setLineWidth(1);
         for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
