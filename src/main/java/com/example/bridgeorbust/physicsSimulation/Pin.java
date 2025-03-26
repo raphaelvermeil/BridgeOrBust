@@ -60,8 +60,11 @@ public class Pin {
         double y = this.position.y * newHeight / previousHeight;
         position = new Vector2D(x, y);
 
-        if (!play)
-            initialPosition=position;
+        double xInit=this.initialPosition.x * newWidth / previousWidth;
+        double yInit=this.initialPosition.y * newHeight / previousHeight;
+        initialPosition = new Vector2D(xInit, yInit);
+//        if (!play)
+//            initialPosition=position;
     }
 
     public void setX(double x){

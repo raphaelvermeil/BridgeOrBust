@@ -4,17 +4,36 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="iowqdsn" />
-
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Beam destroy become red part 2">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Reset ball to initial position at pause">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_11_58_a_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_11_58_a_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_11_59_a_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_11_59_a_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_01_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_01_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_12_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_12_p_m__[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_12_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_12_p_m___Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_15_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_12_15_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_2_13_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_2025-03-19_2_13_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_12_13_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_12_13_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_12_17_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_12_17_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_2_13_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_2_13_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_4_45_p_m__[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_4_45_p_m___Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Car.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
     </list>
-
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -62,7 +81,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
-    &quot;accountId&quot;: &quot;ef65ce83-6902-468d-aaae-ec537a1addcb&quot;
+    &quot;accountId&quot;: &quot;1085a5f7-3eec-445a-9ef0-dab3f201eaf7&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -83,37 +102,10 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BridgeSimulation.executor": "Run",
-    "Application.GameTitleScreen.executor": "Run",
-    "Application.GravitySimulation.executor": "Run",
-    "Application.HelloApplication.executor": "Run",
-    "Application.PendulumSimulation.executor": "Run",
-    "Application.SimplePhysicsEngine.executor": "Run",
-    "Application.SolveLinearSystem.executor": "Run",
-    "Application.TitleScreen.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "#4 on test",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
-      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
-    </key>
-
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.GameTitleScreen.executor&quot;: &quot;Run&quot;,
     &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
     &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
     &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
@@ -127,9 +119,17 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.splitter.proportion&quot;: &quot;0.1736571&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -137,7 +137,6 @@
         <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4" />
       </set>
     </attachedChunks>
-
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -167,6 +166,12 @@
       <workItem from="1739234982887" duration="1146000" />
       <workItem from="1739394355635" duration="1922000" />
       <workItem from="1740157167797" duration="4420000" />
+      <workItem from="1742918471223" duration="2855000" />
+      <workItem from="1742921366560" duration="7315000" />
+      <workItem from="1742932107071" duration="1244000" />
+      <workItem from="1743000176793" duration="185000" />
+      <workItem from="1743005122911" duration="4194000" />
+      <workItem from="1743022617115" duration="1807000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -216,16 +221,13 @@
       <option name="project" value="LOCAL" />
       <updated>1740509137013</updated>
     </task>
-
-    <option name="localTasksCounter" value="7" />
-
-    <task id="LOCAL-00007" summary="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge">
+    <task id="LOCAL-00007" summary="Solved undo and reset bugs, added image for buttons">
       <option name="closed" value="true" />
-      <created>1740630044025</created>
+      <created>1742928579283</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1740630044025</updated>
+      <updated>1742928579283</updated>
     </task>
     <task id="LOCAL-00008" summary="refresh">
       <option name="closed" value="true" />
@@ -259,15 +261,13 @@
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
-
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
-
     <option name="RECENT_FILTERS">
       <map>
         <entry key="Branch">
@@ -303,7 +303,6 @@
         </entry>
       </map>
     </option>
-
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -320,16 +319,13 @@
     <MESSAGE value="Physics Algorithm solved" />
     <MESSAGE value="wow this is my frist time commiting" />
     <MESSAGE value="play pause" />
-
-    <option name="LAST_COMMIT_MESSAGE" value="play pause" />
-
     <MESSAGE value="refresh" />
     <MESSAGE value="refresh test #2" />
     <MESSAGE value="Added verlet red ball" />
     <MESSAGE value="waza" />
     <MESSAGE value="Added calc to ball" />
     <MESSAGE value="Beam destroy become red part 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Beam destroy become red part 2" />
-
+    <MESSAGE value="Solved undo and reset bugs, added image for buttons" />
+    <option name="LAST_COMMIT_MESSAGE" value="Solved undo and reset bugs, added image for buttons" />
   </component>
 </project>

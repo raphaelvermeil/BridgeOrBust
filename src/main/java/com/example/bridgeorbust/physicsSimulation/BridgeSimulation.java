@@ -11,6 +11,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -32,7 +35,7 @@ public class BridgeSimulation extends Application {
     private double cursorY = 0;
     private boolean play = false;
     private boolean roadMode = false;
-    private boolean lost=false;
+    private boolean lost = false;
     public Ball ball1;
     private Beam previousBeam = null;
     private int mouseCounter = 0;
@@ -63,10 +66,11 @@ public class BridgeSimulation extends Application {
         canvas.heightProperty().bind(pane.heightProperty());
 
         ImageView playPause = new ImageView(new Image("file:play.png"));
-        playPause.setX(50);
-        playPause.setY(20);
+        Button playPauseButton = new Button("", playPause);
         playPause.setFitWidth(30);  // Resize if needed
         playPause.setFitHeight(30);
+        playPauseButton.setLayoutX(30);
+        playPauseButton.setLayoutY(20);
 
         HBox controls = new HBox();
         controls.setSpacing(10);
@@ -102,7 +106,8 @@ public class BridgeSimulation extends Application {
         gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 20);
         gearButton.setLayoutY(canvas.getHeight() - gearButton.getHeight() - 20);
 
-        pane.getChildren().addAll(canvas, playPause, controls, resetButton, undoButton, gearButton);
+
+        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
 
         Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
@@ -110,7 +115,7 @@ public class BridgeSimulation extends Application {
         stage.setMinWidth(400);
         stage.setMinHeight(300);
 
-        playPause.setOnMouseClicked(e -> {
+        playPauseButton.setOnAction(e -> {
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 for (Beam beam : beams) {
@@ -119,7 +124,7 @@ public class BridgeSimulation extends Application {
                 }
                 ball1.setPosition(new Vector2D(0, 0));
                 ball1.setOldPosition(new Vector2D(0, 0));
-                this.lost=false;
+                this.lost = false;
                 play = false;
 
             } else {
@@ -144,7 +149,7 @@ public class BridgeSimulation extends Application {
         });
         undoButton.setOnAction(e -> {
 
-            if(firstPin == null){
+            if (firstPin == null) {
                 Beam beam = beams.get(beams.size() - 1);
                 if (mouseCounter > 0) {
                     destroyBeam(beam);
@@ -160,7 +165,7 @@ public class BridgeSimulation extends Application {
             }
 
             for (Pin pin : pins) {
-                if(pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()){
+                if (pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()) {
                     pins.remove(pin);
                 }
             }
@@ -175,7 +180,7 @@ public class BridgeSimulation extends Application {
                 double deltaTime = (now - lastTime) / 1e9;
                 lastTime = now;
 
-                if (play&&!lost) {
+                if (play && !lost) {
                     updateSimulation(deltaTime);
                 }
 
@@ -185,15 +190,30 @@ public class BridgeSimulation extends Application {
         }.start();
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
-        updateOnResize(canvas, playPause, controls, resetButton, undoButton, gearButton);
+        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
 
         // Add listeners to update button positions when the canvas size changes
 
-            canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton, gearButton));
-            canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton, gearButton));
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton));
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton));
 
 //        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
 //        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
+
+
+        scene.getAccelerators().put(
+                new KeyCodeCombination(KeyCode.Z),
+                () -> undoButton.fire()
+        );
+        scene.getAccelerators().put(
+                new KeyCodeCombination(KeyCode.R),
+                () -> resetButton.fire()
+        );
+        scene.getAccelerators().put(
+                new KeyCodeCombination(KeyCode.SPACE),
+                () -> playPauseButton.fire()
+        );
+
 
         stage.setScene(scene);
         stage.setTitle("Bridge Simulation");
@@ -201,10 +221,10 @@ public class BridgeSimulation extends Application {
     }
 
 
-    private void updateOnResize(Canvas canvas, ImageView playPause, HBox controls, Button resetButton, Button undoButton, Button gearButton) {
-        playPause.setX(50);
-        playPause.setY(20);
-        for (Pin pin:startPins){
+    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton) {
+        playPauseButton.setLayoutX(30);
+        playPauseButton.setLayoutY(20);
+        for (Pin pin : startPins) {
             pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
         }
         for (Pin pin : pins) {
@@ -212,16 +232,17 @@ public class BridgeSimulation extends Application {
                 pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
             }
         }
-        for(Beam beam: beams){
+        for (Beam beam : beams) {
             beam.beamSizeBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight());
 
         }
+        ball1.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight());
         this.maxLength = maxLength * canvas.getWidth() / previousWindowWidth;
 
         controls.setLayoutX(50);
         controls.setLayoutY(canvas.getHeight() - 50);
 
-        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth()-225);
+        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 225);
         resetButton.setLayoutY(30);
 
         undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 150);
@@ -230,15 +251,15 @@ public class BridgeSimulation extends Application {
         gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 75);
         gearButton.setLayoutY(30);
 
-        this.winArbitraryLimit*= canvas.getWidth()/this.previousWindowWidth;
-        this.lostArbitraryLimit*= canvas.getHeight()/this.previousWindowHeight;
+        this.winArbitraryLimit *= canvas.getWidth() / this.previousWindowWidth;
+        this.lostArbitraryLimit *= canvas.getHeight() / this.previousWindowHeight;
 
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
     }
 
     private void setupBridge(GraphicsContext gc) {
-        if(startPins.isEmpty())
+        if (startPins.isEmpty())
             level1();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
@@ -266,8 +287,8 @@ public class BridgeSimulation extends Application {
         Pin p5 = new Pin(200, 400, true, true);
         Pin p6 = new Pin(800, 400, true, true);
 
-        this.lostArbitraryLimit=500;
-        this.winArbitraryLimit=900;
+        this.lostArbitraryLimit = 500;
+        this.winArbitraryLimit = 900;
 
         startPins.add(p1);
         startPins.add(p4);
@@ -280,7 +301,7 @@ public class BridgeSimulation extends Application {
         Pin p2 = new Pin(850, 300, true);
         Pin p3 = new Pin(400, 550, true);
 
-        this.lostArbitraryLimit=670;
+        this.lostArbitraryLimit = 670;
 
         pins.add(p1);
         pins.add(p2);
@@ -336,23 +357,26 @@ public class BridgeSimulation extends Application {
         }
         return null;
     }
-    private void checkWin(){
-        if(ball1.getPosition().y>lostArbitraryLimit){
-            this.lost=true;
+
+    private void checkWin() {
+        if (ball1.getPosition().y > lostArbitraryLimit) {
+            this.lost = true;
             System.out.println("you lost");
         }
-        if (ball1.getPosition().x>winArbitraryLimit){
+        if (ball1.getPosition().x > winArbitraryLimit) {
             win();
         }
     }
-    private void win(){
+
+    private void win() {
         System.out.println("You win");
     }
+
     private void updateSimulation(double deltaTime) {
         for (Pin pin : pins) {
             pin.calculateForces();
             System.out.println(pin.getConnectedBeamsSize());
-            if(pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()){
+            if (pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()) {
                 pins.remove(pin);
             }
         }
@@ -432,9 +456,9 @@ public class BridgeSimulation extends Application {
             gc.strokeLine(x, this.lostArbitraryLimit, x + 15, this.lostArbitraryLimit);
         }
 
-        if(lost){
-            String text="LOST";
-            gc.setFont( Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
+        if (lost) {
+            String text = "LOST";
+            gc.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
             gc.setFill(Color.DARKRED);
             double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
             double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height

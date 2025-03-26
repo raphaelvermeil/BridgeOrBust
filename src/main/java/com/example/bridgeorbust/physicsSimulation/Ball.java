@@ -93,7 +93,20 @@ public class Ball {
         else
             return false;
     }
+    public void positionBinding(double previousWidth, double previousHeight, double newWidth, double newHeight ){
+        double x = this.position.x * newWidth / previousWidth;
+        double y = this.position.y * newHeight / previousHeight;
+        position = new Vector2D(x, y);
 
+        double oldX = this.oldPosition.x * newWidth / previousWidth;
+        double oldY = this.oldPosition.y * newHeight / previousHeight;
+        oldPosition = new Vector2D(oldX, oldY);
+
+        if(previousWidth==newWidth)
+            this.radius = this.radius * newHeight / previousHeight;
+        else
+            this.radius = this.radius * newWidth / previousWidth;
+    }
     public Vector2D getPosition() {
         return position;
     }
