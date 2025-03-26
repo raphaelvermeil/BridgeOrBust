@@ -143,6 +143,7 @@ public class BridgeSimulation extends Application {
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 play = false;
+                lost = false;
             }
             firstPin = null;
             mouseCounter = 0;
@@ -333,7 +334,7 @@ public class BridgeSimulation extends Application {
                     pins.add(secondPin);
                 }
 
-                Beam beam = new Beam(firstPin, secondPin, 800, 0.018, roadMode);
+                Beam beam = new Beam(firstPin, secondPin, 900, 0.025, roadMode);
                 beams.add(beam);
                 previousBeam = beam;
                 firstPin = null;
@@ -375,7 +376,7 @@ public class BridgeSimulation extends Application {
     private void updateSimulation(double deltaTime) {
         for (Pin pin : pins) {
             pin.calculateForces();
-            System.out.println(pin.getConnectedBeamsSize());
+            //System.out.println(pin.getConnectedBeamsSize());
             if (pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()) {
                 pins.remove(pin);
             }

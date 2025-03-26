@@ -6,7 +6,7 @@ public class Beam {
     private double stiffness;
     private double mass;
     private double massPerLength;
-    private double breakLimit = 3500;
+    private double breakLimit = 2500;
     private boolean broken = false;
     private boolean physical = false;
     private double maxLength = 250;
@@ -60,7 +60,7 @@ public class Beam {
             Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - restLength);
 
             Vector2D forceBeam = displacement.multiply(-stiffness);
-            Vector2D forceGravity = new Vector2D(0, mass * 65);
+            Vector2D forceGravity = new Vector2D(0, mass * 70);
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
             System.out.println();
             if (currentLength.magnitude() > restLength) {
