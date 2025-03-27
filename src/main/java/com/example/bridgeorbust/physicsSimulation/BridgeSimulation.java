@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -34,6 +35,9 @@ public class BridgeSimulation extends Application {
     private double cursorX = 0;
     private double cursorY = 0;
     private boolean play = false;
+    private CheckBox gridModeButton = new CheckBox("Grid Mode");
+    private double gridSizeX = 20;
+    private double gridSizeY = 20;
     private boolean roadMode = false;
     private boolean lost = false;
     public Ball ball1;
@@ -80,7 +84,7 @@ public class BridgeSimulation extends Application {
         roadButton.setToggleGroup(buttons);
         trussButton.setToggleGroup(buttons);
         buttons.selectToggle(trussButton);
-        controls.getChildren().addAll(roadButton, trussButton);
+        controls.getChildren().addAll(roadButton, trussButton, gridModeButton);
         controls.setLayoutX(canvas.getWidth() - 120);
         controls.setLayoutY(100);
 
@@ -130,6 +134,7 @@ public class BridgeSimulation extends Application {
             } else {
                 playPause.setImage(new Image("file:pause.png"));
                 play = true;
+                gridModeButton.setSelected(false);
             }
         });
         trussButton.setOnAction(e -> roadMode = false);
@@ -172,6 +177,7 @@ public class BridgeSimulation extends Application {
             }
 
         });
+
 
         new AnimationTimer() {
             long lastTime = System.nanoTime();
@@ -255,6 +261,9 @@ public class BridgeSimulation extends Application {
         this.winArbitraryLimit *= canvas.getWidth() / this.previousWindowWidth;
         this.lostArbitraryLimit *= canvas.getHeight() / this.previousWindowHeight;
 
+        this.gridSizeX *= canvas.getWidth() / this.previousWindowWidth;
+        this.gridSizeY *= canvas.getHeight() / this.previousWindowHeight;
+
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
     }
@@ -313,6 +322,10 @@ public class BridgeSimulation extends Application {
     private void handleMouseClick(MouseEvent event) {
         double x = event.getX();
         double y = event.getY();
+        if (gridModeButton.isSelected()) {
+            x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
+            y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
+        }
 
         Pin clickedPin = getPinAt(x, y);
 
@@ -436,12 +449,17 @@ public class BridgeSimulation extends Application {
         if (firstPin != null) {
             gc.setStroke(Color.DARKGREY);
             Vector2D pos1 = firstPin.getPosition();
-
-            double deltaX = cursorX - pos1.x;
-            double deltaY = cursorY - pos1.y;
+            double x = cursorX;
+            double y= cursorY;
+            if (gridModeButton.isSelected()) {
+                x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
+                y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
+            }
+            double deltaX = x - pos1.x;
+            double deltaY = y - pos1.y;
             double magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             double ratio = this.maxLength / magnitude;
-            Vector2D pos2 = ratio >= 1 ? new Vector2D(cursorX, cursorY) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
+            Vector2D pos2 = ratio >= 1 ? new Vector2D(x, y) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 
@@ -451,6 +469,7 @@ public class BridgeSimulation extends Application {
 
         gc.setFill(Color.RED);
         gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
+
         gc.setStroke(Color.RED);
         gc.setLineWidth(1);
         for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
@@ -469,6 +488,18 @@ public class BridgeSimulation extends Application {
 
             gc.fillText(text, x, y);
         }
+        if (gridModeButton.isSelected()) {
+            gc.setStroke(Color.LIGHTGRAY);
+            gc.setLineWidth(0.5);
+            for (double x = 0; x < gc.getCanvas().getWidth(); x += gridSizeX) {
+                gc.strokeLine(x, 0, x, gc.getCanvas().getHeight());
+            }
+            for (double y = 0; y < gc.getCanvas().getHeight(); y += gridSizeY) {
+                gc.strokeLine(0, y, gc.getCanvas().getWidth(), y);
+            }
+        }
+
+
     }
 
     public static void main(String[] args) {

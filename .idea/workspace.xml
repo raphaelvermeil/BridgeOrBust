@@ -4,17 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="iowqdsn" />
-
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Beam destroy become red part 2">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="iowqdsn">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Car.java" beforeDir="false" />
     </list>
-
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -83,34 +76,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BridgeSimulation.executor": "Run",
-    "Application.GameTitleScreen.executor": "Run",
-    "Application.GravitySimulation.executor": "Run",
-    "Application.HelloApplication.executor": "Run",
-    "Application.PendulumSimulation.executor": "Run",
-    "Application.SimplePhysicsEngine.executor": "Run",
-    "Application.SolveLinearSystem.executor": "Run",
-    "Application.TitleScreen.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "#4 on test",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
-  }
-}]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
-      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
-    </key>
-
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
@@ -130,6 +95,12 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -137,7 +108,6 @@
         <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4" />
       </set>
     </attachedChunks>
-
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -216,9 +186,6 @@
       <option name="project" value="LOCAL" />
       <updated>1740509137013</updated>
     </task>
-
-    <option name="localTasksCounter" value="7" />
-
     <task id="LOCAL-00007" summary="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge">
       <option name="closed" value="true" />
       <created>1740630044025</created>
@@ -259,15 +226,13 @@
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
-
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
-
     <option name="RECENT_FILTERS">
       <map>
         <entry key="Branch">
@@ -303,7 +268,6 @@
         </entry>
       </map>
     </option>
-
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -320,16 +284,12 @@
     <MESSAGE value="Physics Algorithm solved" />
     <MESSAGE value="wow this is my frist time commiting" />
     <MESSAGE value="play pause" />
-
-    <option name="LAST_COMMIT_MESSAGE" value="play pause" />
-
     <MESSAGE value="refresh" />
     <MESSAGE value="refresh test #2" />
     <MESSAGE value="Added verlet red ball" />
     <MESSAGE value="waza" />
     <MESSAGE value="Added calc to ball" />
     <MESSAGE value="Beam destroy become red part 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="Beam destroy become red part 2" />
-
+    <option name="LAST_COMMIT_MESSAGE" value="play pause" />
   </component>
 </project>
