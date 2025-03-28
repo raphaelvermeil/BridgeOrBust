@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -49,6 +50,12 @@ public class BridgeSimulation extends Application {
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
+    // Load the audio file
+    AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
+    AudioClip clickSound = new AudioClip(getClass().getResource("/sounds/click.mp3").toString());
+
+
+
     //this is refresh test
 
     @Override
@@ -336,9 +343,11 @@ public class BridgeSimulation extends Application {
             if (clickedPin != null) {
                 firstPin = clickedPin;
 //                animatePin(clickedPin);
+                beamSound.play();
             } else {
                 firstPin = new Pin(x, y, false);
                 pins.add(firstPin);
+                beamSound.play();
 //                animatePin(firstPin);
 
             }
@@ -353,6 +362,7 @@ public class BridgeSimulation extends Application {
 
                 Beam beam = new Beam(firstPin, secondPin, 900, 0.025, roadMode);
                 beams.add(beam);
+                beamSound.play();
                 previousBeam = beam;
                 firstPin = null;
                 mouseCounter++;
@@ -364,12 +374,23 @@ public class BridgeSimulation extends Application {
     private void handleMouseMove(MouseEvent event) {
         cursorX = event.getX();
         cursorY = event.getY();
+
+        for(Pin pin : pins){
+            Vector2D pos = pin.getPosition();
+            if (pos.subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20) {
+                pin.setClicked(true);
+            } else {
+                pin.setClicked(false);
+            }
+        }
     }
 
     private Pin getPinAt(double x, double y) {
         for (Pin pin : pins) {
             Vector2D pos = pin.getPosition();
-            if (pos.subtract(new Vector2D(x, y)).magnitude() < 10) {
+            if (pos.subtract(new Vector2D(x, y)).magnitude() < 20) {
+//                pin.setClicked(true);
+
                 return pin;
             }
         }
@@ -468,7 +489,8 @@ public class BridgeSimulation extends Application {
 
 
 //                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
-                gc.setStroke(Color.GREY);
+                gc.setStroke(Color.rgb(115+(int) beam.getRedColorCoefficient(), 115, 115+(int) beam.getblueColorCoefficient()));
+
                 gc.setLineWidth(4);
 //            gc.setStroke(Color.BLACK);
 
@@ -507,19 +529,37 @@ public class BridgeSimulation extends Application {
                 }
             }
 
+            double R = 20.0;
+            double r = 16.0;
 
             Vector2D pos = pin.getPosition();
-            if(pin.isPositionFixed()){
+            double centerX = pos.x - 10;
+            double centerY = pos.y - 10;
+
+
+            if (pin.isClicked()) {
+                R = 25;
+                r = 21;
+            } else {
+                R = 20;
+                r = 16;
+            }
+
+            double offsetR = (R - 20) / 2;
+            double offsetr = (r - 16) / 2;
+
+            if (pin.isPositionFixed()) {
                 gc.setFill(Color.BLACK);
-                gc.fillRect(pos.x - 10, pos.y - 10, 20, 20);
+                gc.fillRect(centerX - offsetR, centerY - offsetR, R, R);
                 gc.setFill(Color.GREY);
-                gc.fillRect(pos.x - 8, pos.y - 8, 16, 16);
+                gc.fillRect(centerX - offsetr + 2, centerY - offsetr + 2, r, r);
             } else {
                 gc.setFill(Color.BLACK);
-                gc.fillOval(pos.x - 10, pos.y - 10, 20, 20);
+                gc.fillOval(centerX - offsetR, centerY - offsetR, R, R);
                 gc.setFill(Color.GREY);
-                gc.fillOval(pos.x - 8, pos.y - 8, 16, 16);
+                gc.fillOval(centerX - offsetr + 2, centerY - offsetr + 2, r, r);
             }
+
 
 
 

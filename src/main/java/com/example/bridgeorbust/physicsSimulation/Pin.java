@@ -13,6 +13,7 @@ public class Pin {
     private boolean positionFixed;
     private List<Beam> connectedBeams;
     private boolean isStartPin;
+    private boolean isClicked=false;
 
     public Pin(double x, double y, boolean fixed) {
         this.position = new Vector2D(x, y);
@@ -127,5 +128,13 @@ public class Pin {
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public boolean isClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
     }
 }

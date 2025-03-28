@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="iowqdsn">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_5_01_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-19_5_01_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-20_4_23_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-20_4_23_p_m___Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-20_4_32_p_m__[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2025-03-20_4_32_p_m___Changes_.xml" beforeDir="false" />
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Added some ui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +100,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\rapha\Documents\BridgeOrBust\src\main\resources\sounds" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
     </key>
@@ -144,7 +141,7 @@
       <workItem from="1739234982887" duration="1146000" />
       <workItem from="1739394355635" duration="1922000" />
       <workItem from="1740157167797" duration="4420000" />
-      <workItem from="1743180591637" duration="5531000" />
+      <workItem from="1743180591637" duration="10493000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -194,13 +191,13 @@
       <option name="project" value="LOCAL" />
       <updated>1740509137013</updated>
     </task>
-    <task id="LOCAL-00007" summary="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge">
+    <task id="LOCAL-00007" summary="Added some ui">
       <option name="closed" value="true" />
-      <created>1740630044025</created>
+      <created>1743186720498</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1740630044025</updated>
+      <updated>1743186720498</updated>
     </task>
     <task id="LOCAL-00008" summary="refresh">
       <option name="closed" value="true" />
@@ -234,7 +231,7 @@
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,6 +295,7 @@
     <MESSAGE value="waza" />
     <MESSAGE value="Added calc to ball" />
     <MESSAGE value="Beam destroy become red part 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="play pause" />
+    <MESSAGE value="Added some ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added some ui" />
   </component>
 </project>
