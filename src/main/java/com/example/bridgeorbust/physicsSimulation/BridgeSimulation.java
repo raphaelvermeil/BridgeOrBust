@@ -138,6 +138,7 @@ public class BridgeSimulation extends Application {
                 ball1.setOldPosition(new Vector2D(0, 0));
                 this.lost = false;
                 play = false;
+                firstPin = null;
 
             } else {
                 playPause.setImage(new Image("file:pause.png"));
@@ -278,7 +279,7 @@ public class BridgeSimulation extends Application {
 
     private void setupBridge(GraphicsContext gc) {
         if (startPins.isEmpty())
-            level2();
+            level1();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
@@ -305,7 +306,7 @@ public class BridgeSimulation extends Application {
         Pin p5 = new Pin(200, 400, true, true);
         Pin p6 = new Pin(800, 400, true, true);
 
-        this.lostArbitraryLimit = 500;
+        this.lostArbitraryLimit = 550;
         this.winArbitraryLimit = 900;
 
         startPins.add(p1);
@@ -361,10 +362,11 @@ public class BridgeSimulation extends Application {
                 }
 
                 Beam beam = new Beam(firstPin, secondPin, 900, 0.025, roadMode);
+                firstPin = secondPin;
                 beams.add(beam);
                 beamSound.play();
                 previousBeam = beam;
-                firstPin = null;
+//                firstPin = null;
                 mouseCounter++;
 
             }
@@ -572,11 +574,14 @@ public class BridgeSimulation extends Application {
         gc.setFill(Color.RED);
         gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
 
+
         gc.setStroke(Color.RED);
         gc.setLineWidth(1);
-        for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
-            gc.strokeLine(x, this.lostArbitraryLimit, x + 15, this.lostArbitraryLimit);
-        }
+        gc.setLineDashes(5);
+        gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
+//        for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
+//            gc.strokeLine(x, this.lostArbitraryLimit, x + 15, this.lostArbitraryLimit);
+//        }
 
         if (lost) {
             String text = "LOST";
@@ -600,6 +605,7 @@ public class BridgeSimulation extends Application {
                 gc.strokeLine(0, y, gc.getCanvas().getWidth(), y);
             }
         }
+
 
 
     }
