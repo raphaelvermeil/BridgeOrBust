@@ -19,7 +19,7 @@ public class LevelSelectionScene {
         Text title = new Text("SELECT LEVEL");
         title.setLayoutX(230);
         title.setLayoutY(80);
-        title.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
 
         // Level buttons
         Button level1Button = new Button("LEVEL 1");

@@ -4,12 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="iowqdsn">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/GameTitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/GameTitleScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/SettingsScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/SettingsScene.java" afterDir="false" />
+
     <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Added some ui">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,6 +87,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
+
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.BridgeSimulation.executor": "Run",
+    "Application.GameTitleScreen.executor": "Run",
+    "Application.GravitySimulation.executor": "Run",
+    "Application.HelloApplication.executor": "Run",
+    "Application.PendulumSimulation.executor": "Run",
+    "Application.SimplePhysicsEngine.executor": "Run",
+    "Application.SolveLinearSystem.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "ToPushBranch",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
@@ -101,6 +133,7 @@
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\rapha\Documents\BridgeOrBust\src\main\resources\sounds" />
+
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
     </key>
@@ -191,7 +224,11 @@
       <option name="project" value="LOCAL" />
       <updated>1740509137013</updated>
     </task>
+
+    <task id="LOCAL-00007" summary="Physical property of beams, road vs truss in building mode&#10;Beam representing land, logic that draws land to nearest window edge">
+
     <task id="LOCAL-00007" summary="Added some ui">
+
       <option name="closed" value="true" />
       <created>1743186720498</created>
       <option name="number" value="00007" />
@@ -231,7 +268,11 @@
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
     </task>
+
+    <option name="localTasksCounter" value="7" />
+
     <option name="localTasksCounter" value="8" />
+
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,7 +336,11 @@
     <MESSAGE value="waza" />
     <MESSAGE value="Added calc to ball" />
     <MESSAGE value="Beam destroy become red part 2" />
+
+    <option name="LAST_COMMIT_MESSAGE" value="play pause" />
+
     <MESSAGE value="Added some ui" />
     <option name="LAST_COMMIT_MESSAGE" value="Added some ui" />
+
   </component>
 </project>
