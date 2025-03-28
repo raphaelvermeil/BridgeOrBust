@@ -1,7 +1,6 @@
 package com.example.bridgeorbust.physicsSimulation;
 
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,10 +11,10 @@ public class Ball {
     private Vector2D acceleration;
     private double mass;
 
-//    private List<Beam> beams;
+    //    private List<Beam> beams;
     private double radius;
 
-    public Ball(double x, double y, double mass,  double radius) {
+    public Ball(double x, double y, double mass, double radius) {
         this.position = new Vector2D(x, y);
 
         this.oldPosition = new Vector2D(x, y);
@@ -68,32 +67,32 @@ public class Ball {
             }
         }
     }
-    private boolean trulyUnder(Beam beam){
-        double deltaX,deltaY,relativeLength,ratio,relativeHeight,yLimit;
-        Pin leadingPinX,followingPinX, leadingPinY,followingPinY;
-        if(beam.pin1.getPosition().x>=beam.pin2.getPosition().x){
-            leadingPinX=beam.pin2;
-            followingPinX=beam.pin1;
-        }
-        else {
+
+    private boolean trulyUnder(Beam beam) {
+        double deltaX, deltaY, relativeLength, ratio, relativeHeight, yLimit;
+        Pin leadingPinX, followingPinX, leadingPinY, followingPinY;
+        if (beam.pin1.getPosition().x >= beam.pin2.getPosition().x) {
+            leadingPinX = beam.pin2;
+            followingPinX = beam.pin1;
+        } else {
             leadingPinX = beam.pin1;
             followingPinX = beam.pin2;
         }
 
-        deltaX=followingPinX.getPosition().x-leadingPinX.getPosition().x;
-        deltaY=followingPinX.getPosition().y-leadingPinX.getPosition().y;
-        relativeLength=this.position.x+this.radius-leadingPinX.getPosition().x;
-        relativeHeight=deltaY*relativeLength/deltaX;
-        yLimit=leadingPinX.getPosition().y+relativeHeight-this.radius;
-        if(this.position.y>yLimit){
-            this.position.y= yLimit;
-            this.oldPosition.y=yLimit;
+        deltaX = followingPinX.getPosition().x - leadingPinX.getPosition().x;
+        deltaY = followingPinX.getPosition().y - leadingPinX.getPosition().y;
+        relativeLength = this.position.x + this.radius - leadingPinX.getPosition().x;
+        relativeHeight = deltaY * relativeLength / deltaX;
+        yLimit = leadingPinX.getPosition().y + relativeHeight - this.radius;
+        if (this.position.y > yLimit) {
+            this.position.y = yLimit;
+            this.oldPosition.y = yLimit;
             return true;
-        }
-        else
+        } else
             return false;
     }
-    public void positionBinding(double previousWidth, double previousHeight, double newWidth, double newHeight ){
+
+    public void positionBinding(double previousWidth, double previousHeight, double newWidth, double newHeight) {
         double x = this.position.x * newWidth / previousWidth;
         double y = this.position.y * newHeight / previousHeight;
         position = new Vector2D(x, y);
@@ -102,11 +101,11 @@ public class Ball {
         double oldY = this.oldPosition.y * newHeight / previousHeight;
         oldPosition = new Vector2D(oldX, oldY);
 
-        if(previousWidth==newWidth)
-            this.radius = this.radius * newHeight / previousHeight;
-        else
-            this.radius = this.radius * newWidth / previousWidth;
+//        double change = Math.max(newHeight / previousHeight, newWidth / previousWidth) - 1;
+////        double relativeChange=(change>1)?change-1:1-change;
+//        this.radius *= 1 + (change * 0.1);
     }
+
     public Vector2D getPosition() {
         return position;
     }
