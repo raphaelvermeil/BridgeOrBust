@@ -16,7 +16,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class GameTitleScreen extends Application {
-    //c parfait encore parfait encore
+    // Static reference to buttons to maintain consistency
+    private static Button playButton;
+    private static Button settingsButton;
+    private static Button quitButton;
+
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
@@ -25,8 +29,6 @@ public class GameTitleScreen extends Application {
         // Load UI elements
         addHangingLines(root);
         addCircles(root);
-        //add for images.
-        // addImages(root);
         addButtons(root, primaryStage);
 
         // Set up the scene and stage 600 400
@@ -53,7 +55,7 @@ public class GameTitleScreen extends Application {
                 new Circle(25, 8, 30, Color.WHITESMOKE), new Circle(35, 11, 34, Color.WHITESMOKE),
                 new Circle(45, 15, 32, Color.WHITESMOKE), new Circle(55, 19, 35, Color.WHITESMOKE),
                 new Circle(65, 23, 37, Color.WHITESMOKE), new Circle(75, 22, 36, Color.WHITESMOKE),
-                new Circle(85, 26, 34, Color.WHITESMOKE), new Circle(95, 21, 32, Color.WHITESMOKE ),
+                new Circle(85, 26, 34, Color.WHITESMOKE), new Circle(95, 21, 32, Color.WHITESMOKE),
                 new Circle(105, 17, 36, Color.WHITESMOKE), new Circle(115, 14, 34, Color.WHITESMOKE),
                 new Circle(125, 11, 33, Color.WHITESMOKE), new Circle(135, 7, 27, Color.WHITESMOKE),
                 new Circle(145, 4, 22, Color.WHITESMOKE), new Circle(155, 3, 21, Color.WHITESMOKE),
@@ -63,47 +65,31 @@ public class GameTitleScreen extends Application {
         root.getChildren().addAll(circles);
     }
 
-    /** Adds images to the UI. */
-    /*
-    private void addImages(Pane root) {
-        //logo image
-    ImageView logo = new ImageView(new Image("file:logo.png"));
-        logo.setX(250);
-        logo.setY(95);
-        logo.setFitWidth(285);
-        logo.setFitHeight(330);
-
-        ImageView bridge = new ImageView(new Image("file:bridge.PNG"));
-        bridge.setX(175);
-        bridge.setY(95);
-        bridge.setFitWidth(485);
-        bridge.setFitHeight(320);
-
-        //add logo if needed
-        root.getChildren().addAll(bridge);
-    }
-
-     */ /** Adds buttons to the UI and assigns functionality. */
+    /** Adds buttons to the UI and assigns functionality. */
     private void addButtons(Pane root, Stage primaryStage) {
-        Button playButton = createStyledButton("PLAY", 40, 70, -19);
-        Button settingsButton = createStyledButton("SETTINGS", 30, 190, 8);
-        Button quitButton = createStyledButton("QUIT", 40, 310, -4);
+        // Only create buttons if they don't exist
+        if (playButton == null) {
+            playButton = createStyledButton("PLAY", 40, 70, -19);
+            settingsButton = createStyledButton("SETTINGS", 30, 190, 8);
+            quitButton = createStyledButton("QUIT", 40, 310, -4);
 
-        // Add hover effects
-        addHoverEffect(playButton);
-        addHoverEffect(settingsButton);
-        addHoverEffect(quitButton);
+            // Add hover effects
+            addHoverEffect(playButton);
+            addHoverEffect(settingsButton);
+            addHoverEffect(quitButton);
 
+            // Play button action
+            playButton.setOnAction(e -> handleButtonClick(primaryStage, root, "play"));
 
-        // Play button action
-        playButton.setOnAction(e -> handleButtonClick(primaryStage, root, "play"));
+            // Settings button action
+            settingsButton.setOnAction(e -> handleButtonClick(primaryStage, root, "settings"));
 
-        // Settings button action
-        settingsButton.setOnAction(e -> handleButtonClick(primaryStage, root, "settings"));
+            // Quit button action
+            quitButton.setOnAction(e -> Platform.exit());
+        }
 
-        // Quit button action
-        quitButton.setOnAction(e -> Platform.exit());
-
+        // Always ensure these buttons are in the root
+        root.getChildren().removeAll(playButton, settingsButton, quitButton);
         root.getChildren().addAll(playButton, settingsButton, quitButton);
     }
 
@@ -151,8 +137,11 @@ public class GameTitleScreen extends Application {
         addHangingLines(root);
         addCircles(root);
         addButtons(root, primaryStage);
-        return new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 600, 400);
+        scene.getStylesheets().add("file:style.css");
+        return scene;
     }
+
     /** Adds hover effects to buttons. */
     private void addHoverEffect(Button button) {
         ScaleTransition stEnter = new ScaleTransition(Duration.millis(200), button);
