@@ -1,12 +1,13 @@
 package com.example.bridgeorbust.physicsSimulation;
 //wow this is such a great project
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -17,10 +18,12 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,6 +37,9 @@ public class BridgeSimulation extends Application {
     private double cursorX = 0;
     private double cursorY = 0;
     private boolean play = false;
+    private CheckBox gridModeButton = new CheckBox("Grid Mode");
+    private double gridSizeX = 20;
+    private double gridSizeY = 20;
     private boolean roadMode = false;
     private boolean lost = false;
     public Ball ball1;
@@ -44,6 +50,12 @@ public class BridgeSimulation extends Application {
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
+    // Load the audio file
+    AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
+    AudioClip clickSound = new AudioClip(getClass().getResource("/sounds/click.mp3").toString());
+
+
+
     //this is refresh test
 
     @Override
@@ -80,7 +92,7 @@ public class BridgeSimulation extends Application {
         roadButton.setToggleGroup(buttons);
         trussButton.setToggleGroup(buttons);
         buttons.selectToggle(trussButton);
-        controls.getChildren().addAll(roadButton, trussButton);
+        controls.getChildren().addAll(roadButton, trussButton, gridModeButton);
         controls.setLayoutX(canvas.getWidth() - 120);
         controls.setLayoutY(100);
 
@@ -130,6 +142,7 @@ public class BridgeSimulation extends Application {
             } else {
                 playPause.setImage(new Image("file:pause.png"));
                 play = true;
+                gridModeButton.setSelected(false);
             }
         });
         trussButton.setOnAction(e -> roadMode = false);
@@ -172,6 +185,7 @@ public class BridgeSimulation extends Application {
             }
 
         });
+
 
         new AnimationTimer() {
             long lastTime = System.nanoTime();
@@ -255,24 +269,27 @@ public class BridgeSimulation extends Application {
         this.winArbitraryLimit *= canvas.getWidth() / this.previousWindowWidth;
         this.lostArbitraryLimit *= canvas.getHeight() / this.previousWindowHeight;
 
+        this.gridSizeX *= canvas.getWidth() / this.previousWindowWidth;
+        this.gridSizeY *= canvas.getHeight() / this.previousWindowHeight;
+
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
     }
 
     private void setupBridge(GraphicsContext gc) {
         if (startPins.isEmpty())
-            level1();
+            level2();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
             if (pin.isPositionFixed()) {
                 Pin pin2 = null;
                 if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
-                    pin2 = new Pin(0, pin.getPosition().y, true);
+                    pin2 = new Pin(-200, pin.getPosition().y, true);
                     beams.add(new Beam(pin2, pin, 1000, 0.0001, true));
                     gc.setFill(Color.GREEN);
                 } else {
-                    pin2 = new Pin(gc.getCanvas().getWidth(), pin.getPosition().y, true);
+                    pin2 = new Pin(gc.getCanvas().getWidth() + 200, pin.getPosition().y, true);
                     beams.add(new Beam(pin, pin2, 1000, 0.0001, true));
 
                 }
@@ -313,6 +330,10 @@ public class BridgeSimulation extends Application {
     private void handleMouseClick(MouseEvent event) {
         double x = event.getX();
         double y = event.getY();
+        if (gridModeButton.isSelected()) {
+            x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
+            y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
+        }
 
         Pin clickedPin = getPinAt(x, y);
 
@@ -321,9 +342,14 @@ public class BridgeSimulation extends Application {
         } else if (firstPin == null) {
             if (clickedPin != null) {
                 firstPin = clickedPin;
+//                animatePin(clickedPin);
+                beamSound.play();
             } else {
                 firstPin = new Pin(x, y, false);
                 pins.add(firstPin);
+                beamSound.play();
+//                animatePin(firstPin);
+
             }
         } else {
             double deltaX = x - firstPin.getPosition().x;
@@ -336,6 +362,7 @@ public class BridgeSimulation extends Application {
 
                 Beam beam = new Beam(firstPin, secondPin, 900, 0.025, roadMode);
                 beams.add(beam);
+                beamSound.play();
                 previousBeam = beam;
                 firstPin = null;
                 mouseCounter++;
@@ -347,17 +374,43 @@ public class BridgeSimulation extends Application {
     private void handleMouseMove(MouseEvent event) {
         cursorX = event.getX();
         cursorY = event.getY();
+
+        for(Pin pin : pins){
+            Vector2D pos = pin.getPosition();
+            if (pos.subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20) {
+                pin.setClicked(true);
+            } else {
+                pin.setClicked(false);
+            }
+        }
     }
 
     private Pin getPinAt(double x, double y) {
         for (Pin pin : pins) {
             Vector2D pos = pin.getPosition();
-            if (pos.subtract(new Vector2D(x, y)).magnitude() < 10) {
+            if (pos.subtract(new Vector2D(x, y)).magnitude() < 20) {
+//                pin.setClicked(true);
+
                 return pin;
             }
         }
         return null;
     }
+
+//    private void animatePin(Pin pin) {
+//        double originalRadius = pin.getRadius();
+//        double enlargedRadius = originalRadius * 1.5;
+//
+//        Timeline timeline = new Timeline(
+//                new KeyFrame(Duration.ZERO, new KeyValue(pin.radius(), originalRadius)),
+//                new KeyFrame(Duration.millis(100), new KeyValue(pin.radiusProperty(), enlargedRadius)),
+//                new KeyFrame(Duration.millis(200), new KeyValue(pin.radiusProperty(), originalRadius))
+//        );
+//
+//        timeline.setAutoReverse(true);
+//        timeline.setCycleCount(2);
+//        timeline.play();
+//    }
 
     private void checkWin() {
         if (ball1.getPosition().y > lostArbitraryLimit) {
@@ -409,40 +462,107 @@ public class BridgeSimulation extends Application {
     private void render(GraphicsContext gc) {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
-        for (Pin pin : pins) {
-            if (pin.isPositionFixed()) {
-                gc.setFill(Color.GREEN);
-                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
-                    gc.fillRect(0, pin.getPosition().y, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
-                } else {
-                    gc.fillRect(pin.getPosition().x, pin.getPosition().y, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
-                }
-            }
-            gc.setFill(Color.BLUE);
-            Vector2D pos = pin.getPosition();
-            gc.fillOval(pos.x - 5, pos.y - 5, 10, 10);
-        }
+        gc.setFill(Color.LIGHTBLUE);
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+
         gc.setStroke(Color.DARKGREY);
         for (Beam beam : beams) {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
 
-            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
-            gc.setLineWidth(4);
+            if(beam.isPhysical()){
+                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
+                gc.setLineWidth(16);
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+                gc.setStroke(Color.YELLOW);
+                gc.setLineWidth(2);
+                gc.setLineDashes(10);
+
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+                gc.setLineDashes(0);
+            } else {
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(10);
 //            gc.setStroke(Color.BLACK);
-            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+
+
+//                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
+                gc.setStroke(Color.rgb(115+(int) beam.getRedColorCoefficient(), 115, 115+(int) beam.getblueColorCoefficient()));
+
+                gc.setLineWidth(4);
+//            gc.setStroke(Color.BLACK);
+
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+            }
+
+
         }
 
         if (firstPin != null) {
             gc.setStroke(Color.DARKGREY);
             Vector2D pos1 = firstPin.getPosition();
-
-            double deltaX = cursorX - pos1.x;
-            double deltaY = cursorY - pos1.y;
+            double x = cursorX;
+            double y= cursorY;
+            if (gridModeButton.isSelected()) {
+                x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
+                y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
+            }
+            double deltaX = x - pos1.x;
+            double deltaY = y - pos1.y;
             double magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             double ratio = this.maxLength / magnitude;
-            Vector2D pos2 = ratio >= 1 ? new Vector2D(cursorX, cursorY) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
+            Vector2D pos2 = ratio >= 1 ? new Vector2D(x, y) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+        }
+
+        for (Pin pin : pins) {
+
+            if (pin.isPositionFixed()) {
+                gc.setFill(Color.ROSYBROWN);
+                gc.setLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
+                    gc.fillRoundRect(0, pin.getPosition().y+8, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y, 10, 10); // (x, y, width, height)
+                } else {
+                    gc.fillRect(pin.getPosition().x, pin.getPosition().y+8, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
+                }
+            }
+
+            double R = 20.0;
+            double r = 16.0;
+
+            Vector2D pos = pin.getPosition();
+            double centerX = pos.x - 10;
+            double centerY = pos.y - 10;
+
+
+            if (pin.isClicked()) {
+                R = 25;
+                r = 21;
+            } else {
+                R = 20;
+                r = 16;
+            }
+
+            double offsetR = (R - 20) / 2;
+            double offsetr = (r - 16) / 2;
+
+            if (pin.isPositionFixed()) {
+                gc.setFill(Color.BLACK);
+                gc.fillRect(centerX - offsetR, centerY - offsetR, R, R);
+                gc.setFill(Color.GREY);
+                gc.fillRect(centerX - offsetr + 2, centerY - offsetr + 2, r, r);
+            } else {
+                gc.setFill(Color.BLACK);
+                gc.fillOval(centerX - offsetR, centerY - offsetR, R, R);
+                gc.setFill(Color.GREY);
+                gc.fillOval(centerX - offsetr + 2, centerY - offsetr + 2, r, r);
+            }
+
+
+
+
         }
 
 //        gc.setFill(Color.GRAY);
@@ -451,6 +571,7 @@ public class BridgeSimulation extends Application {
 
         gc.setFill(Color.RED);
         gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
+
         gc.setStroke(Color.RED);
         gc.setLineWidth(1);
         for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
@@ -469,6 +590,18 @@ public class BridgeSimulation extends Application {
 
             gc.fillText(text, x, y);
         }
+        if (gridModeButton.isSelected()) {
+            gc.setStroke(Color.LIGHTGRAY);
+            gc.setLineWidth(0.5);
+            for (double x = 0; x < gc.getCanvas().getWidth(); x += gridSizeX) {
+                gc.strokeLine(x, 0, x, gc.getCanvas().getHeight());
+            }
+            for (double y = 0; y < gc.getCanvas().getHeight(); y += gridSizeY) {
+                gc.strokeLine(0, y, gc.getCanvas().getWidth(), y);
+            }
+        }
+
+
     }
 
     public static void main(String[] args) {

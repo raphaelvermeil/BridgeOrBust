@@ -8,10 +8,12 @@ public class Pin {
     private Vector2D initialPosition;
     private Vector2D velocity;
     private Vector2D forceSum;
+    private double radius = 20;
     private double massSum;
     private boolean positionFixed;
     private List<Beam> connectedBeams;
     private boolean isStartPin;
+    private boolean isClicked=false;
 
     public Pin(double x, double y, boolean fixed) {
         this.position = new Vector2D(x, y);
@@ -118,5 +120,21 @@ public class Pin {
 
     public int getConnectedBeamsSize() {
         return connectedBeams.size();
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
+
+    public boolean isClicked() {
+        return isClicked;
+    }
+
+    public void setClicked(boolean clicked) {
+        isClicked = clicked;
     }
 }
