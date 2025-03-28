@@ -8,6 +8,7 @@ public class Pin {
     private Vector2D initialPosition;
     private Vector2D velocity;
     private Vector2D forceSum;
+    private double radius = 20;
     private double massSum;
     private boolean positionFixed;
     private List<Beam> connectedBeams;
@@ -118,5 +119,13 @@ public class Pin {
 
     public int getConnectedBeamsSize() {
         return connectedBeams.size();
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 }

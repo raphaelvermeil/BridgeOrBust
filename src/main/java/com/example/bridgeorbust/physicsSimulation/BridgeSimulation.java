@@ -1,7 +1,7 @@
 package com.example.bridgeorbust.physicsSimulation;
 //wow this is such a great project
 
-import javafx.animation.AnimationTimer;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -22,6 +22,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -270,18 +271,18 @@ public class BridgeSimulation extends Application {
 
     private void setupBridge(GraphicsContext gc) {
         if (startPins.isEmpty())
-            level1();
+            level2();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
             if (pin.isPositionFixed()) {
                 Pin pin2 = null;
                 if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
-                    pin2 = new Pin(0, pin.getPosition().y, true);
+                    pin2 = new Pin(-200, pin.getPosition().y, true);
                     beams.add(new Beam(pin2, pin, 1000, 0.0001, true));
                     gc.setFill(Color.GREEN);
                 } else {
-                    pin2 = new Pin(gc.getCanvas().getWidth(), pin.getPosition().y, true);
+                    pin2 = new Pin(gc.getCanvas().getWidth() + 200, pin.getPosition().y, true);
                     beams.add(new Beam(pin, pin2, 1000, 0.0001, true));
 
                 }
@@ -334,9 +335,12 @@ public class BridgeSimulation extends Application {
         } else if (firstPin == null) {
             if (clickedPin != null) {
                 firstPin = clickedPin;
+//                animatePin(clickedPin);
             } else {
                 firstPin = new Pin(x, y, false);
                 pins.add(firstPin);
+//                animatePin(firstPin);
+
             }
         } else {
             double deltaX = x - firstPin.getPosition().x;
@@ -371,6 +375,21 @@ public class BridgeSimulation extends Application {
         }
         return null;
     }
+
+//    private void animatePin(Pin pin) {
+//        double originalRadius = pin.getRadius();
+//        double enlargedRadius = originalRadius * 1.5;
+//
+//        Timeline timeline = new Timeline(
+//                new KeyFrame(Duration.ZERO, new KeyValue(pin.radius(), originalRadius)),
+//                new KeyFrame(Duration.millis(100), new KeyValue(pin.radiusProperty(), enlargedRadius)),
+//                new KeyFrame(Duration.millis(200), new KeyValue(pin.radiusProperty(), originalRadius))
+//        );
+//
+//        timeline.setAutoReverse(true);
+//        timeline.setCycleCount(2);
+//        timeline.play();
+//    }
 
     private void checkWin() {
         if (ball1.getPosition().y > lostArbitraryLimit) {
@@ -422,28 +441,41 @@ public class BridgeSimulation extends Application {
     private void render(GraphicsContext gc) {
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
-        for (Pin pin : pins) {
-            if (pin.isPositionFixed()) {
-                gc.setFill(Color.GREEN);
-                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
-                    gc.fillRect(0, pin.getPosition().y, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
-                } else {
-                    gc.fillRect(pin.getPosition().x, pin.getPosition().y, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
-                }
-            }
-            gc.setFill(Color.BLUE);
-            Vector2D pos = pin.getPosition();
-            gc.fillOval(pos.x - 5, pos.y - 5, 10, 10);
-        }
+        gc.setFill(Color.LIGHTBLUE);
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+
         gc.setStroke(Color.DARKGREY);
         for (Beam beam : beams) {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
 
-            gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
-            gc.setLineWidth(4);
+            if(beam.isPhysical()){
+                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
+                gc.setLineWidth(16);
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+                gc.setStroke(Color.YELLOW);
+                gc.setLineWidth(2);
+                gc.setLineDashes(10);
+
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+                gc.setLineDashes(0);
+            } else {
+                gc.setStroke(Color.BLACK);
+                gc.setLineWidth(10);
 //            gc.setStroke(Color.BLACK);
-            gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+
+
+//                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
+                gc.setStroke(Color.GREY);
+                gc.setLineWidth(4);
+//            gc.setStroke(Color.BLACK);
+
+                gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+            }
+
+
         }
 
         if (firstPin != null) {
@@ -461,6 +493,36 @@ public class BridgeSimulation extends Application {
             double ratio = this.maxLength / magnitude;
             Vector2D pos2 = ratio >= 1 ? new Vector2D(x, y) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
+        }
+
+        for (Pin pin : pins) {
+
+            if (pin.isPositionFixed()) {
+                gc.setFill(Color.ROSYBROWN);
+                gc.setLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
+                if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
+                    gc.fillRoundRect(0, pin.getPosition().y+8, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y, 10, 10); // (x, y, width, height)
+                } else {
+                    gc.fillRect(pin.getPosition().x, pin.getPosition().y+8, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
+                }
+            }
+
+
+            Vector2D pos = pin.getPosition();
+            if(pin.isPositionFixed()){
+                gc.setFill(Color.BLACK);
+                gc.fillRect(pos.x - 10, pos.y - 10, 20, 20);
+                gc.setFill(Color.GREY);
+                gc.fillRect(pos.x - 8, pos.y - 8, 16, 16);
+            } else {
+                gc.setFill(Color.BLACK);
+                gc.fillOval(pos.x - 10, pos.y - 10, 20, 20);
+                gc.setFill(Color.GREY);
+                gc.fillOval(pos.x - 8, pos.y - 8, 16, 16);
+            }
+
+
+
         }
 
 //        gc.setFill(Color.GRAY);
