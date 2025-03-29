@@ -19,6 +19,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -30,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BridgeSimulation extends Application {
+    private MediaPlayer mediaPlayer;
     private List<Pin> pins = new ArrayList<>();
     private List<Beam> beams = new ArrayList<>();
     private List<Pin> startPins = new ArrayList<>();
@@ -56,10 +59,19 @@ public class BridgeSimulation extends Application {
 
 
 
+
     //this is refresh test
 
     @Override
     public void start(Stage stage) {
+
+        Media media = new Media(getClass().getResource("/sounds/bridgingasmile.mp3").toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+
+
         Canvas canvas = new Canvas();
         GraphicsContext gc = canvas.getGraphicsContext2D();
 //        Scene scene = new Scene(new javafx.scene.layout.Pane(canvas));
@@ -72,7 +84,7 @@ public class BridgeSimulation extends Application {
 //        ball2 = new Ball(80, 100, 10, 20);
         Pane pane = new Pane();
 
-
+        gridModeButton.setSelected(true);
         // Bind the canvas size to the pane size
         canvas.widthProperty().bind(pane.widthProperty());
         canvas.heightProperty().bind(pane.heightProperty());
@@ -83,40 +95,65 @@ public class BridgeSimulation extends Application {
         playPause.setFitHeight(30);
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
+        playPauseButton.getStyleClass().add("transparent-button");
 
         HBox controls = new HBox();
         controls.setSpacing(10);
-        RadioButton roadButton = new RadioButton("Road");
-        RadioButton trussButton = new RadioButton("Truss");
+        RadioButton roadButton = new RadioButton();
+        RadioButton trussButton = new RadioButton();
+
+        ImageView roadImage = new ImageView(new Image("file:road-perspective.png"));
+        ImageView trussImage = new ImageView(new Image("file:beam.png"));
+        roadImage.setFitWidth(30);
+        roadImage.setFitHeight(30);
+        trussImage.setFitWidth(30);
+        trussImage.setFitHeight(30);
+        roadButton.setGraphic(roadImage);
+        trussButton.setGraphic(trussImage);
+//        roadButton.getStyleClass().add("radio-button");
+//        trussButton.getStyleClass().add("radio-button");
+        roadButton.getStyleClass().remove("radio-button");
+        roadButton.getStyleClass().add("toggle-button");
+        trussButton.getStyleClass().remove("radio-button");
+        trussButton.getStyleClass().add("toggle-button");
+
         ToggleGroup buttons = new ToggleGroup();
         roadButton.setToggleGroup(buttons);
         trussButton.setToggleGroup(buttons);
         buttons.selectToggle(trussButton);
-        controls.getChildren().addAll(roadButton, trussButton, gridModeButton);
-        controls.setLayoutX(canvas.getWidth() - 120);
-        controls.setLayoutY(100);
+        controls.getChildren().addAll(roadButton, trussButton);
+        controls.setLayoutX((canvas.getWidth() - controls.getWidth()) / 2);
+        controls.setLayoutY(canvas.getHeight() - controls.getHeight() - 50);
 
-        ImageView resetImage = new ImageView(new Image("file:restart-icon.png"));
+
+
+        ImageView resetImage = new ImageView(new Image("file:arrow.png"));
         Button resetButton = new Button("", resetImage);
         resetImage.setFitWidth(30);
         resetImage.setFitHeight(30);
         resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 20);
         resetButton.setLayoutY(20);
+        resetButton.getStyleClass().add("transparent-button");
 
-        ImageView undoImage = new ImageView(new Image("file:undo-icon.png"));
+        ImageView undoImage = new ImageView(new Image("file:jump.png"));
         undoImage.setFitWidth(30);
         undoImage.setFitHeight(30);
         Button undoButton = new Button("", undoImage);
+        undoButton.getStyleClass().add("transparent-button");
+
 
         undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth());
         undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
 
-        ImageView gearImage = new ImageView(new Image("file:settings-icon.png"));
+        ImageView gearImage = new ImageView(new Image("file:sign-out.png"));
         Button gearButton = new Button("", gearImage);
         gearImage.setFitWidth(30);
         gearImage.setFitHeight(30);
         gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 20);
         gearButton.setLayoutY(canvas.getHeight() - gearButton.getHeight() - 20);
+        gearButton.getStyleClass().add("transparent-button");
+
+
 
 
         pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
@@ -139,6 +176,7 @@ public class BridgeSimulation extends Application {
                 this.lost = false;
                 play = false;
                 firstPin = null;
+                gridModeButton.setSelected(true);
 
             } else {
                 playPause.setImage(new Image("file:pause.png"));
@@ -168,7 +206,7 @@ public class BridgeSimulation extends Application {
                 Beam beam = beams.get(beams.size() - 1);
                 if (mouseCounter > 0) {
                     destroyBeam(beam);
-
+                    System.out.println(mediaPlayer.getCurrentTime());
                     if (beam.pin1.getConnectedBeamsSize() < 1) {
                         pins.remove(beam.pin1);
                     } else if (beam.pin2.getConnectedBeamsSize() < 1) {
@@ -230,7 +268,7 @@ public class BridgeSimulation extends Application {
                 () -> playPauseButton.fire()
         );
 
-
+        scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Bridge Simulation");
         stage.show();
@@ -255,8 +293,8 @@ public class BridgeSimulation extends Application {
         ball1.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight());
         this.maxLength = maxLength * canvas.getWidth() / previousWindowWidth;
 
-        controls.setLayoutX(50);
-        controls.setLayoutY(canvas.getHeight() - 50);
+        controls.setLayoutX((canvas.getWidth() - controls.getWidth()) / 2);
+        controls.setLayoutY(canvas.getHeight() - controls.getHeight() - 50);
 
         resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 225);
         resetButton.setLayoutY(30);
@@ -362,12 +400,13 @@ public class BridgeSimulation extends Application {
                 }
 
                 Beam beam = new Beam(firstPin, secondPin, 900, 0.025, roadMode);
-                firstPin = secondPin;
+//                firstPin = secondPin;
                 beams.add(beam);
                 beamSound.play();
                 previousBeam = beam;
-//                firstPin = null;
+                firstPin = null;
                 mouseCounter++;
+
 
             }
         }
