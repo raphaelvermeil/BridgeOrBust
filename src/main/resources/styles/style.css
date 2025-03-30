@@ -1,0 +1,26 @@
+.transparent-button {
+    -fx-background-color: rgb(115, 115, 115, 0.3); /* Corrected to rgb */
+    -fx-min-width: 50px;
+    -fx-text-fill: #fff;
+    -fx-hovered-background-color: rgb(115, 115, 115, 0.5); /* Corrected to rgb */
+}
+
+.transparent-button:hover {
+    -fx-background-color: rgb(115, 115, 115, 0.5); /* Corrected to rgb */
+}
+
+/* style.css */
+
+
+.toggle-button:selected {
+    -fx-background-color: rgb(115, 115, 115, 0.7); /* Darker background when selected */
+}
+
+.toggle-button {
+    -fx-background-color: rgb(115, 115, 115, 0.3); /* Default background */
+    -fx-padding: 5px; /* Padding around the image */
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded background */
+    -fx-alignment: center; /* Center the image */
+    -fx-content-display: center; /* Ensure the graphic is centered */
+}

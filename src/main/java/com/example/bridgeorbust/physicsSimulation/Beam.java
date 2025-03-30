@@ -64,10 +64,10 @@ public class Beam {
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
             System.out.println();
             if (currentLength.magnitude() > restLength) {
-                this.redColorCoefficient = (forceBeam.magnitude() / breakLimit) * 255;
+                this.redColorCoefficient = (forceBeam.magnitude() / breakLimit) * 140;
 
             } else if (currentLength.magnitude() < restLength) {
-                this.blueColorCoefficient = (forceBeam.magnitude() / breakLimit) * 255;
+                this.blueColorCoefficient = (forceBeam.magnitude() / breakLimit) * 140;
             }
 
             if (forceBeam.magnitude() > this.breakLimit || forceBeam.magnitude() < -this.breakLimit) { // Arbitrary break limit
