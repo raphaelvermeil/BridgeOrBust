@@ -69,6 +69,7 @@ public class BridgeSimulation extends Application {
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
 
 
@@ -633,8 +634,9 @@ public class BridgeSimulation extends Application {
 
             gc.fillText(text, x, y);
         }
+        //Drawing grid
         if (gridModeButton.isSelected()) {
-            gc.setStroke(Color.LIGHTGRAY);
+            gc.setStroke(Color.rgb(100,100,100,0.5));
             gc.setLineWidth(0.5);
             for (double x = 0; x < gc.getCanvas().getWidth(); x += gridSizeX) {
                 gc.strokeLine(x, 0, x, gc.getCanvas().getHeight());
