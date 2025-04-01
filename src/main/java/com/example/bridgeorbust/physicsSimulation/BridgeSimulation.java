@@ -18,6 +18,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -53,7 +54,8 @@ public class BridgeSimulation extends Application {
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
-    public int level;
+    private VBox winWidget = new VBox();
+    public int level = 1;
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
     AudioClip clickSound = new AudioClip(getClass().getResource("/sounds/click.mp3").toString());
@@ -156,9 +158,14 @@ public class BridgeSimulation extends Application {
         gearButton.getStyleClass().add("transparent-button");
 
 
+        winWidget.setLayoutX(canvas.getWidth() / 2);
+        winWidget.setLayoutY(canvas.getHeight() / 2);
+
+        winWidget.getStyleClass().add("win-widget");
+        winWidget.setDisable(true);
 
 
-        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
+        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget);
 
         Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
@@ -246,12 +253,12 @@ public class BridgeSimulation extends Application {
         }.start();
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
-        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
+        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget);
 
         // Add listeners to update button positions when the canvas size changes
 
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton));
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton));
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
 
 //        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
 //        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
@@ -277,7 +284,7 @@ public class BridgeSimulation extends Application {
     }
 
 
-    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton) {
+    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget) {
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
         for (Pin pin : startPins) {
@@ -306,6 +313,17 @@ public class BridgeSimulation extends Application {
 
         gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 75);
         gearButton.setLayoutY(30);
+
+        winWidget.setLayoutX(canvas.getWidth() / 2);
+        winWidget.setLayoutY(canvas.getHeight() / 2);
+
+
+
+        winWidget.setMinWidth(canvas.getWidth() * 400 / 1000);
+        winWidget.setMinHeight(canvas.getHeight() * 400 / 600);
+
+        winWidget.setLayoutX(canvas.getWidth() / 2 - winWidget.getMinWidth() / 2);
+        winWidget.setLayoutY(canvas.getHeight() / 2 - winWidget.getMinHeight() / 2);
 
         this.winArbitraryLimit *= canvas.getWidth() / this.previousWindowWidth;
         this.lostArbitraryLimit *= canvas.getHeight() / this.previousWindowHeight;
@@ -425,6 +443,11 @@ public class BridgeSimulation extends Application {
         cursorX = event.getX();
         cursorY = event.getY();
 
+        if (gridModeButton.isSelected()) {
+            cursorX = (cursorX % gridSizeX > gridSizeX / 2) ? cursorX- cursorX % gridSizeX + gridSizeX : cursorX - cursorX % gridSizeX;
+            cursorY = (cursorY % gridSizeY > gridSizeY / 2) ? cursorY - cursorY % gridSizeY + gridSizeY : cursorY - cursorY % gridSizeY;
+        }
+
         for(Pin pin : pins){
             Vector2D pos = pin.getPosition();
             if (pos.subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20) {
@@ -473,7 +496,7 @@ public class BridgeSimulation extends Application {
     }
 
     private void win() {
-        System.out.println("You win");
+        winWidget.setDisable(false);
     }
 
     private void updateSimulation(double deltaTime) {
@@ -614,6 +637,10 @@ public class BridgeSimulation extends Application {
 
 
         }
+
+//        gc.setFill(Color.GRAY);
+//        gc.fillOval(car.pin1.getPosition().x - 15, car.pin1.getPosition().y - 15, 30, 30);
+//        gc.fillOval(car.pin2.getPosition().x - 15, car.pin2.getPosition().y - 15, 30, 30);
 
         gc.setFill(Color.RED);
         gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
