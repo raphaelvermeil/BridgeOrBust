@@ -1,6 +1,6 @@
 package com.example.bridgeorbust.physicsSimulation;
-//wow this is such a great project
-//ceci est un test
+
+
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -38,6 +38,8 @@ public class BridgeSimulation extends Application {
     private List<Pin> startPins = new ArrayList<>();
     private Pin firstPin = null;
     private double cursorX = 0;
+    private int maxRoadBeam;
+    private int maxTruss;
     private double cursorY = 0;
     private boolean play = false;
     private CheckBox gridModeButton = new CheckBox("Grid Mode");
@@ -46,22 +48,15 @@ public class BridgeSimulation extends Application {
     private boolean roadMode = false;
     private boolean lost = false;
     public Ball ball1;
-    private Beam previousBeam = null;
     private int mouseCounter = 0;
     private double lostArbitraryLimit;
     private double winArbitraryLimit;
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
-    public int level;
+    public int level = 1;
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
-    AudioClip clickSound = new AudioClip(getClass().getResource("/sounds/click.mp3").toString());
-
-
-
-
-    //this is refresh test
 
     @Override
     public void start(Stage stage) {
@@ -128,7 +123,6 @@ public class BridgeSimulation extends Application {
         controls.setLayoutY(canvas.getHeight() - controls.getHeight() - 50);
 
 
-
         ImageView resetImage = new ImageView(new Image("file:arrow.png"));
         Button resetButton = new Button("", resetImage);
         resetImage.setFitWidth(30);
@@ -154,8 +148,6 @@ public class BridgeSimulation extends Application {
         gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 20);
         gearButton.setLayoutY(canvas.getHeight() - gearButton.getHeight() - 20);
         gearButton.getStyleClass().add("transparent-button");
-
-
 
 
         pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
@@ -276,7 +268,6 @@ public class BridgeSimulation extends Application {
         stage.show();
     }
 
-
     private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton) {
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
@@ -318,16 +309,19 @@ public class BridgeSimulation extends Application {
     }
 
     private void setupBridge(GraphicsContext gc) {
-        if (startPins.isEmpty()){
-            switch (level){
-                case 1: level1();break;
-                case 2: level2();break;
+        if (startPins.isEmpty()) {
+            switch (level) {
+                case 1:
+                    level1();
+                    break;
+                case 2:
+                    level2();
+                    break;
                 default:
                     System.out.println("there is no such level");
                     break;
             }
         }
-//            level1();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
@@ -357,6 +351,9 @@ public class BridgeSimulation extends Application {
         this.lostArbitraryLimit = 550;
         this.winArbitraryLimit = 900;
 
+        this.maxRoadBeam = 4;
+        this.maxTruss = 30;
+
         startPins.add(p1);
         startPins.add(p4);
         startPins.add(p5);
@@ -369,6 +366,11 @@ public class BridgeSimulation extends Application {
         Pin p3 = new Pin(400, 550, true);
 
         this.lostArbitraryLimit = 670;
+        this.winArbitraryLimit = 900;
+
+        this.maxRoadBeam = 5;
+        this.maxTruss = 15;
+
 
         startPins.add(p1);
         startPins.add(p2);
@@ -377,8 +379,11 @@ public class BridgeSimulation extends Application {
     }
 
     private void handleMouseClick(MouseEvent event) {
+        if (roadMode && maxRoadBeam <= 0 || !roadMode && maxTruss <= 0)
+            return;
         double x = event.getX();
         double y = event.getY();
+
         if (gridModeButton.isSelected()) {
             x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
             y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
@@ -391,14 +396,11 @@ public class BridgeSimulation extends Application {
         } else if (firstPin == null) {
             if (clickedPin != null) {
                 firstPin = clickedPin;
-//                animatePin(clickedPin);
                 beamSound.play();
             } else {
                 firstPin = new Pin(x, y, false);
                 pins.add(firstPin);
                 beamSound.play();
-//                animatePin(firstPin);
-
             }
         } else {
             double deltaX = x - firstPin.getPosition().x;
@@ -410,12 +412,17 @@ public class BridgeSimulation extends Application {
                 }
 
                 Beam beam = new Beam(firstPin, secondPin, 900, 0.025, roadMode);
-//                firstPin = secondPin;
-                beams.add(beam);
+
                 beamSound.play();
-                previousBeam = beam;
+                beams.add(beam);
                 firstPin = null;
                 mouseCounter++;
+
+                if (beam.isPhysical()) {
+                    this.maxRoadBeam--;
+                } else {
+                    this.maxTruss--;
+                }
 
             }
         }
@@ -425,7 +432,7 @@ public class BridgeSimulation extends Application {
         cursorX = event.getX();
         cursorY = event.getY();
 
-        for(Pin pin : pins){
+        for (Pin pin : pins) {
             Vector2D pos = pin.getPosition();
             if (pos.subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20) {
                 pin.setClicked(true);
@@ -447,20 +454,6 @@ public class BridgeSimulation extends Application {
         return null;
     }
 
-//    private void animatePin(Pin pin) {
-//        double originalRadius = pin.getRadius();
-//        double enlargedRadius = originalRadius * 1.5;
-//
-//        Timeline timeline = new Timeline(
-//                new KeyFrame(Duration.ZERO, new KeyValue(pin.radius(), originalRadius)),
-//                new KeyFrame(Duration.millis(100), new KeyValue(pin.radiusProperty(), enlargedRadius)),
-//                new KeyFrame(Duration.millis(200), new KeyValue(pin.radiusProperty(), originalRadius))
-//        );
-//
-//        timeline.setAutoReverse(true);
-//        timeline.setCycleCount(2);
-//        timeline.play();
-//    }
 
     private void checkWin() {
         if (ball1.getPosition().y > lostArbitraryLimit) {
@@ -506,7 +499,10 @@ public class BridgeSimulation extends Application {
         beam.pin1.removeBeam(beam);
         beam.pin2.removeBeam(beam);
         mouseCounter--;
-
+        if (beam.isPhysical())
+            maxRoadBeam++;
+        else
+            maxTruss++;
     }
 
     private void render(GraphicsContext gc) {
@@ -520,7 +516,7 @@ public class BridgeSimulation extends Application {
             Vector2D pos1 = beam.pin1.getPosition();
             Vector2D pos2 = beam.pin2.getPosition();
 
-            if(beam.isPhysical()){
+            if (beam.isPhysical()) {
                 gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
                 gc.setLineWidth(16);
                 gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
@@ -539,7 +535,7 @@ public class BridgeSimulation extends Application {
 
 
 //                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
-                gc.setStroke(Color.rgb(115+(int) beam.getRedColorCoefficient(), 115, 115+(int) beam.getblueColorCoefficient()));
+                gc.setStroke(Color.rgb(115 + (int) beam.getRedColorCoefficient(), 115, 115 + (int) beam.getblueColorCoefficient()));
 
                 gc.setLineWidth(4);
 //            gc.setStroke(Color.BLACK);
@@ -554,7 +550,7 @@ public class BridgeSimulation extends Application {
             gc.setStroke(Color.DARKGREY);
             Vector2D pos1 = firstPin.getPosition();
             double x = cursorX;
-            double y= cursorY;
+            double y = cursorY;
             if (gridModeButton.isSelected()) {
                 x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
                 y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
@@ -573,9 +569,9 @@ public class BridgeSimulation extends Application {
                 gc.setFill(Color.ROSYBROWN);
                 gc.setLineCap(javafx.scene.shape.StrokeLineCap.ROUND);
                 if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
-                    gc.fillRoundRect(0, pin.getPosition().y+8, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y, 10, 10); // (x, y, width, height)
+                    gc.fillRoundRect(0, pin.getPosition().y + 8, pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y, 10, 10); // (x, y, width, height)
                 } else {
-                    gc.fillRect(pin.getPosition().x, pin.getPosition().y+8, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
+                    gc.fillRect(pin.getPosition().x, pin.getPosition().y + 8, gc.getCanvas().getWidth() - pin.getPosition().x, gc.getCanvas().getHeight() - pin.getPosition().y); // (x, y, width, height)
                 }
             }
 
@@ -611,8 +607,6 @@ public class BridgeSimulation extends Application {
             }
 
 
-
-
         }
 
         gc.setFill(Color.RED);
@@ -638,10 +632,22 @@ public class BridgeSimulation extends Application {
             double y = (gc.getCanvas().getHeight() - textHeight) / 2 + textHeight; // Adjust for baseline alignment
 
             gc.fillText(text, x, y);
+        } else if (!play) {
+            String text = "Roads Left: " + maxRoadBeam + " Trusses Left: " + maxTruss;
+            gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20)); // Change font size as needed
+            gc.setFill(Color.ROSYBROWN);
+            double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
+            double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
+
+            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
+            double y = 30; // Adjust for baseline alignment
+
+            gc.fillText(text, x, y);
+
         }
         //Drawing grid
         if (gridModeButton.isSelected()) {
-            gc.setStroke(Color.rgb(100,100,100,0.5));
+            gc.setStroke(Color.rgb(100, 100, 100, 0.5));
             gc.setLineWidth(0.5);
             for (double x = 0; x < gc.getCanvas().getWidth(); x += gridSizeX) {
                 gc.strokeLine(x, 0, x, gc.getCanvas().getHeight());
@@ -650,7 +656,6 @@ public class BridgeSimulation extends Application {
                 gc.strokeLine(0, y, gc.getCanvas().getWidth(), y);
             }
         }
-
 
 
     }
