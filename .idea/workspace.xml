@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="??">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Graphics grid">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/LevelSelectionScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/LevelSelectionScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -196,13 +197,13 @@
       <option name="project" value="LOCAL" />
       <updated>1743345765511</updated>
     </task>
-    <task id="LOCAL-00008" summary="refresh">
+    <task id="LOCAL-00008" summary="Graphics grid">
       <option name="closed" value="true" />
-      <created>1741712557811</created>
+      <created>1743350512098</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1741712557811</updated>
+      <updated>1743350512098</updated>
     </task>
     <task id="LOCAL-00009" summary="refresh test #2">
       <option name="closed" value="true" />
@@ -228,7 +229,7 @@
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,6 +294,7 @@
     <MESSAGE value="Added calc to ball" />
     <MESSAGE value="Beam destroy become red part 2" />
     <MESSAGE value="??" />
-    <option name="LAST_COMMIT_MESSAGE" value="??" />
+    <MESSAGE value="Graphics grid" />
+    <option name="LAST_COMMIT_MESSAGE" value="Graphics grid" />
   </component>
 </project>

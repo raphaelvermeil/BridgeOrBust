@@ -56,8 +56,22 @@ public class LevelSelectionScene {
             fadeOut.setToValue(0);
             fadeOut.setOnFinished(ev -> {
                 BridgeSimulation app = new BridgeSimulation();
-                app.start(new Stage());
-                primaryStage.close();
+                app.level=1;
+                app.start(primaryStage);
+//                primaryStage.close();
+            });
+            fadeOut.play();
+        });
+
+        level2Button.setOnAction(e -> {
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(400), root);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0);
+            fadeOut.setOnFinished(ev -> {
+                BridgeSimulation app = new BridgeSimulation();
+                app.level=2;
+                app.start(primaryStage);
+//                primaryStage.close();
             });
             fadeOut.play();
         });
@@ -84,7 +98,7 @@ public class LevelSelectionScene {
 
         root.getChildren().addAll(title, level1Button, level2Button, level3Button, backButton);
 
-        Scene scene = new Scene(root, 600, 400);
+        Scene scene = new Scene(root, 1000, 600);
         scene.getStylesheets().add("file:style.css");
         return scene;
     }

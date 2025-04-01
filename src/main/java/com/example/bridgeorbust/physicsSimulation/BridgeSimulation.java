@@ -53,6 +53,7 @@ public class BridgeSimulation extends Application {
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
+    public int level;
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
     AudioClip clickSound = new AudioClip(getClass().getResource("/sounds/click.mp3").toString());
@@ -317,8 +318,16 @@ public class BridgeSimulation extends Application {
     }
 
     private void setupBridge(GraphicsContext gc) {
-        if (startPins.isEmpty())
-            level1();
+        if (startPins.isEmpty()){
+            switch (level){
+                case 1: level1();break;
+                case 2: level2();break;
+                default:
+                    System.out.println("there is no such level");
+                    break;
+            }
+        }
+//            level1();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
@@ -605,10 +614,6 @@ public class BridgeSimulation extends Application {
 
 
         }
-
-//        gc.setFill(Color.GRAY);
-//        gc.fillOval(car.pin1.getPosition().x - 15, car.pin1.getPosition().y - 15, 30, 30);
-//        gc.fillOval(car.pin2.getPosition().x - 15, car.pin2.getPosition().y - 15, 30, 30);
 
         gc.setFill(Color.RED);
         gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
