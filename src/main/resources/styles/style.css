@@ -36,4 +36,5 @@
 .win-widget:disabled {
     -fx-managed: false;
     -fx-visible: false;
+    visibility: hidden;
 }
