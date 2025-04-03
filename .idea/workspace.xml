@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="level selection automation">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="??">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
     </list>
@@ -76,26 +76,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BridgeSimulation.executor": "Run",
-    "Application.GameTitleScreen.executor": "Run",
-    "Application.GravitySimulation.executor": "Run",
-    "Application.HelloApplication.executor": "Run",
-    "Application.PendulumSimulation.executor": "Run",
-    "Application.SimplePhysicsEngine.executor": "Run",
-    "Application.SolveLinearSystem.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.GameTitleScreen.executor&quot;: &quot;Run&quot;,
+    &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SolveLinearSystem.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
@@ -196,21 +196,21 @@
       <option name="project" value="LOCAL" />
       <updated>1743345765511</updated>
     </task>
-    <task id="LOCAL-00008" summary="Graphics grid">
+    <task id="LOCAL-00008" summary="refresh">
       <option name="closed" value="true" />
-      <created>1743350512098</created>
+      <created>1741712557811</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1743350512098</updated>
+      <updated>1741712557811</updated>
     </task>
-    <task id="LOCAL-00009" summary="level selection automation">
+    <task id="LOCAL-00009" summary="refresh test #2">
       <option name="closed" value="true" />
-      <created>1743528277801</created>
+      <created>1741713369006</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1743528277801</updated>
+      <updated>1741713369006</updated>
     </task>
     <task id="LOCAL-00010" summary="Added verlet red ball">
       <option name="closed" value="true" />
@@ -228,7 +228,7 @@
       <option name="project" value="LOCAL" />
       <updated>1742316166091</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -293,8 +293,6 @@
     <MESSAGE value="Added calc to ball" />
     <MESSAGE value="Beam destroy become red part 2" />
     <MESSAGE value="??" />
-    <MESSAGE value="Graphics grid" />
-    <MESSAGE value="level selection automation" />
-    <option name="LAST_COMMIT_MESSAGE" value="level selection automation" />
+    <option name="LAST_COMMIT_MESSAGE" value="??" />
   </component>
 </project>

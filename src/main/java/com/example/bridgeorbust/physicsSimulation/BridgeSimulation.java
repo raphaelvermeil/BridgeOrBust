@@ -685,7 +685,7 @@ public class BridgeSimulation extends Application {
 
 
 //        gc.setFill(Color.RED);
-            gc.drawImage(carImage, ball1.getPosition().x, ball1.getPosition().y, 34.35, 15.15);
+            gc.drawImage(carImage, ball1.getPosition().x, ball1.getPosition().y, (34.35), 15.15);
 //        gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
 
 
