@@ -137,4 +137,8 @@ public class Pin {
     public void setClicked(boolean clicked) {
         isClicked = clicked;
     }
+
+    public void setVelocity(Vector2D velocity) {
+        this.velocity = velocity;
+    }
 }

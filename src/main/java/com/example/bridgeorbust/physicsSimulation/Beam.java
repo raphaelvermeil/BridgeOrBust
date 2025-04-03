@@ -45,7 +45,7 @@ public class Beam {
     }
 
     public void addForceAndMassIfConnected(Pin pin, Vector2D forceSum, double massSum) {
-        if (this.isBroken() == false) {
+        if (!this.isBroken()) {
             if (pin == pin1 || pin == pin2) {
                 pin.setForceSum(forceSum.add(getForceAtPin(pin)));
                 pin.setMassSum(massSum + mass / 2.0);
@@ -54,7 +54,7 @@ public class Beam {
     }
 
     public Vector2D getForceAtPin(Pin pin) {
-        if (this.isBroken() == false) {
+        if (!this.isBroken()) {
             if (pin1 == null || pin2 == null) return new Vector2D();
 
             Vector2D currentLength = pin2.getPosition().subtract(pin1.getPosition());
@@ -63,7 +63,6 @@ public class Beam {
             Vector2D forceBeam = displacement.multiply(-stiffness);
             Vector2D forceGravity = new Vector2D(0, mass * 70);
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
-            System.out.println();
             if (currentLength.magnitude() > restLength) {
                 this.redColorCoefficient = (forceBeam.magnitude() / breakLimit) * 140;
 
