@@ -24,3 +24,17 @@
     -fx-alignment: center; /* Center the image */
     -fx-content-display: center; /* Ensure the graphic is centered */
 }
+
+.win-widget{
+    -fx-background-color: #BC8F8F;
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded background */
+    -fx-padding: 10px; /* Padding around the content */
+
+}
+
+.win-widget:disabled {
+    -fx-managed: false;
+    -fx-visible: false;
+    visibility: hidden;
+}

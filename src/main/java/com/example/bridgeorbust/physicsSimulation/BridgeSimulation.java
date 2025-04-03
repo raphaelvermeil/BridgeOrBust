@@ -28,8 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -62,19 +61,23 @@ public class BridgeSimulation extends Application {
     private boolean roadMode = false;
     private boolean lost = false;
     public Ball ball1;
+    Image carImage;
     private int mouseCounter = 0;
+    Button playPauseButton;
     private double lostArbitraryLimit;
     private double winArbitraryLimit;
     private double previousWindowWidth;
     private double previousWindowHeight;
     private double maxLength = 250;
+    private VBox winWidget = new VBox();
     public int level = 1;
+
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
 
     @Override
     public void start(Stage stage) {
-
+        carImage = new Image("file:car.png");
         Media media = new Media(getClass().getResource("/sounds/bridgingasmile.mp3").toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
@@ -101,12 +104,14 @@ public class BridgeSimulation extends Application {
         canvas.heightProperty().bind(pane.heightProperty());
 
         ImageView playPause = new ImageView(new Image("file:play.png"));
-        Button playPauseButton = new Button("", playPause);
+        playPauseButton = new Button("", playPause);
         playPause.setFitWidth(30);  // Resize if needed
         playPause.setFitHeight(30);
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
         playPauseButton.getStyleClass().add("transparent-button");
+
+
 
         HBox controls = new HBox();
         controls.setSpacing(10);
@@ -163,7 +168,38 @@ public class BridgeSimulation extends Application {
         gearButton.getStyleClass().add("transparent-button");
 
 
-        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
+        winWidget.setLayoutX(canvas.getWidth() / 2);
+        winWidget.setLayoutY(canvas.getHeight() / 2);
+        ImageView winImage = new ImageView(new Image("file:win.png"));
+        winImage.setFitWidth(200);
+        winImage.setFitHeight(200);
+        winWidget.getChildren().add(winImage);
+        winWidget.setAlignment(javafx.geometry.Pos.CENTER);
+        winWidget.setSpacing(40);
+        HBox winButtons = new HBox();
+        winButtons.setAlignment(javafx.geometry.Pos.CENTER);
+        Region spacerLeft = new Region();
+        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
+        Region spacerMiddle = new Region();
+        HBox.setHgrow(spacerMiddle, Priority.ALWAYS);
+        Region spacerRight = new Region();
+        HBox.setHgrow(spacerRight, Priority.ALWAYS);
+        ImageView nextLevelImage = new ImageView(new Image("file:forward.png"));
+        ImageView restartImage = new ImageView(new Image("file:arrow.png"));
+        nextLevelImage.setFitHeight(30);
+        nextLevelImage.setFitWidth(30);
+        restartImage.setFitHeight(30);
+        restartImage.setFitWidth(30);
+        Button nextLevelButton = new Button("", nextLevelImage);
+        Button restartButton = new Button("", restartImage);
+        winButtons.getChildren().addAll(spacerLeft,restartButton, spacerMiddle, nextLevelButton, spacerRight);
+        winWidget.getChildren().add(winButtons);
+
+        winWidget.getStyleClass().add("win-widget");
+        winWidget.setDisable(true);
+
+
+        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget);
 
         Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
@@ -190,6 +226,18 @@ public class BridgeSimulation extends Application {
                 play = true;
                 gridModeButton.setSelected(false);
             }
+        });
+        restartButton.setOnAction(e -> {
+            for (Beam beam : beams) {
+                beam.pin1.resetToInit();
+                beam.pin2.resetToInit();
+            }
+            ball1.setPosition(new Vector2D(0, 0));
+            ball1.setOldPosition(new Vector2D(0, 0));
+            this.lost = false;
+            firstPin = null;
+            gridModeButton.setSelected(true);
+            winWidget.setDisable(true);
         });
         trussButton.setOnAction(e -> roadMode = false);
         roadButton.setOnAction(e -> roadMode = true);
@@ -246,11 +294,12 @@ public class BridgeSimulation extends Application {
         }.start();
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
-        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton);
+        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget);
 
         // Add listeners to update button positions when the canvas size changes
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton));
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton));
+
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
 
         scene.getAccelerators().put(
                 new KeyCodeCombination(KeyCode.Z),
@@ -271,7 +320,8 @@ public class BridgeSimulation extends Application {
         stage.show();
     }
 
-    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton) {
+
+    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget) {
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
         for (Pin pin : startPins) {
@@ -301,6 +351,17 @@ public class BridgeSimulation extends Application {
         gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 75);
         gearButton.setLayoutY(30);
 
+        winWidget.setLayoutX(canvas.getWidth() / 2);
+        winWidget.setLayoutY(canvas.getHeight() / 2);
+
+
+
+        winWidget.setMinWidth(canvas.getWidth() * 400 / 1000);
+        winWidget.setMinHeight(canvas.getHeight() * 400 / 600);
+
+        winWidget.setLayoutX(canvas.getWidth() / 2 - winWidget.getMinWidth() / 2);
+        winWidget.setLayoutY(canvas.getHeight() / 2 - winWidget.getMinHeight() / 2);
+
         this.winArbitraryLimit *= canvas.getWidth() / this.previousWindowWidth;
         this.lostArbitraryLimit *= canvas.getHeight() / this.previousWindowHeight;
 
@@ -325,6 +386,7 @@ public class BridgeSimulation extends Application {
                     break;
             }
         }
+//            level1();
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
@@ -369,11 +431,6 @@ public class BridgeSimulation extends Application {
         Pin p3 = new Pin(400, 550, true);
 
         this.lostArbitraryLimit = 670;
-        this.winArbitraryLimit = 900;
-
-        this.maxRoadBeam = 5;
-        this.maxTruss = 15;
-
 
         startPins.add(p1);
         startPins.add(p2);
@@ -381,11 +438,12 @@ public class BridgeSimulation extends Application {
     }
 
     private void handleMouseClick(MouseEvent event) {
-        if (roadMode && maxRoadBeam <= 0 || !roadMode && maxTruss <= 0)
+        if (roadMode&&maxRoadBeam<=0||!roadMode&&maxTruss<=0) {
+            System.out.println("Cannot build this beam.");
             return;
+        }
         double x = event.getX();
         double y = event.getY();
-
         if (gridModeButton.isSelected()) {
             x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
             y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
@@ -434,7 +492,12 @@ public class BridgeSimulation extends Application {
         cursorX = event.getX();
         cursorY = event.getY();
 
-        for (Pin pin : pins) {
+        if (gridModeButton.isSelected()) {
+            cursorX = (cursorX % gridSizeX > gridSizeX / 2) ? cursorX- cursorX % gridSizeX + gridSizeX : cursorX - cursorX % gridSizeX;
+            cursorY = (cursorY % gridSizeY > gridSizeY / 2) ? cursorY - cursorY % gridSizeY + gridSizeY : cursorY - cursorY % gridSizeY;
+        }
+
+        for(Pin pin : pins){
             Vector2D pos = pin.getPosition();
             if (pos.subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20) {
                 pin.setClicked(true);
@@ -468,7 +531,9 @@ public class BridgeSimulation extends Application {
     }
 
     private void win() {
-        System.out.println("You win");
+        winWidget.setDisable(false);
+        playPauseButton.fire();
+
     }
 
     private void updateSimulation(double deltaTime) {
@@ -617,56 +682,73 @@ public class BridgeSimulation extends Application {
 
         }
 
-        gc.setFill(Color.RED);
-        gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
+        Beam currentBeam = ball1.getCurrentBeam();
+        if (currentBeam != null) {
+            Vector2D pos1 = currentBeam.pin1.getPosition();
+            Vector2D pos2 = currentBeam.pin2.getPosition();
+            double angle = Math.toDegrees(Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x));
+
+            // Apply rotation to the car image
+            gc.save();
+            gc.translate(ball1.getPosition().x + 17.175, ball1.getPosition().y + 7.575); // Translate to the center of the car image
+            gc.rotate(angle);
+            gc.drawImage(carImage, -17.175, -7.575, 34.35, 15.15); // Draw the car image centered
+            gc.restore();
+        } else {
 
 
-        gc.setStroke(Color.RED);
-        gc.setLineWidth(1);
-        gc.setLineDashes(5);
-        gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
+//        gc.setFill(Color.RED);
+            gc.drawImage(carImage, ball1.getPosition().x, ball1.getPosition().y, (34.35), 15.15);
+//        gc.fillOval(ball1.getPosition().x, ball1.getPosition().y, ball1.getRadius(), ball1.getRadius());
+
+
+            gc.setStroke(Color.RED);
+            gc.setLineWidth(1);
+            gc.setLineDashes(5);
+            gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
 //        for (double x = 0; x < gc.getCanvas().getWidth(); x += (15 + 10)) {
 //            gc.strokeLine(x, this.lostArbitraryLimit, x + 15, this.lostArbitraryLimit);
 //        }
+        }
+            if (lost) {
+                String text = "LOST";
+                gc.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
+                gc.setFill(Color.DARKRED);
+                double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
+                double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
 
-        if (lost) {
-            String text = "LOST";
-            gc.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
-            gc.setFill(Color.DARKRED);
-            double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
-            double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
+                double x = (gc.getCanvas().getWidth() - textWidth) / 2;
+                double y = (gc.getCanvas().getHeight() - textHeight) / 2 + textHeight; // Adjust for baseline alignment
 
-            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
-            double y = (gc.getCanvas().getHeight() - textHeight) / 2 + textHeight; // Adjust for baseline alignment
+                gc.fillText(text, x, y);
+            } else if (!play) {
+                String text = "Roads Left: " + maxRoadBeam + " Trusses Left: " + maxTruss;
+                gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20)); // Change font size as needed
+                gc.setFill(Color.ROSYBROWN);
+                double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
+                double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
 
-            gc.fillText(text, x, y);
-        } else if (!play) {
-            String text = "Roads Left: " + maxRoadBeam + " Trusses Left: " + maxTruss;
-            gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20)); // Change font size as needed
-            gc.setFill(Color.ROSYBROWN);
-            double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
-            double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
+                double x = (gc.getCanvas().getWidth() - textWidth) / 2;
+                double y = 30; // Adjust for baseline alignment
 
-            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
-            double y = 30; // Adjust for baseline alignment
+                gc.fillText(text, x, y);
 
-            gc.fillText(text, x, y);
+            }
+            //Drawing grid
+            if (gridModeButton.isSelected()) {
+                gc.setStroke(Color.rgb(100, 100, 100, 0.5));
+                gc.setLineWidth(0.5);
+                for (double x = 0; x < gc.getCanvas().getWidth(); x += gridSizeX) {
+                    gc.strokeLine(x, 0, x, gc.getCanvas().getHeight());
+                }
+                for (double y = 0; y < gc.getCanvas().getHeight(); y += gridSizeY) {
+                    gc.strokeLine(0, y, gc.getCanvas().getWidth(), y);
+                }
+            }
+
 
         }
-        //Drawing grid
-        if (gridModeButton.isSelected()) {
-            gc.setStroke(Color.rgb(100, 100, 100, 0.5));
-            gc.setLineWidth(0.5);
-            for (double x = 0; x < gc.getCanvas().getWidth(); x += gridSizeX) {
-                gc.strokeLine(x, 0, x, gc.getCanvas().getHeight());
-            }
-            for (double y = 0; y < gc.getCanvas().getHeight(); y += gridSizeY) {
-                gc.strokeLine(0, y, gc.getCanvas().getWidth(), y);
-            }
-        }
 
-
-    }
 
     public static void main(String[] args) {
         launch();

@@ -20,6 +20,7 @@ public class GameTitleScreen extends Application {
     private static Button playButton;
     private static Button settingsButton;
     private static Button quitButton;
+    public int test = 4;
 
     @Override
     public void start(Stage primaryStage) {

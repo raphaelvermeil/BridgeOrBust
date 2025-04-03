@@ -7,6 +7,7 @@ import java.util.List;
 public class Ball {
     private Vector2D position;
     private Vector2D oldPosition;
+    private Beam currentBeam;
 
     private Vector2D acceleration;
     private double mass;
@@ -61,12 +62,14 @@ public class Ball {
                 if (this.position.y >= beam.pin1.getPosition().y - (2 * this.radius) || this.position.y >= beam.pin2.getPosition().y - (2 * this.radius)) {
 
                     if (trulyUnder(beam)) {
+                        currentBeam = beam;
                     }
 
                 }
             }
         }
     }
+
 
     private boolean trulyUnder(Beam beam) {
         double deltaX, deltaY, relativeLength, ratio, relativeHeight, yLimit;
@@ -87,6 +90,7 @@ public class Ball {
         if (this.position.y > yLimit) {
             this.position.y = yLimit;
             this.oldPosition.y = yLimit;
+
             return true;
         } else
             return false;
@@ -128,5 +132,13 @@ public class Ball {
 
     public void setOldPosition(Vector2D oldPosition) {
         this.oldPosition = oldPosition;
+    }
+
+    public Beam getCurrentBeam() {
+        return currentBeam;
+    }
+
+    public void setCurrentBeam(Beam currentBeam) {
+        this.currentBeam = currentBeam;
     }
 }
