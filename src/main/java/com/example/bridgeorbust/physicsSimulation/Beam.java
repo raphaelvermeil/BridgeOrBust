@@ -6,7 +6,7 @@ public class Beam {
     private double stiffness;
     private double mass;
     private double massPerLength;
-    private double breakLimit = 2500;
+    private double breakLimit;
     private boolean broken = false;
     private boolean physical = false;
     private double maxLength = 250;
@@ -18,13 +18,14 @@ public class Beam {
 
     }
 
-    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength, boolean physical) {
+    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength, double breakLimit, boolean physical) {
         this.pin1 = p1;
         this.pin2 = p2;
         this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
         this.stiffness = stiffness;
         this.massPerLength = massPerLength;
         createMass();
+        this.breakLimit = breakLimit;
         this.physical = physical;
 
         p1.addBeam(this);
@@ -84,8 +85,9 @@ public class Beam {
         return new Vector2D();
     }
 
-    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight){
-        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();;
+    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight) {
+        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();
+        ;
         this.maxLength = maxLength * newWidth / previousWidth;
         this.massPerLength = massPerLength * newHeight / previousHeight;
         createMass();
@@ -121,7 +123,8 @@ public class Beam {
     }
 
     public void setRestLength() {
-        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();;
+        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();
+        ;
     }
 
     public double getMass() {
