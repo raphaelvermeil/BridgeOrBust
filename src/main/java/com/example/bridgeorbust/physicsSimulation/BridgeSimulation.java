@@ -41,7 +41,6 @@ public class BridgeSimulation extends Application {
     private int maxTruss;
     private double cursorY = 0;
     private boolean play = false;
-
     private CheckBox gridModeButton = new CheckBox("Grid Mode");
     private double gridSizeX = 20;
     private double gridSizeY = 20;
@@ -58,7 +57,7 @@ public class BridgeSimulation extends Application {
     private double maxLength = 250;
     private VBox winWidget = new VBox();
     public int level = 1;
-    
+
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
 
@@ -228,12 +227,17 @@ public class BridgeSimulation extends Application {
             winWidget.setDisable(true);
         });
         trussButton.setOnAction(e -> roadMode = false);
-
         roadButton.setOnAction(e -> roadMode = true);
         resetButton.setOnAction(e -> {
-            pins.clear();
-            beams.clear();
-            setupBridge(gc);
+            if (firstPin != null) {
+                if(firstPin.getConnectedBeamsSize()==0)
+                    pins.remove(firstPin);
+                firstPin = null;
+            }
+
+            while (mouseCounter>0)
+                destroyBeam(beams.getLast());
+
             ball1.setPosition(new Vector2D(0, 0));
             ball1.setOldPosition(new Vector2D(0, 0));
             if (play) {
@@ -241,34 +245,22 @@ public class BridgeSimulation extends Application {
                 play = false;
                 lost = false;
             }
-            firstPin = null;
+
             mouseCounter = 0;
         });
         undoButton.setOnAction(e -> {
-
             if (firstPin == null) {
-                Beam beam = beams.get(beams.size() - 1);
                 if (mouseCounter > 0) {
-                    destroyBeam(beam);
+                    destroyBeam(beams.getLast());
                     System.out.println(mediaPlayer.getCurrentTime());
-                    if (beam.pin1.getConnectedBeamsSize() < 1) {
-                        pins.remove(beam.pin1);
-                    } else if (beam.pin2.getConnectedBeamsSize() < 1) {
-                        pins.remove(beam.pin2);
-                    }
                 }
             } else {
+                if(firstPin.getConnectedBeamsSize()==0)
+                    pins.remove(firstPin);
                 firstPin = null;
             }
 
-            for (Pin pin : pins) {
-                if (pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()) {
-                    pins.remove(pin);
-                }
-            }
-
         });
-
 
         new AnimationTimer() {
             long lastTime = System.nanoTime();
@@ -294,10 +286,6 @@ public class BridgeSimulation extends Application {
 
         canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
         canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
-
-//        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
-//        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPause, controls, resetButton, undoButton));
-
 
         scene.getAccelerators().put(
                 new KeyCodeCombination(KeyCode.Z),
@@ -564,6 +552,12 @@ public class BridgeSimulation extends Application {
         beams.remove(beam);
         beam.pin1.removeBeam(beam);
         beam.pin2.removeBeam(beam);
+        if (beam.pin1.getConnectedBeamsSize() < 1) {
+            pins.remove(beam.pin1);
+        }
+        if (beam.pin2.getConnectedBeamsSize() < 1) {
+            pins.remove(beam.pin2);
+        }
         mouseCounter--;
         if (beam.isPhysical())
             maxRoadBeam++;
