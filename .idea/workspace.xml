@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Push test">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Right click destroys beam">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Ball.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Pin.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +143,7 @@
       <workItem from="1740157167797" duration="4420000" />
       <workItem from="1743180591637" duration="5531000" />
       <workItem from="1743725933148" duration="2225000" />
-      <workItem from="1743870745086" duration="1192000" />
+      <workItem from="1743870745086" duration="8822000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -222,15 +225,15 @@
       <option name="project" value="LOCAL" />
       <updated>1743546237798</updated>
     </task>
-    <task id="LOCAL-00011" summary="Added calc to ball">
+    <task id="LOCAL-00011" summary="Right click destroys beam">
       <option name="closed" value="true" />
-      <created>1742316166090</created>
+      <created>1743872242039</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1742316166091</updated>
+      <updated>1743872242039</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,6 +301,7 @@
     <MESSAGE value="Graphics grid" />
     <MESSAGE value="level selection automation" />
     <MESSAGE value="max beam count" />
-    <option name="LAST_COMMIT_MESSAGE" value="max beam count" />
+    <MESSAGE value="Right click destroys beam" />
+    <option name="LAST_COMMIT_MESSAGE" value="Right click destroys beam" />
   </component>
 </project>

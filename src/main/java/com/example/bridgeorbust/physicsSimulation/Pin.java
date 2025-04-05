@@ -41,6 +41,7 @@ public class Pin {
     public void resetToInit(){
         this.position=this.initialPosition;
     }
+
     public void calculateForces() {
         forceSum = new Vector2D();
         massSum = 0.0;

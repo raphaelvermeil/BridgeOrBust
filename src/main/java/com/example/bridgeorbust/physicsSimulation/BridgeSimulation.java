@@ -62,7 +62,7 @@ public class BridgeSimulation extends Application {
     private double gridSizeY = 20;
     private boolean roadMode = false;
     private boolean lost = false;
-    public Ball ball1;
+    public static Ball ball1 = new Ball(50, 275, 100000, 20);;
     Image carImage;
     private int mouseCounter = 0;
     Button playPauseButton;
@@ -95,7 +95,7 @@ public class BridgeSimulation extends Application {
         canvas.setOnMouseMoved(this::handleMouseMove);
 
 
-        ball1 = new Ball(50, 275, 10, 20);
+
 
         Pane pane = new Pane();
 
@@ -451,9 +451,11 @@ public class BridgeSimulation extends Application {
 
         if (event.getButton() == javafx.scene.input.MouseButton.SECONDARY) { // Check if right-click
             for (Beam beam : beams) {
-                if (isMouseHoveringOverBeam(x, y, beam)) {
-                    destroyBeam(beam);
-                    return;
+                if(!beam.pin1.isPositionFixed() || !beam.pin2.isPositionFixed()) {
+                    if (isMouseHoveringOverBeam(x, y, beam)) {
+                        destroyBeam(beam);
+                        return;
+                    }
                 }
             }
         }else if(event.getButton() == javafx.scene.input.MouseButton.PRIMARY){
@@ -581,8 +583,29 @@ public class BridgeSimulation extends Application {
     }
 
     private void updateSimulation(double deltaTime) {
+
+        for (Beam beam : beams) {
+
+        }
+
         for (Pin pin : pins) {
+//            if(!pin.isPositionFixed()) {
+//                System.out.println(pin.getMassSum());            }
+
             pin.calculateForces();
+//            if(!pin.isPositionFixed()) {
+//                System.out.println(pin.getMassSum());            }
+            for(Beam beam: beams){
+                if (beam.isPhysical()) {
+                    ball1.checkCollisions(beam);
+//                    if(!pin.isPositionFixed()) {
+//                        System.out.println(pin.getMassSum());            }
+                }
+
+                if (beam.isBroken()) {
+                    destroyBeam(beam);
+                }
+            }
             //System.out.println(pin.getConnectedBeamsSize());
             if (pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()) {
                 pins.remove(pin);
@@ -591,15 +614,7 @@ public class BridgeSimulation extends Application {
         for (Pin pin : pins) {
             pin.update(deltaTime);
         }
-        for (Beam beam : beams) {
-            if (beam.isPhysical()) {
-                ball1.checkCollisions(beam);
-            }
 
-            if (beam.isBroken()) {
-                destroyBeam(beam);
-            }
-        }
         ball1.accelerate(0, 9.8);
         ball1.update(deltaTime);
         checkWin();
