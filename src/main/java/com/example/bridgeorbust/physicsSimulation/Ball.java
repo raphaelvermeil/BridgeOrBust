@@ -19,7 +19,7 @@ public class Ball {
         this.position = new Vector2D(x, y);
 
         this.oldPosition = new Vector2D(x, y);
-        this.mass = 0.0;
+        this.mass = mass;
         this.acceleration = new Vector2D();
         this.radius = radius;
 
@@ -63,6 +63,22 @@ public class Ball {
 
                     if (trulyUnder(beam)) {
                         currentBeam = beam;
+                        // Calculate distances to each pin
+//                    double distanceToPin1 = this.position.subtract(beam.pin1.getPosition()).magnitude();
+//                    double distanceToPin2 = this.position.subtract(beam.pin2.getPosition()).magnitude();
+//
+//                    // Determine the closer pin and add the mass of the ball to its sumMass
+//                    if (distanceToPin1 < distanceToPin2) {
+//                        beam.pin1.setMassSum(beam.pin1.getMassSum() + this.mass);
+//
+//
+//
+//                    } else {
+//                        beam.pin2.setMassSum(beam.pin2.getMassSum() + this.mass);
+//
+//                    }
+
+
                     }
 
                 }
@@ -140,5 +156,13 @@ public class Ball {
 
     public void setCurrentBeam(Beam currentBeam) {
         this.currentBeam = currentBeam;
+    }
+
+    public double getMass() {
+        return mass;
+    }
+
+    public void setMass(double mass) {
+        this.mass = mass;
     }
 }
