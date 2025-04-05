@@ -434,7 +434,7 @@ public class BridgeSimulation extends Application {
         this.winArbitraryLimit = 900;
 
         this.maxRoadBeam = 4;
-        this.maxTruss = 30;
+        this.maxTruss = 18;
 
         startPins.add(p1);
         startPins.add(p2);
