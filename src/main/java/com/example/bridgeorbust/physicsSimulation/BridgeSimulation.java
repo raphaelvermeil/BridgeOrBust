@@ -615,8 +615,8 @@ public class BridgeSimulation extends Application {
             pin.update(deltaTime);
         }
 
-        ball1.accelerate(0, 9.8);
-        ball1.update(deltaTime);
+
+        ball1.update(deltaTime, beams);
         checkWin();
     }
 

@@ -25,9 +25,11 @@ public class Ball {
 
     }
 
-    public void update(double dt) {
+    public void update(double dt,List<Beam> beams) {
+        this.acceleration=new Vector2D(0,0);
+        this.accelerate(0, 9.8);
 
-        double velocity_x = 2;//this.position.x - this.oldPosition.x;
+        double velocity_x = 2;
         double velocity_y = this.position.y - this.oldPosition.y;
 
 
@@ -39,25 +41,23 @@ public class Ball {
         this.position.x = (this.position.x + velocity_x + this.acceleration.x * dt);
         this.position.y = (this.position.y + velocity_y + this.acceleration.y * dt);
 
-        // Reset acceleration
-        this.acceleration.x = 0;
-
-        this.acceleration.y = 0;
-
+        for(Beam beam: beams){
+            if (beam.isPhysical()) {
+                this.checkCollisions(beam);
+            }
+        }
     }
 
-    void accelerate(double ax, double ay) {
+    private void accelerate(double ax, double ay) {
         this.acceleration.x = (this.acceleration.x + ax);
-
         this.acceleration.y = (this.acceleration.y + ay);
     }
 
-    void checkCollisions(Beam beam) {
+    public void checkCollisions(Beam beam) {
         if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)
                 || (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) {
 
             if (this.position.y >= beam.pin1.getPosition().y - this.radius || this.position.y >= beam.pin2.getPosition().y - (this.radius)) {
-
 
                 if (this.position.y >= beam.pin1.getPosition().y - (2 * this.radius) || this.position.y >= beam.pin2.getPosition().y - (2 * this.radius)) {
 
@@ -89,7 +89,7 @@ public class Ball {
 
     private boolean trulyUnder(Beam beam) {
         double deltaX, deltaY, relativeLength, ratio, relativeHeight, yLimit;
-        Pin leadingPinX, followingPinX, leadingPinY, followingPinY;
+        Pin leadingPinX, followingPinX;
         if (beam.pin1.getPosition().x >= beam.pin2.getPosition().x) {
             leadingPinX = beam.pin2;
             followingPinX = beam.pin1;
@@ -104,12 +104,16 @@ public class Ball {
         relativeHeight = deltaY * relativeLength / deltaX;
         yLimit = leadingPinX.getPosition().y + relativeHeight - this.radius;
         if (this.position.y > yLimit) {
-            this.position.y = yLimit;
-            this.oldPosition.y = yLimit;
-
-            return true;
-        } else
-            return false;
+            if (this.oldPosition.y+this.radius <= leadingPinX.getPosition().y + 5) {
+                replace(yLimit);
+                return true;
+            }
+        }
+        return false;
+    }
+    private void replace(double newY){
+        this.position.y = newY;
+        this.oldPosition.y = newY;
     }
 
     public void positionBinding(double previousWidth, double previousHeight, double newWidth, double newHeight) {
