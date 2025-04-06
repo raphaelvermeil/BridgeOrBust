@@ -25,8 +25,8 @@ public class Ball {
 
     }
 
-    public void update(double dt,List<Beam> beams) {
-        this.acceleration=new Vector2D(0,0);
+    public void update(double dt, List<Beam> beams) {
+        this.acceleration = new Vector2D(0, 0);
         this.accelerate(0, 9.8);
 
         double velocity_x = 2;
@@ -41,7 +41,7 @@ public class Ball {
         this.position.x = (this.position.x + velocity_x + this.acceleration.x * dt);
         this.position.y = (this.position.y + velocity_y + this.acceleration.y * dt);
 
-        for(Beam beam: beams){
+        for (Beam beam : beams) {
             if (beam.isPhysical()) {
                 this.checkCollisions(beam);
             }
@@ -104,14 +104,25 @@ public class Ball {
         relativeHeight = deltaY * relativeLength / deltaX;
         yLimit = leadingPinX.getPosition().y + relativeHeight - this.radius;
         if (this.position.y > yLimit) {
-            if (this.oldPosition.y+this.radius <= leadingPinX.getPosition().y + 5) {
-                replace(yLimit);
-                return true;
+            if (deltaY <= 0) {
+                if (this.oldPosition.y + this.radius <= leadingPinX.getPosition().y + 5) {
+                    replace(yLimit);
+                    System.out.println("1");
+                    return true;
+                }
+            } else {
+                if (this.oldPosition.y <= yLimit + 10) {
+                    replace(yLimit);
+                    System.out.println(2);
+                    return true;
+                }
             }
+
         }
         return false;
     }
-    private void replace(double newY){
+
+    private void replace(double newY) {
         this.position.y = newY;
         this.oldPosition.y = newY;
     }
