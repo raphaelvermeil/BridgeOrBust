@@ -42,9 +42,9 @@ public class Pin {
         this.position=this.initialPosition;
     }
 
-    public void calculateForces() {
+    public void calculateForces(double mass) {
         forceSum = new Vector2D();
-        massSum = 0.0;
+        massSum = mass;
         for (Beam beam : connectedBeams) {
             beam.addForceAndMassIfConnected(this, forceSum, massSum);
         }
@@ -117,6 +117,10 @@ public class Pin {
 
     public Vector2D getVelocity() {
         return velocity;
+    }
+
+    public List<Beam> getConnectedBeams() {
+        return connectedBeams;
     }
 
     public int getConnectedBeamsSize() {

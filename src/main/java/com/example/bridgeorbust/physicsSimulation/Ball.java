@@ -11,6 +11,7 @@ public class Ball {
 
     private Vector2D acceleration;
     private double mass;
+    private double yLimit;
 
     //    private List<Beam> beams;
     private double radius;
@@ -40,12 +41,6 @@ public class Ball {
 
         this.position.x = (this.position.x + velocity_x + this.acceleration.x * dt);
         this.position.y = (this.position.y + velocity_y + this.acceleration.y * dt);
-
-        for (Beam beam : beams) {
-            if (beam.isPhysical()) {
-                this.checkCollisions(beam);
-            }
-        }
     }
 
     private void accelerate(double ax, double ay) {
@@ -53,7 +48,7 @@ public class Ball {
         this.acceleration.y = (this.acceleration.y + ay);
     }
 
-    public void checkCollisions(Beam beam) {
+    public boolean checkCollisions(Beam beam) {
         if ((this.position.x > beam.pin1.getPosition().x && this.position.x < beam.pin2.getPosition().x)
                 || (this.position.x <= beam.pin1.getPosition().x && this.position.x >= beam.pin2.getPosition().x)) {
 
@@ -62,33 +57,18 @@ public class Ball {
                 if (this.position.y >= beam.pin1.getPosition().y - (2 * this.radius) || this.position.y >= beam.pin2.getPosition().y - (2 * this.radius)) {
 
                     if (trulyUnder(beam)) {
-                        currentBeam = beam;
-                        // Calculate distances to each pin
-//                    double distanceToPin1 = this.position.subtract(beam.pin1.getPosition()).magnitude();
-//                    double distanceToPin2 = this.position.subtract(beam.pin2.getPosition()).magnitude();
-//
-//                    // Determine the closer pin and add the mass of the ball to its sumMass
-//                    if (distanceToPin1 < distanceToPin2) {
-//                        beam.pin1.setMassSum(beam.pin1.getMassSum() + this.mass);
-//
-//
-//
-//                    } else {
-//                        beam.pin2.setMassSum(beam.pin2.getMassSum() + this.mass);
-//
-//                    }
-
-
+                        return true;
                     }
 
                 }
             }
         }
+        return false;
     }
 
 
     private boolean trulyUnder(Beam beam) {
-        double deltaX, deltaY, relativeLength, ratio, relativeHeight, yLimit;
+        double deltaX, deltaY, relativeLength, relativeHeight, yLimit;
         Pin leadingPinX, followingPinX;
         if (beam.pin1.getPosition().x >= beam.pin2.getPosition().x) {
             leadingPinX = beam.pin2;
@@ -106,14 +86,12 @@ public class Ball {
         if (this.position.y > yLimit) {
             if (deltaY <= 0) {
                 if (this.oldPosition.y + this.radius <= leadingPinX.getPosition().y + 5) {
-                    replace(yLimit);
-                    System.out.println("1");
+                    this.yLimit=yLimit;
                     return true;
                 }
             } else {
                 if (this.oldPosition.y <= yLimit + 10) {
-                    replace(yLimit);
-                    System.out.println(2);
+                    this.yLimit=yLimit;
                     return true;
                 }
             }
@@ -122,9 +100,12 @@ public class Ball {
         return false;
     }
 
-    private void replace(double newY) {
-        this.position.y = newY;
-        this.oldPosition.y = newY;
+    public void replace(Beam beam) {
+        if (this.checkCollisions(beam)) {
+            this.position.y = this.yLimit;
+            this.oldPosition.y = this.yLimit;
+        }
+
     }
 
     public void positionBinding(double previousWidth, double previousHeight, double newWidth, double newHeight) {

@@ -5,11 +5,10 @@ package com.example.bridgeorbust.physicsSimulation;
  * !!BUG!! reset forces at pause, color should ideally stay, FIXED
  * change physic values per level? NO
  * calibrate realism FIxED
-
+ * <p>
  * add weight effect to mass (hint: check only physical beams/use trulyUnder())
  * binding is spaghetti, bind width to height? (if so, ratio with full-screen size or smt)
  * \__} massPerLength, breakLimit, maxLength, x-Speed, y-accel, ect.
- * test button while in build mode
  * grid button while in build mode, (cannot be checked if pins != startPins and in freeMode)
  * level3
  * fix key comb. i.e. spacebar!!
@@ -51,8 +50,8 @@ public class BridgeSimulation extends Application {
     private List<Pin> startPins = new ArrayList<>();
     private Pin firstPin = null;
     private double cursorX = 0;
-    private double breakLimitTruss = 4000;
-    private double breakLimitRoad = 2500;
+    private double breakLimitTruss = 4100;
+    private double breakLimitRoad = 2700;
     private int maxRoadBeam;
     private int maxTruss;
     private double cursorY = 0;
@@ -62,7 +61,8 @@ public class BridgeSimulation extends Application {
     private double gridSizeY = 20;
     private boolean roadMode = false;
     private boolean lost = false;
-    public static Ball ball1 = new Ball(50, 275, 100000, 20);;
+    public static Ball ball1 = new Ball(50, 275, 0.02, 20);
+    ;
     Image carImage;
     private int mouseCounter = 0;
     Button playPauseButton;
@@ -93,8 +93,6 @@ public class BridgeSimulation extends Application {
 
         canvas.setOnMouseClicked(this::handleMouseClick);
         canvas.setOnMouseMoved(this::handleMouseMove);
-
-
 
 
         Pane pane = new Pane();
@@ -220,8 +218,8 @@ public class BridgeSimulation extends Application {
                 play = false;
                 firstPin = null;
                 gridModeButton.setSelected(true);
-                for (Pin pin:pins){
-                    pin.setVelocity(new Vector2D(0,0));
+                for (Pin pin : pins) {
+                    pin.setVelocity(new Vector2D(0, 0));
                 }
             } else {
                 playPause.setImage(new Image("file:pause.png"));
@@ -321,7 +319,6 @@ public class BridgeSimulation extends Application {
         stage.setTitle("Bridge Simulation");
         stage.show();
     }
-
 
     private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget) {
         playPauseButton.setLayoutX(30);
@@ -442,23 +439,19 @@ public class BridgeSimulation extends Application {
     }
 
     private void handleMouseClick(MouseEvent event) {
-
-
         double x = event.getX();
         double y = event.getY();
 
-
-
         if (event.getButton() == javafx.scene.input.MouseButton.SECONDARY) { // Check if right-click
             for (Beam beam : beams) {
-                if(!beam.pin1.isPositionFixed() || !beam.pin2.isPositionFixed()) {
+                if (!beam.pin1.isPositionFixed() || !beam.pin2.isPositionFixed()) {
                     if (isMouseHoveringOverBeam(x, y, beam)) {
                         destroyBeam(beam);
                         return;
                     }
                 }
             }
-        }else if(event.getButton() == javafx.scene.input.MouseButton.PRIMARY){
+        } else if (event.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
             if (roadMode && maxRoadBeam <= 0 || !roadMode && maxTruss <= 0) {
                 System.out.println("Cannot build this beam.");
                 return;
@@ -467,7 +460,6 @@ public class BridgeSimulation extends Application {
                 x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
                 y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
             }
-
 
             Pin clickedPin = getPinAt(x, y);
 
@@ -491,7 +483,7 @@ public class BridgeSimulation extends Application {
                         pins.add(secondPin);
                     }
 
-                    Beam beam = new Beam(firstPin, secondPin, 900, roadMode ? 0.035 : 0.03, (roadMode) ? breakLimitRoad : breakLimitTruss, roadMode);
+                    Beam beam = new Beam(firstPin, secondPin, 900, roadMode ? 0.033 : 0.025, (roadMode) ? breakLimitRoad : breakLimitTruss, roadMode);
 
                     beamSound.play();
                     beams.add(beam);
@@ -565,7 +557,6 @@ public class BridgeSimulation extends Application {
         return distance;
     }
 
-
     private void checkWin() {
         if (ball1.getPosition().y > lostArbitraryLimit) {
             this.lost = true;
@@ -583,40 +574,43 @@ public class BridgeSimulation extends Application {
     }
 
     private void updateSimulation(double deltaTime) {
-
         for (Beam beam : beams) {
-
+            if (beam.isBroken()) {
+                destroyBeam(beam);
+            }
         }
+        ball1.update(deltaTime, beams);
 
         for (Pin pin : pins) {
-//            if(!pin.isPositionFixed()) {
-//                System.out.println(pin.getMassSum());            }
-
-            pin.calculateForces();
-//            if(!pin.isPositionFixed()) {
-//                System.out.println(pin.getMassSum());            }
-            for(Beam beam: beams){
-                if (beam.isPhysical()) {
-                    ball1.checkCollisions(beam);
-//                    if(!pin.isPositionFixed()) {
-//                        System.out.println(pin.getMassSum());            }
-                }
-
-                if (beam.isBroken()) {
-                    destroyBeam(beam);
-                }
-            }
-            //System.out.println(pin.getConnectedBeamsSize());
             if (pin.getConnectedBeamsSize() == 0 && !pin.isStartPin()) {
                 pins.remove(pin);
+                continue;
             }
-        }
-        for (Pin pin : pins) {
+
+            for (Beam beam : pin.getConnectedBeams()) {
+                if (ball1.checkCollisions(beam)) {
+                    if (pin == beam.pin1) {
+                        if (beam.pin1.getPosition().subtract(ball1.getPosition()).magnitude() <= ball1.getPosition().subtract(beam.pin2.getPosition()).magnitude()) {//ball closer to pin1
+                            pin.calculateForces(ball1.getMass());
+                        }
+                    }else {
+                        if (beam.pin2.getPosition().subtract(ball1.getPosition()).magnitude() <= ball1.getPosition().subtract(beam.pin1.getPosition()).magnitude())
+                            pin.calculateForces(ball1.getMass());
+                    }
+                }
+                else {
+                    pin.calculateForces(0);
+                }
+            }
+
             pin.update(deltaTime);
         }
-
-
-        ball1.update(deltaTime, beams);
+        System.out.println(pins.getFirst().getMassSum());
+        for (Beam beam : beams) {
+            if (beam.isPhysical()) {
+                ball1.replace(beam);
+            }
+        }
         checkWin();
     }
 
