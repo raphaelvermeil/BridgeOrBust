@@ -57,6 +57,7 @@ public class Ball {
                 if (this.position.y >= beam.pin1.getPosition().y - (2 * this.radius) || this.position.y >= beam.pin2.getPosition().y - (2 * this.radius)) {
 
                     if (trulyUnder(beam)) {
+                        currentBeam = beam;
                         return true;
                     }
 

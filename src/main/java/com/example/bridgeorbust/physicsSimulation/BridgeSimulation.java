@@ -603,8 +603,13 @@ public class BridgeSimulation extends Application {
                 }
             }
 
+
+        }
+
+        for(Pin pin : pins) {
             pin.update(deltaTime);
         }
+
         System.out.println(pins.getFirst().getMassSum());
         for (Beam beam : beams) {
             if (beam.isPhysical()) {
