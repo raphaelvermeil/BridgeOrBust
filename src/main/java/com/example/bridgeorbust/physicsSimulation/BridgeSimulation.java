@@ -62,7 +62,6 @@ public class BridgeSimulation extends Application {
     private boolean roadMode = false;
     private boolean lost = false;
     public static Ball ball1 = new Ball(50, 275, 0.02, 20);
-    ;
     Image carImage;
     private int mouseCounter = 0;
     Button playPauseButton;
@@ -602,13 +601,10 @@ public class BridgeSimulation extends Application {
                     pin.calculateForces(0);
                 }
             }
-
-
         }
 
-        for(Pin pin : pins) {
+        for (Pin pin:pins)
             pin.update(deltaTime);
-        }
 
         System.out.println(pins.getFirst().getMassSum());
         for (Beam beam : beams) {

@@ -96,7 +96,6 @@ public class Ball {
                     return true;
                 }
             }
-
         }
         return false;
     }

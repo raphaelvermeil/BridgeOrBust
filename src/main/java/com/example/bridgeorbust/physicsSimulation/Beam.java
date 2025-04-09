@@ -52,28 +52,6 @@ public class Beam {
             if (pin == pin1 || pin == pin2) {
                 pin.setForceSum(forceSum.add(getForceAtPin(pin)));
                 pin.setMassSum(massSum + mass / 2.0);
-
-                if(ball1.getCurrentBeam() != null) {
-                    if(ball1.getCurrentBeam().pin1 == pin1 || ball1.getCurrentBeam().pin2 == pin2) {
-
-//                         //Calculate distances to each pin
-//                    double distanceToPin1 = ball1.getPosition().subtract(pin1.getPosition()).magnitude();
-//                    double distanceToPin2 = ball1.getPosition().subtract(pin2.getPosition()).magnitude();
-//
-//                    // Determine the closer pin and add the mass of the ball to its sumMass
-//                    if (distanceToPin1 < distanceToPin2) {
-//                        System.out.println(pin1.getMassSum());
-//                        pin1.setMassSum(pin1.getMassSum() + ball1.getMass());
-//                        System.out.println(pin1.getMassSum());
-//
-//
-//                    } else {
-//                        pin2.setMassSum(pin2.getMassSum() + ball1.getMass());
-//
-//                    }
-                    }
-                }
-
             }
         }
     }
@@ -95,7 +73,7 @@ public class Beam {
                 this.blueColorCoefficient = (forceBeam.magnitude() / breakLimit) * 140;
             }
 
-            if (forceBeam.magnitude() > this.breakLimit || forceBeam.magnitude() < -this.breakLimit) { // Arbitrary break limit
+            if (forceBeam.magnitude() > this.breakLimit) { // Arbitrary break limit
                 broken = true;
             }
             if (pin == pin1) {
