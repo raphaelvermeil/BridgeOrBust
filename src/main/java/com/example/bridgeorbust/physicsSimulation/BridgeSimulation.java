@@ -76,6 +76,7 @@ public class BridgeSimulation extends Application {
     private double gAccel = 70;
     private VBox winWidget = new VBox();
     public int level = 1;
+    private int initalPinCount = 0;
 
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
@@ -294,6 +295,20 @@ public class BridgeSimulation extends Application {
 
         });
 
+        nextLevelButton.setOnAction(e -> {
+            if (level == 3) {
+                level = 1;
+            } else {
+                level++;
+            }
+            beams.clear();
+            pins.clear();
+            startPins.clear();
+            System.out.println("next level: " + level);
+            setupBridge(gc);
+            winWidget.setDisable(true);
+        });
+
         new AnimationTimer() {
             long lastTime = System.nanoTime();
 
@@ -306,7 +321,8 @@ public class BridgeSimulation extends Application {
                     updateSimulation(deltaTime);
                 }
 
-                if((!gridModeButton.isSelected() && !pins.equals(startPins)) || (gridModeButton.isSelected() && !pins.equals(startPins))) {
+
+                if((!gridModeButton.isSelected() && pins.size() > initalPinCount) || (gridModeButton.isSelected() && pins.size() > initalPinCount)) {
                     gridModeButton.setDisable(true);
                 } else{
                     gridModeButton.setDisable(false);
@@ -421,6 +437,9 @@ public class BridgeSimulation extends Application {
                 case 2:
                     level2();
                     break;
+                case 3:
+                    level3();
+                    break;
                 default:
                     System.out.println("there is no such level");
                     break;
@@ -442,11 +461,12 @@ public class BridgeSimulation extends Application {
 
                 }
                 newPins.add(pin2);
-                startPins.add(pin2);
+
 
             }
         }
         pins.addAll(newPins);
+        initalPinCount = pins.size();
     }
 
     private void level1() {//fix numeration!
@@ -471,6 +491,22 @@ public class BridgeSimulation extends Application {
         Pin p1 = new Pin(150, 300, true);
         Pin p2 = new Pin(850, 300, true);
         Pin p3 = new Pin(400, 550, true);
+
+        this.lostArbitraryLimit = 500;
+        this.winArbitraryLimit = 900;
+
+        this.maxRoadBeam = 4;
+        this.maxTruss = 18;
+
+        startPins.add(p1);
+        startPins.add(p2);
+        startPins.add(p3);
+    }
+
+    private void level3() {//fix numeration!
+        Pin p1 = new Pin(200, 400, true);
+        Pin p2 = new Pin(800, 200, true);
+        Pin p3 = new Pin(500, 550, true);
 
         this.lostArbitraryLimit = 500;
         this.winArbitraryLimit = 900;
