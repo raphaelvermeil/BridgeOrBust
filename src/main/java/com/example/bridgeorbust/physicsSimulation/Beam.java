@@ -6,6 +6,8 @@ public class Beam {
     public Pin pin1, pin2;
     private double restLength;
     private double stiffness;
+    private double stiffnessX;
+    private double stiffnessY;
     private double mass;
     private double massPerLength;
     private double massPerX;
@@ -13,6 +15,7 @@ public class Beam {
     private double breakLimit;
     private boolean broken = false;
     private boolean physical = false;
+    private double gAccel;
     //private double maxLength = 250;
     private double airFrictionCoefficient = 3;
     private double redColorCoefficient;
@@ -23,16 +26,19 @@ public class Beam {
 
     }
 
-    public Beam(Pin p1, Pin p2, double stiffness, double[] massPerLength, double breakLimit, boolean physical) {
+    public Beam(Pin p1, Pin p2, double[] stiffness, double[] massPerLength, double breakLimit, double gAccel, boolean physical) {
         this.pin1 = p1;
         this.pin2 = p2;
         this.vectorObject = p1.getPosition().subtract(p2.getPosition());
         this.restLength = vectorObject.magnitude();
-        this.stiffness = stiffness;
+//        this.stiffness = stiffness;
+        this.stiffnessX = stiffness[0];
+        this.stiffnessY = stiffness[1];
 //        this.massPerLength = massPerLength;
         this.massPerX = massPerLength[0];
         this.massPerY = massPerLength[1];
         createMass();
+        this.gAccel = gAccel;
         this.breakLimit = breakLimit;
         this.physical = physical;
 
@@ -69,8 +75,8 @@ public class Beam {
             Vector2D currentLength = pin2.getPosition().subtract(pin1.getPosition());
             Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - restLength);
 
-            Vector2D forceBeam = displacement.multiply(-stiffness);
-            Vector2D forceGravity = new Vector2D(0, mass * 70);
+            Vector2D forceBeam = new Vector2D(displacement.x * -stiffnessX, displacement.y * -stiffnessY);//displacement.multiply(-stiffness);
+            Vector2D forceGravity = new Vector2D(0, mass * gAccel);
             Vector2D forceAirFriction = pin.getVelocity().multiply(-airFrictionCoefficient);
             if (currentLength.magnitude() > restLength) {
                 this.redColorCoefficient = (forceBeam.magnitude() / breakLimit) * 140;
@@ -93,13 +99,16 @@ public class Beam {
         return new Vector2D();
     }
 
-    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight, double[] massPerLength) {
+    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight, double[] stiffness, double[] massPerLength, double gAccel) {
         this.vectorObject = pin1.getPosition().subtract(pin2.getPosition());
         this.restLength = vectorObject.magnitude();
 //        this.maxLength = maxLength * newWidth / previousWidth;
 //        this.massPerLength = massPerLength * newHeight / previousHeight;
+        this.stiffnessX = stiffness[0];
+        this.stiffnessY = stiffness[1];
         this.massPerX = massPerLength[0];
         this.massPerY = massPerLength[1];
+        this.gAccel = gAccel;
         createMass();
     }
 
