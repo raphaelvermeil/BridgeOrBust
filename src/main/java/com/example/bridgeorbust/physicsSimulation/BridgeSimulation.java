@@ -9,9 +9,11 @@ package com.example.bridgeorbust.physicsSimulation;
  * add weight effect to mass (hint: check only physical beams/use trulyUnder())
  * binding is spaghetti, bind width to height? (if so, ratio with full-screen size or smt)
  * \__} massPerLength, breakLimit, maxLength, x-Speed, y-accel, ect.
+ * ---- max length in x and y, x
+ * <p>
  * grid button while in build mode, (cannot be checked if pins != startPins and in freeMode)
  * level3
- * fix key comb. i.e. spacebar!!
+ * fix key comb. i.e. spacebar!! now p
  */
 
 import javafx.animation.*;
@@ -69,7 +71,11 @@ public class BridgeSimulation extends Application {
     private double winArbitraryLimit;
     private double previousWindowWidth;
     private double previousWindowHeight;
-    private double maxLength = 250;
+    private double maxLength = 240;
+    private double maxLengthX = 240;
+    private double maxLengthY = 240;
+    private double[] massPerLRoad = {Math.pow(0.033, 2), Math.pow(0.033, 2)};
+    private double[] massPerLTruss = {Math.pow(0.025, 2), Math.pow(0.0253, 2)};
     private VBox winWidget = new VBox();
     public int level = 1;
 
@@ -322,20 +328,29 @@ public class BridgeSimulation extends Application {
     private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget) {
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
+
+        this.maxLengthX = maxLengthX * canvas.getWidth() / previousWindowWidth;
+        this.maxLengthY = maxLengthY * canvas.getHeight() / previousWindowHeight;
+        this.maxLength = Math.max(maxLengthX, maxLengthY);
+        this.massPerLRoad[0] *= Math.pow(previousWindowWidth / canvas.getWidth(), 2);
+        this.massPerLRoad[1] *= Math.pow(previousWindowHeight / canvas.getHeight(), 2);
+        this.massPerLTruss[0] *= Math.pow(previousWindowWidth / canvas.getWidth(), 2);
+        this.massPerLTruss[1] *= Math.pow(previousWindowHeight / canvas.getHeight(), 2);
+
         for (Pin pin : startPins) {
             pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
         }
         for (Pin pin : pins) {
-            if (pin.isStartPin() == false) {
+            if (!pin.isStartPin()) {
                 pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
             }
         }
         for (Beam beam : beams) {
-            beam.beamSizeBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight());
+            beam.beamSizeBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), (beam.isPhysical()) ? massPerLRoad : massPerLTruss);
 
         }
         ball1.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight());
-        this.maxLength = maxLength * canvas.getWidth() / previousWindowWidth;
+
 
         controls.setLayoutX((canvas.getWidth() - controls.getWidth()) / 2);
         controls.setLayoutY(canvas.getHeight() - controls.getHeight() - 50);
@@ -390,11 +405,11 @@ public class BridgeSimulation extends Application {
                 Pin pin2 = null;
                 if (pin.getPosition().x <= (gc.getCanvas().getWidth()) / 2) {
                     pin2 = new Pin(-200, pin.getPosition().y, true);
-                    beams.add(new Beam(pin2, pin, 1, 0.0001, 5000, true));
+                    beams.add(new Beam(pin2, pin, 1, new double[]{0.0001, 0.0001}, 5000, true));
                     gc.setFill(Color.GREEN);
                 } else {
                     pin2 = new Pin(gc.getCanvas().getWidth() + 200, pin.getPosition().y, true);
-                    beams.add(new Beam(pin, pin2, 1, 0.0001, 5000, true));
+                    beams.add(new Beam(pin, pin2, 1, new double[]{0.0001, 0.0001}, 5000, true));
 
                 }
                 newPins.add(pin2);//newPins.removeAll(null);
@@ -474,15 +489,15 @@ public class BridgeSimulation extends Application {
                     beamSound.play();
                 }
             } else {
-                double deltaX = x - firstPin.getPosition().x;
-                double deltaY = y - firstPin.getPosition().y;
-                if (Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= this.maxLength) {
+                double deltaX = Math.abs(x - firstPin.getPosition().x);
+                double deltaY = Math.abs(y - firstPin.getPosition().y);
+                if ((deltaX <= this.maxLengthX && deltaY <= this.maxLengthY) && Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= this.maxLength) {
                     Pin secondPin = (clickedPin != null ? clickedPin : new Pin(x, y, false));
                     if (clickedPin == null) {
                         pins.add(secondPin);
                     }
 
-                    Beam beam = new Beam(firstPin, secondPin, 900, roadMode ? 0.033 : 0.025, (roadMode) ? breakLimitRoad : breakLimitTruss, roadMode);
+                    Beam beam = new Beam(firstPin, secondPin, 900, roadMode ? massPerLRoad : massPerLTruss, (roadMode) ? breakLimitRoad : breakLimitTruss, roadMode);
 
                     beamSound.play();
                     beams.add(beam);
@@ -592,18 +607,17 @@ public class BridgeSimulation extends Application {
                         if (beam.pin1.getPosition().subtract(ball1.getPosition()).magnitude() <= ball1.getPosition().subtract(beam.pin2.getPosition()).magnitude()) {//ball closer to pin1
                             pin.calculateForces(ball1.getMass());
                         }
-                    }else {
+                    } else {
                         if (beam.pin2.getPosition().subtract(ball1.getPosition()).magnitude() <= ball1.getPosition().subtract(beam.pin1.getPosition()).magnitude())
                             pin.calculateForces(ball1.getMass());
                     }
-                }
-                else {
+                } else {
                     pin.calculateForces(0);
                 }
             }
         }
 
-        for (Pin pin:pins)
+        for (Pin pin : pins)
             pin.update(deltaTime);
 
         System.out.println(pins.getFirst().getMassSum());
@@ -684,9 +698,16 @@ public class BridgeSimulation extends Application {
             }
             double deltaX = x - pos1.x;
             double deltaY = y - pos1.y;
-            double magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-            double ratio = this.maxLength / magnitude;
-            Vector2D pos2 = ratio >= 1 ? new Vector2D(x, y) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
+//            double magnitude = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+//
+
+            Vector2D delta = new Vector2D((Math.abs(deltaX) <= maxLengthX) ? deltaX : Math.copySign(maxLengthX, deltaX), (Math.abs(deltaY) <= maxLengthY) ? deltaY : Math.copySign(maxLengthY, deltaY));//ratio >= 1 ? new Vector2D(x, y) : new Vector2D(pos1.x + deltaX * ratio, pos1.y + deltaY * ratio);
+            if (delta.magnitude() > maxLength) {
+                double ratio = this.maxLength / delta.magnitude();
+                delta = delta.multiply(ratio);
+            }
+            Vector2D pos2 = pos1.add(delta);
+
             gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
         }
 

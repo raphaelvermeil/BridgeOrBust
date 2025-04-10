@@ -86,7 +86,7 @@ public class Ball {
         yLimit = leadingPinX.getPosition().y + relativeHeight - this.radius;
         if (this.position.y > yLimit) {
             if (deltaY <= 0) {
-                if (this.oldPosition.y + this.radius <= leadingPinX.getPosition().y + 5) {
+                if (this.oldPosition.y + this.radius <= leadingPinX.getPosition().y + 10) {//+10 is buffer
                     this.yLimit=yLimit;
                     return true;
                 }

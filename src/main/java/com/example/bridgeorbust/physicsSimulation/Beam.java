@@ -8,24 +8,30 @@ public class Beam {
     private double stiffness;
     private double mass;
     private double massPerLength;
+    private double massPerX;
+    private double massPerY;
     private double breakLimit;
     private boolean broken = false;
     private boolean physical = false;
-    private double maxLength = 250;
+    //private double maxLength = 250;
     private double airFrictionCoefficient = 3;
     private double redColorCoefficient;
     private double blueColorCoefficient;
+    private Vector2D vectorObject;
 
     public Beam() {
 
     }
 
-    public Beam(Pin p1, Pin p2, double stiffness, double massPerLength, double breakLimit, boolean physical) {
+    public Beam(Pin p1, Pin p2, double stiffness, double[] massPerLength, double breakLimit, boolean physical) {
         this.pin1 = p1;
         this.pin2 = p2;
-        this.restLength = p1.getPosition().subtract(p2.getPosition()).magnitude();
+        this.vectorObject = p1.getPosition().subtract(p2.getPosition());
+        this.restLength = vectorObject.magnitude();
         this.stiffness = stiffness;
-        this.massPerLength = massPerLength;
+//        this.massPerLength = massPerLength;
+        this.massPerX = massPerLength[0];
+        this.massPerY = massPerLength[1];
         createMass();
         this.breakLimit = breakLimit;
         this.physical = physical;
@@ -37,10 +43,10 @@ public class Beam {
     public void setPhysical(boolean physical) {
         this.physical = physical;
     }
-
-    public double getMaxLength() {
-        return maxLength;
-    }
+//
+//    public double getMaxLength() {
+//        return maxLength;
+//    }
 
     public boolean isPhysical() {
         return physical;
@@ -87,11 +93,13 @@ public class Beam {
         return new Vector2D();
     }
 
-    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight) {
-        this.restLength = this.pin1.getPosition().subtract(this.pin2.getPosition()).magnitude();
-        ;
-        this.maxLength = maxLength * newWidth / previousWidth;
-        this.massPerLength = massPerLength * newHeight / previousHeight;
+    public void beamSizeBinding(double previousWidth, double previousHeight, double newWidth, double newHeight, double[] massPerLength) {
+        this.vectorObject = pin1.getPosition().subtract(pin2.getPosition());
+        this.restLength = vectorObject.magnitude();
+//        this.maxLength = maxLength * newWidth / previousWidth;
+//        this.massPerLength = massPerLength * newHeight / previousHeight;
+        this.massPerX = massPerLength[0];
+        this.massPerY = massPerLength[1];
         createMass();
     }
 
@@ -117,7 +125,10 @@ public class Beam {
     }
 
     public void createMass() {
-        this.mass = this.restLength * this.massPerLength;
+//        this.mass = this.restLength * this.massPerLength;
+//        System.out.println("1 " + this.mass);
+        this.mass = Math.sqrt(massPerX * vectorObject.x * vectorObject.x + massPerY * vectorObject.y * vectorObject.y);
+        System.out.println("2 " + this.mass);
     }
 
     public double getRestLength() {
