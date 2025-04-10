@@ -38,3 +38,21 @@
     -fx-visible: false;
     visibility: hidden;
 }
+
+.grid-button{
+    -fx-background-color: rgb(115, 115, 115, 0.3);
+    -fx-border-radius: 5px; /* Rounded corners */
+    -fx-background-radius: 5px; /* Rounded background */
+    -fx-padding: 10px; /* Padding around the content */
+}
+
+.grid-button:hover {
+    -fx-background-color: rgb(115, 115, 115, 0.5); /* Darker background on hover */
+}
+
+/*.grid-button:selected .mark {*/
+/*    -fx-shape: "M6,3 A1,1 0 0,1 5.99,4"; !* Smaller X *!*/
+/*    -fx-background-color: black; !* Checkmark color *!*/
+/*    -fx-scale-x: 1.5; !* Scale the checkmark horizontally *!*/
+/*    -fx-scale-y: 1.5; !* Scale the checkmark vertically *!*/
+/*}*/

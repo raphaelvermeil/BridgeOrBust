@@ -1,11 +1,9 @@
 package com.example.bridgeorbust.physicsSimulation;
 
-/**
- * problems:
+/* problems:
  * !!BUG!! reset forces at pause, color should ideally stay, FIXED
  * change physic values per level? NO
  * calibrate realism FIxED
- * <p>
  * add weight effect to mass (hint: check only physical beams/use trulyUnder())
  * binding is spaghetti, bind width to height? (if so, ratio with full-screen size or smt)
  * \__} massPerLength, breakLimit, maxLength, x-Speed, y-accel, ect.
@@ -29,7 +27,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.AudioClip;
@@ -39,11 +36,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BridgeSimulation extends Application {
     private MediaPlayer mediaPlayer;
@@ -58,7 +54,7 @@ public class BridgeSimulation extends Application {
     private int maxTruss;
     private double cursorY = 0;
     private boolean play = false;
-    private CheckBox gridModeButton = new CheckBox("Grid Mode");
+    private CheckBox gridModeButton = new CheckBox("GRID");
     private double gridSizeX = 20;
     private double gridSizeY = 20;
     private boolean roadMode = false;
@@ -103,6 +99,17 @@ public class BridgeSimulation extends Application {
 
 
         Pane pane = new Pane();
+
+
+
+
+//        ImageView gearImage = new ImageView(new Image("file:sign-out.png"));
+//        Button gearButton = new Button("", gearImage);
+//        gearImage.setFitWidth(30);
+//        gearImage.setFitHeight(30);
+        gridModeButton.setLayoutX(canvas.getWidth() - gridModeButton.getWidth() - 75);
+        gridModeButton.setLayoutY(90);
+        gridModeButton.getStyleClass().add("grid-button");
 
         gridModeButton.setSelected(true);
         // Bind the canvas size to the pane size
@@ -150,8 +157,8 @@ public class BridgeSimulation extends Application {
         Button resetButton = new Button("", resetImage);
         resetImage.setFitWidth(30);
         resetImage.setFitHeight(30);
-        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 20);
-        resetButton.setLayoutY(20);
+        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 225);
+        resetButton.setLayoutY(30);
         resetButton.getStyleClass().add("transparent-button");
 
         ImageView undoImage = new ImageView(new Image("file:jump.png"));
@@ -161,15 +168,15 @@ public class BridgeSimulation extends Application {
         undoButton.getStyleClass().add("transparent-button");
 
 
-        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth());
-        undoButton.setLayoutY(canvas.getHeight() - undoButton.getHeight() - 80);
+        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 150);
+        undoButton.setLayoutY(30);
 
         ImageView gearImage = new ImageView(new Image("file:sign-out.png"));
         Button gearButton = new Button("", gearImage);
         gearImage.setFitWidth(30);
         gearImage.setFitHeight(30);
-        gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 20);
-        gearButton.setLayoutY(canvas.getHeight() - gearButton.getHeight() - 20);
+        gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 75);
+        gearButton.setLayoutY(30);
         gearButton.getStyleClass().add("transparent-button");
 
 
@@ -204,15 +211,16 @@ public class BridgeSimulation extends Application {
         winWidget.setDisable(true);
 
 
-        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget);
+        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton);
 
         Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
 
         stage.setMinWidth(400);
         stage.setMinHeight(300);
-
+        AtomicBoolean gridFlag = new AtomicBoolean(gridModeButton.isSelected());
         playPauseButton.setOnAction(e -> {
+
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 for (Beam beam : beams) {
@@ -224,14 +232,17 @@ public class BridgeSimulation extends Application {
                 this.lost = false;
                 play = false;
                 firstPin = null;
-                gridModeButton.setSelected(true);
+
+                gridModeButton.setSelected(gridFlag.get());
                 for (Pin pin : pins) {
                     pin.setVelocity(new Vector2D(0, 0));
                 }
             } else {
+                gridFlag.set(gridModeButton.isSelected());
                 playPause.setImage(new Image("file:pause.png"));
                 play = true;
                 gridModeButton.setSelected(false);
+
             }
         });
         restartButton.setOnAction(e -> {
@@ -295,18 +306,25 @@ public class BridgeSimulation extends Application {
                     updateSimulation(deltaTime);
                 }
 
+                if((!gridModeButton.isSelected() && !pins.equals(startPins)) || (gridModeButton.isSelected() && !pins.equals(startPins))) {
+                    gridModeButton.setDisable(true);
+                } else{
+                    gridModeButton.setDisable(false);
+                }
+
+
                 render(gc);
             }
 
         }.start();
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
-        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget);
+        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton);
 
         // Add listeners to update button positions when the canvas size changes
 
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget));
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton));
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton));
 
         scene.getAccelerators().put(
                 new KeyCodeCombination(KeyCode.Z),
@@ -327,7 +345,7 @@ public class BridgeSimulation extends Application {
         stage.show();
     }
 
-    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget) {
+    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget, CheckBox gridModeButton) {
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
 
@@ -360,14 +378,17 @@ public class BridgeSimulation extends Application {
         controls.setLayoutX((canvas.getWidth() - controls.getWidth()) / 2);
         controls.setLayoutY(canvas.getHeight() - controls.getHeight() - 50);
 
-        resetButton.setLayoutX(canvas.getWidth() - resetButton.getWidth() - 225);
+        resetButton.setLayoutX(canvas.getWidth() - 225);
         resetButton.setLayoutY(30);
 
-        undoButton.setLayoutX(canvas.getWidth() - undoButton.getWidth() - 150);
+        undoButton.setLayoutX(canvas.getWidth() - 150);
         undoButton.setLayoutY(30);
 
-        gearButton.setLayoutX(canvas.getWidth() - gearButton.getWidth() - 75);
+        gearButton.setLayoutX(canvas.getWidth() - 75);
         gearButton.setLayoutY(30);
+
+        gridModeButton.setLayoutX(canvas.getWidth() - 100);
+        gridModeButton.setLayoutY(90);
 
         winWidget.setLayoutX(canvas.getWidth() / 2);
         winWidget.setLayoutY(canvas.getHeight() / 2);
@@ -388,6 +409,8 @@ public class BridgeSimulation extends Application {
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
     }
+
+
 
     private void setupBridge(GraphicsContext gc) {
         if (startPins.isEmpty()) {
@@ -412,12 +435,15 @@ public class BridgeSimulation extends Application {
                     pin2 = new Pin(-200, pin.getPosition().y, true);
                     beams.add(new Beam(pin2, pin, new double[]{1, 1}, new double[]{0.0001, 0.0001}, 5000, 1, true));
                     gc.setFill(Color.GREEN);
+
                 } else {
                     pin2 = new Pin(gc.getCanvas().getWidth() + 200, pin.getPosition().y, true);
                     beams.add(new Beam(pin, pin2, new double[]{1, 1}, new double[]{0.0001, 0.0001}, 5000, 1, true));
 
                 }
-                newPins.add(pin2);//newPins.removeAll(null);
+                newPins.add(pin2);
+                startPins.add(pin2);
+
             }
         }
         pins.addAll(newPins);
@@ -784,7 +810,7 @@ public class BridgeSimulation extends Application {
         }
 
         if (lost) {
-            String text = "LOST";
+            String text = "BUST";
             gc.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
             gc.setFill(Color.DARKRED);
             double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
