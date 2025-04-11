@@ -76,6 +76,9 @@ public class BridgeSimulation extends Application {
     private double gAccel = 70;
     private VBox winWidget = new VBox();
     public int level = 1;
+    private double[][] level1 = {{200,300},{800, 300},{200, 400},{800, 400}};
+    private double[][] level2 = {{150, 300},{850, 300},{400, 550}};
+    private double[][] level3 = {{200, 400},{800, 200},{800, 400}};
     private int initalPinCount = 0;
 
     // Load the audio file
@@ -376,9 +379,21 @@ public class BridgeSimulation extends Application {
         this.massPerLTruss[0] *= Math.pow(previousWindowWidth / canvas.getWidth(), 2);
         this.massPerLTruss[1] *= Math.pow(previousWindowHeight / canvas.getHeight(), 2);
         this.stifness[0] *=   previousWindowWidth/canvas.getWidth();
-        this.stifness[1] *= previousWindowHeight/canvas.getHeight()  ;
-//        this.gAccel *= canvas.getHeight() / previousWindowHeight;
+        this.stifness[1] *= previousWindowHeight/canvas.getHeight();
 
+//        this.gAccel *= canvas.getHeight() / previousWindowHeight;
+        for (int i = 0; i<level1.length; i++){
+            level1[i][0] *= canvas.getWidth() / previousWindowWidth;
+            level1[i][1] *= canvas.getHeight() / previousWindowHeight;
+        }
+        for (int i = 0; i<level2.length; i++){
+            level2[i][0] *= canvas.getWidth() / previousWindowWidth;
+            level2[i][1] *= canvas.getHeight() / previousWindowHeight;
+        }
+        for (int i = 0; i<level3.length; i++){
+            level3[i][0] *= canvas.getWidth() / previousWindowWidth;
+            level3[i][1] *= canvas.getHeight() / previousWindowHeight;
+        }
         for (Pin pin : startPins) {
             pin.positionBinding(previousWindowWidth, previousWindowHeight, canvas.getWidth(), canvas.getHeight(), play);
         }
@@ -429,8 +444,6 @@ public class BridgeSimulation extends Application {
         previousWindowHeight = canvas.getHeight();
     }
 
-
-
     private void setupBridge(GraphicsContext gc) {
         if (startPins.isEmpty()) {
             switch (level) {
@@ -448,6 +461,7 @@ public class BridgeSimulation extends Application {
                     break;
             }
         }
+
         List<Pin> newPins = new ArrayList<Pin>();
         pins.addAll(startPins);
         for (Pin pin : pins) {
@@ -473,53 +487,47 @@ public class BridgeSimulation extends Application {
     }
 
     private void level1() {//fix numeration!
-        Pin p1 = new Pin(200, 300, true, true);
-        Pin p4 = new Pin(800, 300, true, true);
-        Pin p5 = new Pin(200, 400, true, true);
-        Pin p6 = new Pin(800, 400, true, true);
+        for (int i=0; i < level1.length; i++){
+            Pin pin = new Pin(level1[i][0], level1[i][1], true, true);
+            startPins.add(pin);
+
+        }
 
         this.lostArbitraryLimit = 550;
         this.winArbitraryLimit = 900;
 
         this.maxRoadBeam = 4;
         this.maxTruss = 30;
-
-        startPins.add(p1);
-        startPins.add(p4);
-        startPins.add(p5);
-        startPins.add(p6);
     }
 
     private void level2() {//fix numeration!
-        Pin p1 = new Pin(150, 300, true, true);
-        Pin p2 = new Pin(850, 300, true, true);
-        Pin p3 = new Pin(400, 550, true, true);
-
+        for (int i=0; i < level2.length; i++){
+            Pin pin = new Pin(level2[i][0], level2[i][1], true, true);
+            startPins.add(pin);
+        }
         this.lostArbitraryLimit = 500;
         this.winArbitraryLimit = 900;
 
         this.maxRoadBeam = 4;
         this.maxTruss = 18;
 
-        startPins.add(p1);
-        startPins.add(p2);
-        startPins.add(p3);
+//        startPins.add(p1);
+//        startPins.add(p2);
+//        startPins.add(p3);
     }
 
     private void level3() {//fix numeration!
-        Pin p1 = new Pin(200, 400, true, true);
-        Pin p2 = new Pin(800, 200, true, true);
-        Pin p3 = new Pin(800, 400, true, true);
+        for (int i=0; i < level3.length; i++){
+            Pin pin = new Pin(level3[i][0], level3[i][1], true, true);
+            startPins.add(pin);
+        }
 
         this.lostArbitraryLimit = 500;
         this.winArbitraryLimit = 900;
 
         this.maxRoadBeam = 4;
-        this.maxTruss = 18;
+        this.maxTruss = 10;
 
-        startPins.add(p1);
-        startPins.add(p2);
-        startPins.add(p3);
     }
 
     private void handleMouseClick(MouseEvent event) {
