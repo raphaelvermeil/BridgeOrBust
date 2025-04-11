@@ -219,10 +219,12 @@ public class BridgeSimulation extends Application {
 
         stage.setMinWidth(400);
         stage.setMinHeight(300);
+
         AtomicBoolean gridFlag = new AtomicBoolean(gridModeButton.isSelected());
         playPauseButton.setOnAction(e -> {
 
             if (play) {
+                stage.setResizable(true);
                 playPause.setImage(new Image("file:play.png"));
                 for (Beam beam : beams) {
                     beam.pin1.resetToInit();
@@ -243,6 +245,7 @@ public class BridgeSimulation extends Application {
                 playPause.setImage(new Image("file:pause.png"));
                 play = true;
                 gridModeButton.setSelected(false);
+                stage.setResizable(false);
 
             }
         });
@@ -488,9 +491,9 @@ public class BridgeSimulation extends Application {
     }
 
     private void level2() {//fix numeration!
-        Pin p1 = new Pin(150, 300, true);
-        Pin p2 = new Pin(850, 300, true);
-        Pin p3 = new Pin(400, 550, true);
+        Pin p1 = new Pin(150, 300, true, true);
+        Pin p2 = new Pin(850, 300, true, true);
+        Pin p3 = new Pin(400, 550, true, true);
 
         this.lostArbitraryLimit = 500;
         this.winArbitraryLimit = 900;
@@ -504,9 +507,9 @@ public class BridgeSimulation extends Application {
     }
 
     private void level3() {//fix numeration!
-        Pin p1 = new Pin(200, 400, true);
-        Pin p2 = new Pin(800, 200, true);
-        Pin p3 = new Pin(500, 550, true);
+        Pin p1 = new Pin(200, 400, true, true);
+        Pin p2 = new Pin(800, 200, true, true);
+        Pin p3 = new Pin(800, 400, true, true);
 
         this.lostArbitraryLimit = 500;
         this.winArbitraryLimit = 900;
