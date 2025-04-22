@@ -36,7 +36,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +58,10 @@ public class BridgeSimulation extends Application {
     private double cursorY = 0;
     private boolean play = false;
     private CheckBox gridModeButton = new CheckBox("GRID");
+    private Button physicsDemoButton = new Button("PHYSICS");
+    private boolean physicsDemoMode = false;
+    private javafx.scene.Cursor normalCursor = javafx.scene.Cursor.DEFAULT;
+    private javafx.scene.Cursor physicsCursor = javafx.scene.Cursor.CROSSHAIR;
     private double gridSizeX = 20;
     private double gridSizeY = 20;
     private boolean roadMode = false;
@@ -76,7 +82,10 @@ public class BridgeSimulation extends Application {
     private double[] massPerLTruss = {Math.pow(0.025, 2), Math.pow(0.0253, 2)};
     private double gAccel = 70;
     private VBox winWidget = new VBox();
-    public int level = 1;
+    private VBox physicsDemo = new VBox();
+    private Canvas canvas;
+    private Beam selectedBeam = null;  // Track the currently selected beam
+    public int level = 2;
     private double[][] level1 = {{200,300},{800, 300},{200, 400},{800, 400}};
     private double[][] level2 = {{150, 300},{850, 300},{400, 550}};
     private double[][] level3 = {{200, 400},{800, 200},{800, 400}};
@@ -95,7 +104,7 @@ public class BridgeSimulation extends Application {
         mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
 */
-        Canvas canvas = new Canvas();
+        canvas = new Canvas();
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
         canvas.setOnMouseClicked(this::handleMouseClick);
@@ -109,6 +118,10 @@ public class BridgeSimulation extends Application {
         gridModeButton.setLayoutX(canvas.getWidth() - gridModeButton.getWidth() - 75);
         gridModeButton.setLayoutY(90);
         gridModeButton.getStyleClass().add("grid-button");
+
+        physicsDemoButton.setLayoutX(canvas.getWidth() - physicsDemoButton.getWidth() - 75);
+        physicsDemoButton.setLayoutY(120);
+        physicsDemoButton.getStyleClass().add("grid-button");
 
         gridModeButton.setSelected(true);
         // Bind the canvas size to the pane size
@@ -209,8 +222,33 @@ public class BridgeSimulation extends Application {
         winWidget.getStyleClass().add("win-widget");
         winWidget.setDisable(true);
 
+        physicsDemo.setLayoutX(canvas.getWidth() - 100);
+        physicsDemo.setLayoutY(canvas.getHeight() - 150);
+        physicsDemo.setSpacing(10);
+        physicsDemo.setAlignment(javafx.geometry.Pos.CENTER);
+        physicsDemo.setMinWidth(200);
+        physicsDemo.setMinHeight(225);
+        physicsDemo.getStyleClass().add("physics-demo");
+        physicsDemo.setVisible(false);
 
-        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton);
+        Text noBeamText = new Text("No beam selected");
+        noBeamText.setFont(Font.font("Arial", 14));
+        physicsDemo.getChildren().add(noBeamText);
+
+        physicsDemoButton.setOnAction(e -> {
+            physicsDemoMode = !physicsDemoMode;
+            physicsDemo.setVisible(physicsDemoMode);
+            if (physicsDemoMode) {
+                canvas.setCursor(physicsCursor);
+            } else {
+                canvas.setCursor(normalCursor);
+                selectedBeam = null;  // Clear selected beam
+                physicsDemo.getChildren().clear();
+                physicsDemo.getChildren().add(noBeamText);
+            }
+        });
+
+        pane.getChildren().addAll(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton, physicsDemoButton, physicsDemo);
 
         Scene scene = new Scene(pane, 1000, 600);
         setupBridge(gc);
@@ -252,12 +290,13 @@ public class BridgeSimulation extends Application {
                 beam.pin1.resetToInit();
                 beam.pin2.resetToInit();
             }
-            ball1.setPosition(new Vector2D(0, 0));
-            ball1.setOldPosition(new Vector2D(0, 0));
+            ball1.setPosition(new Vector2D(50, 275));
+            ball1.setOldPosition(new Vector2D(50, 275));
             this.lost = false;
             firstPin = null;
             gridModeButton.setSelected(true);
             winWidget.setDisable(true);
+            stage.setResizable(true);
         });
         trussButton.setOnAction(e -> roadMode = false);
         roadButton.setOnAction(e -> roadMode = true);
@@ -271,14 +310,15 @@ public class BridgeSimulation extends Application {
             while (mouseCounter > 0)
                 destroyBeam(beams.getLast());
 
-            ball1.setPosition(new Vector2D(0, 0));
-            ball1.setOldPosition(new Vector2D(0, 0));
+            ball1.setPosition(new Vector2D(50, 275));
+            ball1.setOldPosition(new Vector2D(50, 275));
             if (play) {
                 playPause.setImage(new Image("file:play.png"));
                 gridModeButton.setSelected(true);
                 play = false;
                 lost = false;
             }
+            stage.setResizable(true);
 
             mouseCounter = 0;
         });
@@ -310,6 +350,7 @@ public class BridgeSimulation extends Application {
             beams.clear();
             pins.clear();
             startPins.clear();
+            mouseCounter = 0;
             System.out.println("next level: " + level);
             setupBridge(gc);
             winWidget.setDisable(true);
@@ -334,6 +375,8 @@ public class BridgeSimulation extends Application {
                     gridModeButton.setDisable(false);
                 }
 
+                // Update physics demo information in real-time
+                updatePhysicsDemo();
 
                 render(gc);
             }
@@ -341,12 +384,12 @@ public class BridgeSimulation extends Application {
         }.start();
         previousWindowWidth = canvas.getWidth();
         previousWindowHeight = canvas.getHeight();
-        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton);
+        updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton, physicsDemo);
 
         // Add listeners to update button positions when the canvas size changes
 
-        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton));
-        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton));
+        canvas.widthProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton, physicsDemo));
+        canvas.heightProperty().addListener((obs, oldVal, newVal) -> updateOnResize(canvas, playPauseButton, controls, resetButton, undoButton, gearButton, winWidget, gridModeButton, physicsDemo));
 
         scene.getAccelerators().put(
                 new KeyCodeCombination(KeyCode.Z),
@@ -371,7 +414,7 @@ public class BridgeSimulation extends Application {
         stage.show();
     }
 
-    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget, CheckBox gridModeButton) {
+    private void updateOnResize(Canvas canvas, Button playPauseButton, HBox controls, Button resetButton, Button undoButton, Button gearButton, VBox winWidget, CheckBox gridModeButton, VBox physicsDemo) {
         playPauseButton.setLayoutX(30);
         playPauseButton.setLayoutY(20);
 
@@ -428,15 +471,48 @@ public class BridgeSimulation extends Application {
         gridModeButton.setLayoutX(canvas.getWidth() - 100);
         gridModeButton.setLayoutY(90);
 
+        // Update physics demo button position
+        physicsDemoButton.setLayoutX(canvas.getWidth() - physicsDemoButton.getWidth() - 75);
+        physicsDemoButton.setLayoutY(120);
+
         winWidget.setLayoutX(canvas.getWidth() / 2);
         winWidget.setLayoutY(canvas.getHeight() / 2);
-
 
         winWidget.setMinWidth(canvas.getWidth() * 400 / 1000);
         winWidget.setMinHeight(canvas.getHeight() * 400 / 600);
 
         winWidget.setLayoutX(canvas.getWidth() / 2 - winWidget.getMinWidth() / 2);
         winWidget.setLayoutY(canvas.getHeight() / 2 - winWidget.getMinHeight() / 2);
+
+        // Update physics demo VBox position and size
+        physicsDemo.setLayoutX(canvas.getWidth() - 200);
+        physicsDemo.setLayoutY(canvas.getHeight() - 225);
+        physicsDemo.setMinWidth(200);
+        physicsDemo.setMinHeight(225);
+        physicsDemo.setPrefWidth(200);
+        physicsDemo.setPrefHeight(225);
+
+        // Update physics demo text size based on window size
+        if (!physicsDemo.getChildren().isEmpty() && physicsDemo.getChildren().get(0) instanceof Text) {
+            Text physicsText = (Text) physicsDemo.getChildren().get(0);
+            double scaleFactor = Math.min(canvas.getWidth() / 1000, canvas.getHeight() / 600);
+            physicsText.setFont(Font.font("Arial", 14 * scaleFactor));
+            
+            // Update the text content if it's showing beam forces
+            if (physicsText.getText().startsWith("Beam Forces:")) {
+                for (Beam beam : beams) {
+                    if (isMouseHoveringOverBeam(cursorX, cursorY, beam) || 
+                        beam.pin1.getPosition().subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20 ||
+                        beam.pin2.getPosition().subtract(new Vector2D(cursorX, cursorY)).magnitude() < 20) {
+                        physicsText.setText(String.format("Beam Forces:\nX: %.2f N\nY: %.2f N\nTotal: %.2f N", 
+                            beam.getForceAtPin(beam.pin1).x, 
+                            beam.getForceAtPin(beam.pin1).y,
+                            beam.getForceAtPin(beam.pin1).magnitude()));
+                        break;
+                    }
+                }
+            }
+        }
 
         this.winArbitraryLimit *= canvas.getWidth() / this.previousWindowWidth;
         this.lostArbitraryLimit *= canvas.getHeight() / this.previousWindowHeight;
@@ -538,7 +614,7 @@ public class BridgeSimulation extends Application {
         double x = event.getX();
         double y = event.getY();
 
-        if (event.getButton() == javafx.scene.input.MouseButton.SECONDARY) { // Check if right-click
+        if (event.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
             for (Beam beam : beams) {
                 if (!beam.pin1.isPositionFixed() || !beam.pin2.isPositionFixed()) {
                     if (isMouseHoveringOverBeam(x, y, beam)) {
@@ -548,50 +624,66 @@ public class BridgeSimulation extends Application {
                 }
             }
         } else if (event.getButton() == javafx.scene.input.MouseButton.PRIMARY) {
-            if (roadMode && maxRoadBeam <= 0 || !roadMode && maxTruss <= 0) {
-                System.out.println("Cannot build this beam.");
-                return;
-            }
-            if (gridModeButton.isSelected()) {
-                x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
-                y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
-            }
-
-            Pin clickedPin = getPinAt(x, y);
-
-            if (y < 80 || play) {
-                System.out.println("Cannot build.");
-            } else if (firstPin == null) {
-                if (clickedPin != null) {
-                    firstPin = clickedPin;
-                    beamSound.play();
-                } else {
-                    firstPin = new Pin(x, y, false);
-                    pins.add(firstPin);
-                    beamSound.play();
+            if (physicsDemoMode) {
+                // In physics demo mode, look for beams to display forces
+                for (Beam beam : beams) {
+                    if (isMouseHoveringOverBeam(x, y, beam) || 
+                        beam.pin1.getPosition().subtract(new Vector2D(x, y)).magnitude() < 20 ||
+                        beam.pin2.getPosition().subtract(new Vector2D(x, y)).magnitude() < 20) {
+                        selectedBeam = beam;  // Store the selected beam
+                        updatePhysicsDemo();  // Update the display
+                        canvas.setCursor(normalCursor);
+                        physicsDemoMode = false;
+                        return;
+                    }
                 }
             } else {
-                double deltaX = Math.abs(x - firstPin.getPosition().x);
-                double deltaY = Math.abs(y - firstPin.getPosition().y);
-                if ((deltaX <= this.maxLengthX && deltaY <= this.maxLengthY) && Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= this.maxLength) {
-                    Pin secondPin = (clickedPin != null ? clickedPin : new Pin(x, y, false));
-                    if (clickedPin == null) {
-                        pins.add(secondPin);
-                    }
+                // Normal mode - handle beam and pin creation
+                if (roadMode && maxRoadBeam <= 0 || !roadMode && maxTruss <= 0) {
+                    System.out.println("Cannot build this beam.");
+                    return;
+                }
+                if (gridModeButton.isSelected()) {
+                    x = (x % gridSizeX > gridSizeX / 2) ? x - x % gridSizeX + gridSizeX : x - x % gridSizeX;
+                    y = (y % gridSizeY > gridSizeY / 2) ? y - y % gridSizeY + gridSizeY : y - y % gridSizeY;
+                }
 
-                    Beam beam = new Beam(firstPin, secondPin, stifness, roadMode ? massPerLRoad : massPerLTruss, (roadMode) ? breakLimitRoad : breakLimitTruss, gAccel, roadMode);
+                Pin clickedPin = getPinAt(x, y);
 
-                    beamSound.play();
-                    beams.add(beam);
-                    firstPin = null;
-                    mouseCounter++;
-
-                    if (beam.isPhysical()) {
-                        this.maxRoadBeam--;
+                if (y < 80 || play) {
+                    System.out.println("Cannot build.");
+                } else if (firstPin == null) {
+                    if (clickedPin != null) {
+                        firstPin = clickedPin;
+                        beamSound.play();
                     } else {
-                        this.maxTruss--;
+                        firstPin = new Pin(x, y, false);
+                        pins.add(firstPin);
+                        beamSound.play();
                     }
+                } else {
+                    double deltaX = Math.abs(x - firstPin.getPosition().x);
+                    double deltaY = Math.abs(y - firstPin.getPosition().y);
+                    if ((deltaX <= this.maxLengthX && deltaY <= this.maxLengthY) && Math.sqrt(deltaX * deltaX + deltaY * deltaY) <= this.maxLength) {
+                        Pin secondPin = (clickedPin != null ? clickedPin : new Pin(x, y, false));
+                        if (clickedPin == null) {
+                            pins.add(secondPin);
+                        }
 
+                        Beam beam = new Beam(firstPin, secondPin, stifness, roadMode ? massPerLRoad : massPerLTruss, (roadMode) ? breakLimitRoad : breakLimitTruss, gAccel, roadMode);
+
+                        beamSound.play();
+                        beams.add(beam);
+                        firstPin = null;
+                        mouseCounter++;
+
+                        if (beam.isPhysical()) {
+                            this.maxRoadBeam--;
+                        } else {
+                            this.maxTruss--;
+                        }
+
+                    }
                 }
             }
         }
@@ -752,16 +844,16 @@ public class BridgeSimulation extends Application {
             } else {
                 gc.setStroke(Color.BLACK);
                 gc.setLineWidth(10);
-//            gc.setStroke(Color.BLACK);
+
 
                 gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
 
 
-//                gc.setStroke(Color.rgb((int) beam.getRedColorCoefficient(), 0, (int) beam.getblueColorCoefficient()));
+
                 gc.setStroke(Color.rgb(115 + (int) beam.getRedColorCoefficient(), 115, 115 + (int) beam.getblueColorCoefficient()));
 
                 gc.setLineWidth(4);
-//            gc.setStroke(Color.BLACK);
+
 
                 gc.strokeLine(pos1.x, pos1.y, pos2.x, pos2.y);
             }
@@ -841,9 +933,21 @@ public class BridgeSimulation extends Application {
 
         Beam currentBeam = ball1.getCurrentBeam();
         if (currentBeam != null) {
-            Vector2D pos1 = currentBeam.pin1.getPosition();
-            Vector2D pos2 = currentBeam.pin2.getPosition();
+
+            Pin leadingPinX, followingPinX;
+            if (currentBeam.pin1.getPosition().x >= currentBeam.pin2.getPosition().x) {
+                leadingPinX = currentBeam.pin2;
+                followingPinX = currentBeam.pin1;
+            } else {
+                leadingPinX = currentBeam.pin1;
+                followingPinX = currentBeam.pin2;
+            }
+
+            Vector2D pos1 = leadingPinX.getPosition();
+            Vector2D pos2 = followingPinX.getPosition();
             double angle = Math.toDegrees(Math.atan2(pos2.y - pos1.y, pos2.x - pos1.x));
+
+
 
             // Apply rotation to the car image
             gc.save();
@@ -898,6 +1002,45 @@ public class BridgeSimulation extends Application {
 
     }
 
+    private void updatePhysicsDemo() {
+        if (selectedBeam != null && physicsDemo.isVisible()) {
+            physicsDemo.getChildren().clear();
+
+            // Get current displacement
+            Vector2D currentLength = selectedBeam.pin2.getPosition().subtract(selectedBeam.pin1.getPosition());
+            Vector2D displacement = currentLength.normalize().multiply(currentLength.magnitude() - selectedBeam.getRestLength());
+
+            // Create equation display
+            Text equationTitle = new Text("Hooke's Law (F = -k * x)");
+            equationTitle.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+
+            Text stiffnessInfo = new Text(String.format("Spring Constants:\nkx = %.0f N/m\nky = %.0f N/m", 
+                selectedBeam.getStiffnessX(), selectedBeam.getStiffnessY()));
+            
+            Text displacementInfo = new Text(String.format("Displacement:\nx = %.2f m\ny = %.2f m", 
+                displacement.x, displacement.y));
+
+            Vector2D forceBeam = new Vector2D(displacement.x * -selectedBeam.getStiffnessX(),
+                                            displacement.y * -selectedBeam.getStiffnessY());
+            Text forceInfo = new Text(String.format("Resulting Force:\nFx = %.2f N\nFy = %.2f N\nTotal = %.2f N", 
+                forceBeam.x, forceBeam.y, forceBeam.magnitude()));
+
+            // Add all text elements with spacing
+            physicsDemo.setSpacing(10);
+            physicsDemo.getChildren().addAll(
+                equationTitle,
+                stiffnessInfo,
+                displacementInfo,
+                forceInfo
+            );
+
+            // Apply consistent font to all but title
+            Font regularFont = Font.font("Arial", 14);
+            stiffnessInfo.setFont(regularFont);
+            displacementInfo.setFont(regularFont);
+            forceInfo.setFont(regularFont);
+        }
+    }
 
     public static void main(String[] args) {
         launch();

@@ -49,10 +49,6 @@ public class Beam {
     public void setPhysical(boolean physical) {
         this.physical = physical;
     }
-//
-//    public double getMaxLength() {
-//        return maxLength;
-//    }
 
     public boolean isPhysical() {
         return physical;
@@ -163,6 +159,22 @@ public class Beam {
 
     public void setMassPerLength(double massPerLength) {
         this.massPerLength = massPerLength;
+    }
+
+    public double getStiffnessX() {
+        return stiffnessX;
+    }
+
+    public void setStiffnessX(double stiffnessX) {
+        this.stiffnessX = stiffnessX;
+    }
+
+    public double getStiffnessY() {
+        return stiffnessY;
+    }
+
+    public void setStiffnessY(double stiffnessY) {
+        this.stiffnessY = stiffnessY;
     }
 }
 
