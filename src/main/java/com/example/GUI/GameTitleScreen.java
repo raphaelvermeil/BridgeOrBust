@@ -1,118 +1,104 @@
 package com.example.GUI;
-import com.example.bridgeorbust.physicsSimulation.BridgeSimulation;
-import javafx.animation.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.animation.FadeTransition;
+import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
+
 public class GameTitleScreen extends Application {
-    // Static reference to buttons to maintain consistency
-    private static Button playButton;
-    private static Button settingsButton;
-    private static Button quitButton;
-    public int test = 4;
+    private Canvas canvas;
+    private Button playButton, settingsButton, quitButton;
+    private final double WIDTH = 1000;
+    private final double HEIGHT = 600;
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage stage) {
+
+        MusicManager.startBackgroundMusic();
+
+        // Create a new Pane for the recreated scene
         Pane root = new Pane();
-        root.setStyle("-fx-background-color: #A9EDFE;"); // Background color
-
-        // Load UI elements
-        addHangingLines(root);
-        addCircles(root);
-        addButtons(root, primaryStage);
-
-        // Set up the scene and stage 600 400
-        Scene scene = new Scene(root, 600, 400);
-        primaryStage.setTitle("Swinging Menu");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        root.setStyle("-fx-background-color: #5ed3f7");
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
         scene.getStylesheets().add("file:style.css");
+        scene.getWidth();
+        stage.setMinHeight(150);
+        stage.setMinWidth(300);
+        // Canvas for lines
+        canvas = new Canvas(scene.getWidth(), scene.getHeight());
+        root.getChildren().add(canvas);
+        Image gifBackground = new Image("file:clouding.gif");
+        ImageView gifView = new ImageView(gifBackground);
+        gifView.setPreserveRatio(false);
+        gifView.setFitWidth(WIDTH);
+        gifView.setFitHeight(HEIGHT);
+        gifView.setManaged(false);
+        gifView.setLayoutY(-157); // Stick to top
+
+// Resize with scene
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> gifView.setFitWidth(newVal.doubleValue()));
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> gifView.setFitHeight(newVal.doubleValue()));
+
+        canvas = new Canvas(scene.getWidth(), scene.getHeight());
+        root.getChildren().add(canvas);
+
+
+        // Buttons
+        playButton = createStyledButton("Play");
+        settingsButton = createStyledButton("Settings");
+        quitButton = createStyledButton("Quit");
+
+        root.getChildren().addAll(playButton, settingsButton, quitButton,gifView);
+
+        // Button Actions using common handler
+        playButton.setOnAction(e -> handleButtonClick(stage, "play"));
+        settingsButton.setOnAction(e -> handleButtonClick(stage, "settings"));
+        quitButton.setOnAction(e -> Platform.exit());
+
+        // Resize listeners
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> draw(scene));
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> draw(scene));
+
+        draw(scene);
+        stage.setScene(scene);
+        stage.setTitle("Bridge or Bust");
+        stage.show();
     }
 
-    /** Adds the hanging lines to the UI. */
-    private void addHangingLines(Pane root) {
-        Line[] lines = {
-                new Line(150, 0, 60, 90), new Line(150, 0, 165, 60),
-                new Line(75, 125, 69, 200), new Line(180, 115, 200, 220),
-                new Line(57, 240, 63, 315), new Line(206, 250, 167, 310)
-        };
-        root.getChildren().addAll(lines);
-    }
+    private void handleButtonClick(Stage stage, String action) {
+        Scene currentScene = stage.getScene();
 
-    /** Adds decorative circles to the UI. */
-    private void addCircles(Pane root) {
-        Circle[] circles = {
-                new Circle(25, 8, 30, Color.WHITESMOKE), new Circle(35, 11, 34, Color.WHITESMOKE),
-                new Circle(45, 15, 32, Color.WHITESMOKE), new Circle(55, 19, 35, Color.WHITESMOKE),
-                new Circle(65, 23, 37, Color.WHITESMOKE), new Circle(75, 22, 36, Color.WHITESMOKE),
-                new Circle(85, 26, 34, Color.WHITESMOKE), new Circle(95, 21, 32, Color.WHITESMOKE),
-                new Circle(105, 17, 36, Color.WHITESMOKE), new Circle(115, 14, 34, Color.WHITESMOKE),
-                new Circle(125, 11, 33, Color.WHITESMOKE), new Circle(135, 7, 27, Color.WHITESMOKE),
-                new Circle(145, 4, 22, Color.WHITESMOKE), new Circle(155, 3, 21, Color.WHITESMOKE),
-                new Circle(450, 8, 24, Color.FLORALWHITE), new Circle(480, 8, 36, Color.FLORALWHITE),
-                new Circle(520, 15, 40, Color.WHITESMOKE), new Circle(560, 12, 26, Color.WHITESMOKE)
-        };
-        root.getChildren().addAll(circles);
-    }
-
-    /** Adds buttons to the UI and assigns functionality. */
-    private void addButtons(Pane root, Stage primaryStage) {
-        // Only create buttons if they don't exist
-        if (playButton == null) {
-            playButton = createStyledButton("PLAY", 40, 70, -19);
-            settingsButton = createStyledButton("SETTINGS", 30, 190, 8);
-            quitButton = createStyledButton("QUIT", 40, 310, -4);
-
-            // Add hover effects
-            addHoverEffect(playButton);
-            addHoverEffect(settingsButton);
-            addHoverEffect(quitButton);
-
-            // Play button action
-            playButton.setOnAction(e -> handleButtonClick(primaryStage, root, "play"));
-
-            // Settings button action
-            settingsButton.setOnAction(e -> handleButtonClick(primaryStage, root, "settings"));
-
-            // Quit button action
-            quitButton.setOnAction(e -> Platform.exit());
-        }
-
-        // Always ensure these buttons are in the root
-        root.getChildren().removeAll(playButton, settingsButton, quitButton);
-        root.getChildren().addAll(playButton, settingsButton, quitButton);
-    }
-
-    /** Handles button clicks with smooth transitions. */
-    private void handleButtonClick(Stage primaryStage, Pane root, String action) {
-        ScaleTransition stClick = new ScaleTransition(Duration.millis(500), root);
+        ScaleTransition stClick = new ScaleTransition(Duration.millis(0), currentScene.getRoot());
         stClick.setToX(1.0);
         stClick.setToY(1.0);
         stClick.setOnFinished(event -> {
-            FadeTransition fadeOut = new FadeTransition(Duration.millis(400), root);
+            FadeTransition fadeOut = new FadeTransition(Duration.millis(0), currentScene.getRoot());
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0);
             fadeOut.setOnFinished(ev -> {
                 if (action.equals("play")) {
-                    // Replace with new LevelSelectionScene
-                    LevelSelectionScene levelSelectionScene = new LevelSelectionScene();
-                    primaryStage.setScene(levelSelectionScene.createLevelSelectionScene(primaryStage));
+                    LevelSelectionScene levelScene = new LevelSelectionScene();
+                    stage.setScene(levelScene.createLevelSelectionScene(stage));
                 } else if (action.equals("settings")) {
                     SettingsScene settingsScene = new SettingsScene();
-                    primaryStage.setScene(settingsScene.createSettingsScene(primaryStage));
+                    stage.setScene(settingsScene.createSettingsScene(stage));
                 }
-                FadeTransition fadeIn = new FadeTransition(Duration.millis(300), primaryStage.getScene().getRoot());
+                FadeTransition fadeIn = new FadeTransition(Duration.millis(0), stage.getScene().getRoot());
                 fadeIn.setFromValue(0);
                 fadeIn.setToValue(1.0);
                 fadeIn.play();
@@ -122,38 +108,156 @@ public class GameTitleScreen extends Application {
         stClick.play();
     }
 
-    /** Creates a styled button. */
-    private Button createStyledButton(String text, double x, double y, double rotate) {
-        Button button = new Button(text);
+    private void draw(Scene scene) {
+        double w = scene.getWidth();
+        double h = scene.getHeight();
+        canvas.setWidth(w);
+        canvas.setHeight(h);
+
+        // Increased the base scale factor by 1.5x to make everything bigger
+        double scale = Math.min(w / 800, h / 600) * 1.5;
+        // Increased base button size from 140 to 180
+        double buttonW = 180 * scale;
+        double buttonH = 50 * scale;  // Increased from 40 to 50
+        double gap = 50 * scale;      // Increased from 40 to 50
+
+        // Center the elements vertically a bit better
+        double playY = h / 3;         // Changed from h/4 to h/3 for better vertical centering
+        double settingsY = playY + buttonH + gap;
+        double quitY = settingsY + buttonH + gap;
+        double centerX = w / 2 - buttonW / 2;
+
+        // Position and resize buttons
+        positionAndStyle(playButton, centerX, playY, buttonW, buttonH, scale);
+        positionAndStyle(settingsButton, centerX, settingsY, buttonW, buttonH, scale);
+        positionAndStyle(quitButton, centerX, quitY, buttonW, buttonH, scale);
+
+        // Draw lines
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.clearRect(0, 0, w, h);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(3);  // Increased line width from 2 to 3
+
+        double centerBtnX = centerX + buttonW / 2;
+
+        // Lines to Play - made the lines spread wider
+        gc.strokeLine(w / 3, 0, centerBtnX - 40, playY);  // Changed -20 to -40
+        gc.strokeLine(2 * w / 3, 0, centerBtnX + 40, playY);  // Changed +20 to +40
+
+        // Play to Settings - made the lines spread wider
+        gc.strokeLine(centerBtnX - 50, playY + buttonH, centerBtnX - 50, settingsY);  // Changed -30 to -50
+        gc.strokeLine(centerBtnX + 50, playY + buttonH, centerBtnX + 50, settingsY);  // Changed +30 to +50
+
+        // Settings to Quit - made the lines spread wider
+        gc.strokeLine(centerBtnX - 50, settingsY + buttonH, centerBtnX - 50, quitY);  // Changed -30 to -50
+        gc.strokeLine(centerBtnX + 50, settingsY + buttonH, centerBtnX + 50, quitY);  // Changed +30 to +50
+    }
+
+    private void positionAndStyle(Button button, double x, double y, double width, double height, double scale) {
         button.setLayoutX(x);
         button.setLayoutY(y);
-        button.setRotate(rotate);
-        button.getStyleClass().add("menu-button");
-        return button;
+        button.setPrefWidth(width);
+        button.setPrefHeight(height);
+        setButtonStyle(button, scale);
     }
 
-    public Scene createGameTitleScene(Stage primaryStage) {
-        Pane root = new Pane();
-        root.setStyle("-fx-background-color: #A9EDFE;");
-        addHangingLines(root);
-        addCircles(root);
-        addButtons(root, primaryStage);
-        Scene scene = new Scene(root, 600, 400);
-        scene.getStylesheets().add("file:style.css");
-        return scene;
+    private Button createStyledButton(String text) {
+        return new Button(text);
     }
 
-    /** Adds hover effects to buttons. */
+    private void setButtonStyle(Button button, double scale) {
+        int fontSize = Math.max(12, (int)(24 * scale));  // Increased from 10/20 to 12/24
+        int radius = (int)(85 * scale);
+        int padH = (int)(30 * scale);
+
+        String style = "-fx-background-color: white;" +
+                "-fx-border-radius: " + radius*8 + "px;" +
+                "-fx-background-radius: " + (radius*6) + "px;" +
+                "-fx-font-size: " + fontSize + "px;" +
+                "-fx-font-weight: bold;" +
+                "-fx-text-fill: #006699;" +
+                "-fx-padding: 12px " + padH + "px;";
+        button.setStyle(style);
+        buttonEffect(button);
+        // In createStyledButton:
+
+    }
+
     private void addHoverEffect(Button button) {
         ScaleTransition stEnter = new ScaleTransition(Duration.millis(200), button);
         stEnter.setToX(1.3);
         stEnter.setToY(1.2);
+
         ScaleTransition stExit = new ScaleTransition(Duration.millis(200), button);
         stExit.setToX(1.0);
         stExit.setToY(1.0);
 
         button.setOnMouseEntered(e -> stEnter.playFromStart());
         button.setOnMouseExited(e -> stExit.playFromStart());
+    }
+
+    private void buttonEffect(Button button) {
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.AQUAMARINE);
+        glow.setRadius(20);
+
+        button.setOnMouseEntered(e -> {
+            button.setEffect(glow);
+        });
+
+        button.setOnMouseExited(e -> {
+            button.setEffect(null);
+        });
+
+        button.setOnMousePressed(e -> {
+            String currentStyle = button.getStyle();
+            button.setStyle(currentStyle + "-fx-translate-y: 2px;");
+        });
+    }
+
+    public Scene createGameTitleScene(Stage primaryStage) {
+        // Create a new Pane for the recreated scene
+        Pane root = new Pane();
+        root.setStyle("-fx-background-color: #5ed3f7");
+        Scene scene = new Scene(root, WIDTH, HEIGHT);
+        scene.getStylesheets().add("file:style.css");
+
+        Image gifBackground = new Image("file:clouding.gif");
+        ImageView gifView = new ImageView(gifBackground);
+        gifView.setPreserveRatio(false);
+        gifView.setFitWidth(WIDTH);
+        gifView.setFitHeight(HEIGHT);
+        gifView.setManaged(false);
+        gifView.setLayoutY(-160); // Pushes it to the top
+
+        scene.widthProperty().addListener((obs, oldVal, newVal) -> gifView.setFitWidth(newVal.doubleValue()));
+        scene.heightProperty().addListener((obs, oldVal, newVal) -> gifView.setFitHeight(newVal.doubleValue()));
+
+        root.getChildren().add(gifView);
+
+
+        canvas = new Canvas(WIDTH, HEIGHT);
+        root.getChildren().add(canvas);
+
+        playButton = createStyledButton("Play");
+        settingsButton = createStyledButton("Settings");
+        quitButton = createStyledButton("Quit");
+
+        addHoverEffect(playButton);
+        addHoverEffect(settingsButton);
+        addHoverEffect(quitButton);
+
+        root.getChildren().addAll(playButton, settingsButton, quitButton);
+
+        playButton.setOnAction(e -> handleButtonClick(primaryStage, "play"));
+        settingsButton.setOnAction(e -> handleButtonClick(primaryStage, "settings"));
+        quitButton.setOnAction(e -> Platform.exit());
+
+        scene.widthProperty().addListener((obs, o, n) -> draw(scene));
+        scene.heightProperty().addListener((obs, o, n) -> draw(scene));
+
+        draw(scene);
+        return scene;
     }
 
     public static void main(String[] args) {

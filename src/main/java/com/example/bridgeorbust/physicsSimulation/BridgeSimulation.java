@@ -14,6 +14,7 @@ package com.example.bridgeorbust.physicsSimulation;
  * fix key comb. i.e. spacebar!! now p
  */
 
+import com.example.GUI.GameTitleScreen;
 import javafx.animation.*;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -87,14 +88,13 @@ public class BridgeSimulation extends Application {
     @Override
     public void start(Stage stage) {
         carImage = new Image("file:car.png");
-        Media media = new Media(getClass().getResource("/sounds/bridgingasmile.mp3").toString());
+   /*     Media media = new Media(getClass().getResource("/sounds/Waltz.mp3").toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
         mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         mediaPlayer.setVolume(0.1);
         mediaPlayer.play();
-
-
+*/
         Canvas canvas = new Canvas();
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -106,11 +106,6 @@ public class BridgeSimulation extends Application {
 
 
 
-
-//        ImageView gearImage = new ImageView(new Image("file:sign-out.png"));
-//        Button gearButton = new Button("", gearImage);
-//        gearImage.setFitWidth(30);
-//        gearImage.setFitHeight(30);
         gridModeButton.setLayoutX(canvas.getWidth() - gridModeButton.getWidth() - 75);
         gridModeButton.setLayoutY(90);
         gridModeButton.getStyleClass().add("grid-button");
@@ -300,6 +295,11 @@ public class BridgeSimulation extends Application {
             }
 
         });
+        //gear button action
+        gearButton.setOnAction(e -> {
+            GameTitleScreen gameTitleScreen = new GameTitleScreen();
+            stage.setScene(gameTitleScreen.createGameTitleScene(stage));
+        });
 
         nextLevelButton.setOnAction(e -> {
             if (level == 3) {
@@ -359,6 +359,10 @@ public class BridgeSimulation extends Application {
         scene.getAccelerators().put(
                 new KeyCodeCombination(KeyCode.P),
                 () -> playPauseButton.fire()
+        );
+        scene.getAccelerators().put(
+                new KeyCodeCombination(KeyCode.G),
+                () -> gridModeButton.fire()
         );
 
         scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
