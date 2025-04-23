@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="Fixed undo and added the function of next level in the win-widget">
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="grid">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/Beam.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/GameTitleScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/GameTitleScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/MusicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/MusicManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/SettingsScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/SettingsScene.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/TutorialScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/TutorialScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/styles/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles/style.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,7 +60,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
-    &quot;accountId&quot;: &quot;1085a5f7-3eec-445a-9ef0-dab3f201eaf7&quot;
+    &quot;accountId&quot;: &quot;ef65ce83-6902-468d-aaae-ec537a1addcb&quot;
   }
 }</component>
   <component name="MavenImportPreferences">
@@ -101,17 +103,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustTRUE" />
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustTRUE\src\main\resources\sounds" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
     </key>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.24807.4" />
-        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.24807.4" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -142,9 +138,6 @@
       <workItem from="1739394355635" duration="1922000" />
       <workItem from="1740157167797" duration="4420000" />
       <workItem from="1743180591637" duration="5531000" />
-      <workItem from="1744388830683" duration="395000" />
-      <workItem from="1744390350460" duration="2763000" />
-      <workItem from="1745342518959" duration="2410000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -258,15 +251,7 @@
       <option name="project" value="LOCAL" />
       <updated>1744307200206</updated>
     </task>
-    <task id="LOCAL-00015" summary="Fixed undo and added the function of next level in the win-widget">
-      <option name="closed" value="true" />
-      <created>1744321271639</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1744321271639</updated>
-    </task>
-    <option name="localTasksCounter" value="16" />
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -338,7 +323,6 @@
     <MESSAGE value="car teleportation bug fixed AAAAHHHHHHH" />
     <MESSAGE value="car teleportation bug fixed AAAAHHHHHHH 2" />
     <MESSAGE value="grid" />
-    <MESSAGE value="Fixed undo and added the function of next level in the win-widget" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed undo and added the function of next level in the win-widget" />
+    <option name="LAST_COMMIT_MESSAGE" value="grid" />
   </component>
 </project>

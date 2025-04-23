@@ -198,7 +198,7 @@ public class LevelSelectionScene {
             button.setStyle(originalStyle + "-fx-translate-y: 4px; -fx-brightness: 120%;");
         });
 
-        button.setOnMouseReleased(e -> {
+            button.setOnMouseReleased(e -> {
             if (button.isHover()) {
                 button.setEffect(glow);
             } else {

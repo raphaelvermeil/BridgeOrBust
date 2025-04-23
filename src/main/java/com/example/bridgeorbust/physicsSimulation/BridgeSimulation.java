@@ -301,26 +301,63 @@ public class BridgeSimulation extends Application {
         trussButton.setOnAction(e -> roadMode = false);
         roadButton.setOnAction(e -> roadMode = true);
         resetButton.setOnAction(e -> {
-            if (firstPin != null) {
-                if (firstPin.getConnectedBeamsSize() == 0)
-                    pins.remove(firstPin);
-                firstPin = null;
-            }
+            // confirmation
+            VBox confirmationDialog = new VBox();
+            confirmationDialog.setAlignment(javafx.geometry.Pos.CENTER);
+            confirmationDialog.setSpacing(20);
+            confirmationDialog.setStyle("-fx-background-color: rgba(0, 0, 0, 1);" +
+                    " -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;");
 
-            while (mouseCounter > 0)
-                destroyBeam(beams.getLast());
+            Text confirmationText = new Text("Are you sure you want to reset the game?\n All progress will be lost.");
+            confirmationText.setFill(Color.WHITE);
+            confirmationText.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-            ball1.setPosition(new Vector2D(50, 275));
-            ball1.setOldPosition(new Vector2D(50, 275));
-            if (play) {
-                playPause.setImage(new Image("file:play.png"));
-                gridModeButton.setSelected(true);
-                play = false;
-                lost = false;
-            }
-            stage.setResizable(true);
+            Button noButton = new Button("No");
+            Button yesButton = new Button("Yes");
 
-            mouseCounter = 0;
+            HBox buttonBox = new HBox(10, noButton, yesButton);
+            buttonBox.setAlignment(javafx.geometry.Pos.CENTER);
+
+            confirmationDialog.getChildren().addAll(confirmationText, buttonBox);
+            confirmationDialog.setLayoutX((canvas.getWidth() - 300) / 2);
+            confirmationDialog.setLayoutY((canvas.getHeight() - 150) / 2);
+            confirmationDialog.setMinWidth(300);
+            confirmationDialog.setMinHeight(150);
+
+            Pane parentPane = (Pane) canvas.getParent();
+            parentPane.getChildren().add(confirmationDialog);
+
+            // Handle no
+            noButton.setOnAction(noEvent -> {
+                parentPane.getChildren().remove(confirmationDialog);
+            });
+
+            // Handle yes
+            yesButton.setOnAction(yesEvent -> {
+                parentPane.getChildren().remove(confirmationDialog);
+
+                // Reset game logic
+                if (firstPin != null) {
+                    if (firstPin.getConnectedBeamsSize() == 0)
+                        pins.remove(firstPin);
+                    firstPin = null;
+                }
+
+                while (mouseCounter > 0)
+                    destroyBeam(beams.getLast());
+
+                ball1.setPosition(new Vector2D(50, 275));
+                ball1.setOldPosition(new Vector2D(50, 275));
+                if (play) {
+                    playPause.setImage(new Image("file:play.png"));
+                    gridModeButton.setSelected(true);
+                    play = false;
+                    lost = false;
+                }
+                stage.setResizable(true);
+
+                mouseCounter = 0;
+            });
         });
         undoButton.setOnAction(e -> {
             if (firstPin == null) {

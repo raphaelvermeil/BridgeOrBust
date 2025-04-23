@@ -33,9 +33,8 @@ public class SettingsScene {
         root.setPadding(new Insets(40));
         root.setAlignment(Pos.CENTER);
 
-        HBox systemVolumeBox = createVolumeControl("System Volume", "system-volume-slider");
-        systemVolumeSlider = (Slider) systemVolumeBox.lookup(".slider");
-        setupSystemVolumeControl();
+
+
 
         // Music volume Control
         HBox musicVolumeBox = createVolumeControl("Music Volume", "music-volume-slider");
@@ -63,7 +62,7 @@ public class SettingsScene {
         });
 
 
-        // Fullscreen checkbox here
+ /*       // Fullscreen checkbox here
         //TODO does not work yet but should be
         fullscreenCheckbox = new CheckBox("Fullscreen");
         fullscreenCheckbox.setStyle("-fx-font-size: 16px;");
@@ -75,10 +74,11 @@ public class SettingsScene {
         });
         fullscreenCheckbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
             primaryStage.setFullScreen(newVal);
-        });
+        });*/
 
         // Back button
         Button backButton = new Button("BACK");
+        backButton.setStyle("-fx-text-fill: #006699; -fx-background-color: white; -fx-font-size: 28px;");
         backButton.getStyleClass().add("menu-button");
         addHoverEffect(backButton);
         Button testSound = new Button("Test Sound Volume");
@@ -98,10 +98,9 @@ public class SettingsScene {
 
         // Add all component
         root.getChildren().addAll(
-                systemVolumeBox,
                 musicVolumeBox,
                 muteMusicCheckbox,
-                fullscreenCheckbox,
+        //        fullscreenCheckbox,
                 backButton
         );
 
