@@ -85,7 +85,7 @@ public class BridgeSimulation extends Application {
     private VBox physicsDemo = new VBox();
     private Canvas canvas;
     private Beam selectedBeam = null;  // Track the currently selected beam
-    public int level = 2;
+    public int level = 1;
     private double[][] level1 = {{200,300},{800, 300},{200, 400},{800, 400}};
     private double[][] level2 = {{150, 300},{850, 300},{400, 550}};
     private double[][] level3 = {{200, 400},{800, 200},{800, 400}};
@@ -119,8 +119,8 @@ public class BridgeSimulation extends Application {
         gridModeButton.setLayoutY(90);
         gridModeButton.getStyleClass().add("grid-button");
 
-        physicsDemoButton.setLayoutX(canvas.getWidth() - physicsDemoButton.getWidth() - 75);
-        physicsDemoButton.setLayoutY(120);
+        physicsDemoButton.setLayoutX(canvas.getWidth() - 100);
+        physicsDemoButton.setLayoutY(135);
         physicsDemoButton.getStyleClass().add("grid-button");
 
         gridModeButton.setSelected(true);
@@ -230,6 +230,8 @@ public class BridgeSimulation extends Application {
         physicsDemo.setMinHeight(225);
         physicsDemo.getStyleClass().add("physics-demo");
         physicsDemo.setVisible(false);
+
+
 
         Text noBeamText = new Text("No beam selected");
         noBeamText.setFont(Font.font("Arial", 14));
@@ -509,8 +511,8 @@ public class BridgeSimulation extends Application {
         gridModeButton.setLayoutY(90);
 
         // Update physics demo button position
-        physicsDemoButton.setLayoutX(canvas.getWidth() - physicsDemoButton.getWidth() - 75);
-        physicsDemoButton.setLayoutY(120);
+        physicsDemoButton.setLayoutX(canvas.getWidth() - 100);
+        physicsDemoButton.setLayoutY(135);
 
         winWidget.setLayoutX(canvas.getWidth() / 2);
         winWidget.setLayoutY(canvas.getHeight() / 2);
@@ -522,11 +524,12 @@ public class BridgeSimulation extends Application {
         winWidget.setLayoutY(canvas.getHeight() / 2 - winWidget.getMinHeight() / 2);
 
         // Update physics demo VBox position and size
-        physicsDemo.setLayoutX(canvas.getWidth() - 200);
+        physicsDemo.setLayoutX(canvas.getWidth() - canvas.getWidth()/6);
         physicsDemo.setLayoutY(canvas.getHeight() - 225);
-        physicsDemo.setMinWidth(200);
+
+        physicsDemo.setMinWidth(175);
         physicsDemo.setMinHeight(225);
-        physicsDemo.setPrefWidth(200);
+        physicsDemo.setPrefWidth(175);
         physicsDemo.setPrefHeight(225);
 
         // Update physics demo text size based on window size
