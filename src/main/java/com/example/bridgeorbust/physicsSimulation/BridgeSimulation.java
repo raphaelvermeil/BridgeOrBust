@@ -85,7 +85,7 @@ public class BridgeSimulation extends Application {
     private VBox physicsDemo = new VBox();
     private Canvas canvas;
     private Beam selectedBeam = null;  // Track the currently selected beam
-    public int level = 1;
+    public int level = 2;
     private double[][] level1 = {{200,300},{800, 300},{200, 400},{800, 400}};
     private double[][] level2 = {{150, 300},{850, 300},{400, 550}};
     private double[][] level3 = {{200, 400},{800, 200},{800, 400}};
@@ -613,8 +613,9 @@ public class BridgeSimulation extends Application {
 
         }
 
-        this.lostArbitraryLimit = 550;
-        this.winArbitraryLimit = 900;
+        this.lostArbitraryLimit = canvas.getHeight() - canvas.getHeight() / 5;
+        this.winArbitraryLimit = canvas.getWidth() - canvas.getWidth() / 7;
+
 
         this.maxRoadBeam = 4;
         this.maxTruss = 30;
@@ -625,8 +626,9 @@ public class BridgeSimulation extends Application {
             Pin pin = new Pin(level2[i][0], level2[i][1], true, true);
             startPins.add(pin);
         }
-        this.lostArbitraryLimit = 500;
-        this.winArbitraryLimit = 900;
+        this.lostArbitraryLimit = canvas.getHeight() - canvas.getHeight() / 5;
+        this.winArbitraryLimit = canvas.getWidth() - canvas.getWidth() / 7;
+
 
         this.maxRoadBeam = 4;
         this.maxTruss = 18;
@@ -642,8 +644,10 @@ public class BridgeSimulation extends Application {
             startPins.add(pin);
         }
 
-        this.lostArbitraryLimit = 500;
-        this.winArbitraryLimit = 900;
+//        this.lostArbitraryLimit = 500;
+        this.lostArbitraryLimit = canvas.getHeight() - canvas.getHeight() / 5;
+
+        this.winArbitraryLimit = canvas.getWidth() - canvas.getWidth() / 7;
 
         this.maxRoadBeam = 4;
         this.maxTruss = 10;
@@ -995,14 +999,17 @@ public class BridgeSimulation extends Application {
             gc.rotate(angle);
             gc.drawImage(carImage, -17.175, -7.575, 34.35, 15.15); // Draw the car image centered
             gc.restore();
+
         } else {
             gc.drawImage(carImage, ball1.getPosition().x, ball1.getPosition().y, (34.35), 15.15);
 
-            gc.setStroke(Color.RED);
-            gc.setLineWidth(1);
-            gc.setLineDashes(5);
-            gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
+
         }
+
+        gc.setStroke(Color.RED);
+        gc.setLineWidth(1);
+        gc.setLineDashes(5);
+        gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
 
         if (lost) {
             String text = "BUST";
