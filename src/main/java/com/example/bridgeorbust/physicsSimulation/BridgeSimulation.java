@@ -68,6 +68,7 @@ public class BridgeSimulation extends Application {
     private boolean lost = false;
     public static Ball ball1 = new Ball(50, 275, 0.02, 20);
     Image carImage;
+    Image truckImage;
     private int mouseCounter = 0;
     Button playPauseButton;
     private double lostArbitraryLimit;
@@ -97,6 +98,7 @@ public class BridgeSimulation extends Application {
     @Override
     public void start(Stage stage) {
         carImage = new Image("file:car.png");
+        truckImage = new Image("file:truck.png");
    /*     Media media = new Media(getClass().getResource("/sounds/Waltz.mp3").toString());
         MediaPlayer mediaPlayer = new MediaPlayer(media);
 
@@ -1012,7 +1014,7 @@ public class BridgeSimulation extends Application {
         gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
 
         if (lost) {
-            String text = "BUST";
+            String text = " ";
             gc.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
             gc.setFill(Color.DARKRED);
             double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width

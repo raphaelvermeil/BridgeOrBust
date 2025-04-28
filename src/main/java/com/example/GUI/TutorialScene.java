@@ -8,11 +8,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 
 public class TutorialScene {
     private Stage primaryStage;
     private BorderPane root;
+    private ImageView gifView;
     private int currentGifIndex = 0;
 
     public Scene createScene(Stage primaryStage) {
@@ -20,8 +23,26 @@ public class TutorialScene {
         root = new BorderPane();
         root.setStyle("-fx-background-color: #112233;");
 
-        // Create the initial scene first
+        // Create initial scene
         Scene scene = new Scene(root, 1000, 600);
+
+        // Create gifView once
+        gifView = new ImageView();
+        gifView.setPreserveRatio(false);
+        gifView.setFitWidth(scene.getWidth());
+        gifView.setFitHeight(scene.getHeight() * 0.8);
+
+        // Listen for window resizing once
+        scene.widthProperty().addListener((obs, oldVal, newVal) ->
+                gifView.setFitWidth(newVal.doubleValue()));
+
+        scene.heightProperty().addListener((obs, oldVal, newVal) ->
+                gifView.setFitHeight(newVal.doubleValue() * 0.8));
+
+        // Put gifView inside a center pane
+        StackPane centerPane = new StackPane(gifView);
+        centerPane.setAlignment(Pos.CENTER);
+        root.setCenter(centerPane);
 
         // Now load the first GIF
         loadGif(scene, 0);
@@ -31,40 +52,22 @@ public class TutorialScene {
 
     private void loadGif(Scene scene, int index) {
         currentGifIndex = index;
-        root.setCenter(null);
-        root.setBottom(null);
 
         // Choose which GIF to load based on index
         String gifName;
         switch (index) {
-            case 0: gifName = "a"; break;
-            case 1: gifName = "b"; break;
-            case 2: gifName = "c"; break;
-            case 3: gifName = "d"; break;
-            default: gifName = "a"; break;
+            case 0: gifName = "GBOB1"; break;
+            case 1: gifName = "GBOB2"; break;
+            case 2: gifName = "GBOB3"; break;
+            case 3: gifName = "GBOB4"; break;
+            default: gifName = "GBOB1"; break;
         }
 
         try {
-            // Create GIF view
-            Image gifImage = new Image("file:" + gifName + ".gif");
-            ImageView gifView = new ImageView(gifImage);
-            gifView.setPreserveRatio(false);
-            gifView.setFitWidth(scene.getWidth());
-            gifView.setFitHeight(scene.getHeight() * 0.8); // 80% of height
+            // Load and set new image (reuse same gifView!)
+            gifView.setImage(new Image("file:" + gifName + ".gif"));
 
-            // Setup responsive sizing
-            scene.widthProperty().addListener((obs, oldVal, newVal) ->
-                    gifView.setFitWidth(newVal.doubleValue()));
-
-            scene.heightProperty().addListener((obs, oldVal, newVal) ->
-                    gifView.setFitHeight(newVal.doubleValue() * 0.8));
-
-            // Center the GIF
-            StackPane centerPane = new StackPane(gifView);
-            centerPane.setAlignment(Pos.CENTER);
-            root.setCenter(centerPane);
-
-            // Create navigation buttons based on which GIF we're showing
+            // Rebuild bottom buttons
             createNavigationButtons(scene, index);
 
         } catch (Exception e) {
@@ -74,57 +77,84 @@ public class TutorialScene {
     }
 
     private void createNavigationButtons(Scene scene, int index) {
-        HBox buttonsBox = new HBox(10);
+        HBox buttonsBox = new HBox();
         buttonsBox.setPadding(new javafx.geometry.Insets(15));
+        buttonsBox.setAlignment(Pos.CENTER);
 
-        if (index == 0) {
-            // First GIF: only Next and Skip buttons on right
-            buttonsBox.setAlignment(Pos.CENTER_RIGHT);
+        // Left side - Previous button
+        HBox leftBox = new HBox(10);
+        leftBox.setAlignment(Pos.CENTER_LEFT);
 
-            Button nextButton = new Button("Next");
-            nextButton.setOnAction(e -> loadGif(scene, 1));
-
-            Button skipButton = new Button("Skip Tutorial");
-            skipButton.setOnAction(e -> returnToTitleScreen());
-
-            buttonsBox.getChildren().addAll(nextButton, skipButton);
-
-        } else if (index == 3) {
-            // Last GIF: only Finish button on right
-            buttonsBox.setAlignment(Pos.CENTER_RIGHT);
-
-            Button finishButton = new Button("Finish Tutorial");
-            finishButton.setOnAction(e -> returnToTitleScreen());
-
-            buttonsBox.getChildren().add(finishButton);
-
-        } else {
-            // Middle GIFs: Previous on left, Next and Skip on right
-            buttonsBox.setPrefWidth(scene.getWidth());
-
-            HBox leftBox = new HBox();
-            leftBox.setAlignment(Pos.CENTER_LEFT);
-
-            Button previousButton = new Button("Previous");
+        // Add previous button to all slides except the first one
+        if (index > 0) {
+            Button previousButton = createStyledButton("Previous");
             previousButton.setOnAction(e -> loadGif(scene, index - 1));
             leftBox.getChildren().add(previousButton);
-
-            HBox rightBox = new HBox(0);
-            rightBox.setAlignment(Pos.CENTER_RIGHT);
-
-            Button nextButton = new Button("Next");
-            nextButton.setOnAction(e -> loadGif(scene, index + 1));
-
-            Button skipButton = new Button("Skip Tutorial");
-            skipButton.setOnAction(e -> returnToTitleScreen());
-
-            rightBox.getChildren().addAll(nextButton, skipButton);
-
-            buttonsBox.getChildren().addAll(leftBox, rightBox);
-            buttonsBox.setSpacing(scene.getWidth() - 300); // Adjust spacing to push buttons to edges
         }
 
+        // Flexible space in the middle
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        // Right side - Next/Skip/Finish buttons
+        HBox rightBox = new HBox(10);
+        rightBox.setAlignment(Pos.CENTER_RIGHT);
+
+        // Add Next button to all slides except the last one
+        if (index < 3) {
+            Button nextButton = createStyledButton("Next");
+            nextButton.setOnAction(e -> loadGif(scene, index + 1));
+            rightBox.getChildren().add(nextButton);
+        }
+
+        // Add Finish button only to the last slide
+        if (index == 3) {
+            Button finishButton = createStyledButton("Finish Tutorial");
+            finishButton.setOnAction(e -> returnToTitleScreen());
+            rightBox.getChildren().add(finishButton);
+        }
+
+        // Add Skip button to all slides except the last one
+        if (index < 3) {
+            Button skipButton = createStyledButton("Skip Tutorial");
+            skipButton.setOnAction(e -> returnToTitleScreen());
+            rightBox.getChildren().add(skipButton);
+        }
+
+        // Add all components to the main box
+        buttonsBox.getChildren().addAll(leftBox, spacer, rightBox);
+
         root.setBottom(buttonsBox);
+    }
+
+    private Button createStyledButton(String text) {
+        Button button = new Button(text);
+
+        // Apply consistent styling
+        button.setStyle("-fx-background-color: #2C3E50; " +
+                "-fx-text-fill: white; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 10px 20px; " +
+                "-fx-background-radius: 5px;");
+
+        // Add hover effect
+        button.setOnMouseEntered(e ->
+                button.setStyle("-fx-background-color: #34495E; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-background-radius: 5px;")
+        );
+
+        button.setOnMouseExited(e ->
+                button.setStyle("-fx-background-color: #2C3E50; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 10px 20px; " +
+                        "-fx-background-radius: 5px;")
+        );
+
+        return button;
     }
 
     private void returnToTitleScreen() {

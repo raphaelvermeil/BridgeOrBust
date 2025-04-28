@@ -4,9 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="finished physics demo and fixed reset bug on level 2-3">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="91190871-3849-461b-8f03-dc2c5ace9180" name="Changes" comment="grid">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Bridgeback1.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bridge.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bridge1.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bridge2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bridge3.PNG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/bridges.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pause1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pink.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/restart-icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/TutorialScene.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/TutorialScene.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/bridgeorbust/physicsSimulation/BridgeSimulation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -53,12 +64,12 @@
     }
   ]
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/raphaelvermeil/BridgeOrBust.git",
-    "accountId": "f8e68879-e683-4993-890d-c98838f9f514"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/raphaelvermeil/BridgeOrBust.git&quot;,
+    &quot;accountId&quot;: &quot;ef65ce83-6902-468d-aaae-ec537a1addcb&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -70,47 +81,40 @@
   &quot;associatedIndex&quot;: 8
 }</component>
   <component name="ProjectId" id="2sGpF0nnjcdZcYrBJRKgrbLPMbU" />
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BridgeSimulation.executor": "Run",
-    "Application.GameTitleScreen.executor": "Run",
-    "Application.GravitySimulation.executor": "Run",
-    "Application.HelloApplication.executor": "Run",
-    "Application.PendulumSimulation.executor": "Run",
-    "Application.SimplePhysicsEngine.executor": "Run",
-    "Application.SolveLinearSystem.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BridgeSimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.GameTitleScreen.executor&quot;: &quot;Run&quot;,
+    &quot;Application.GravitySimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
+    &quot;Application.PendulumSimulation.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SimplePhysicsEngine.executor&quot;: &quot;Run&quot;,
+    &quot;Application.SolveLinearSystem.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustTRUE" />
+      <recent name="C:\Users\nikev\Downloads\BridgeOrBustTRUE\src\main\resources\sounds" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial" />
       <recent name="C:\Users\nikev\Downloads\BridgeOrBustOfficial\src\main" />
     </key>
-  </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.435" />
-        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.435" />
-      </set>
-    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -141,11 +145,6 @@
       <workItem from="1739394355635" duration="1922000" />
       <workItem from="1740157167797" duration="4420000" />
       <workItem from="1743180591637" duration="5531000" />
-      <workItem from="1744388830683" duration="395000" />
-      <workItem from="1744390350460" duration="2763000" />
-      <workItem from="1745342518959" duration="2410000" />
-      <workItem from="1745594512357" duration="2111000" />
-      <workItem from="1745770005845" duration="1775000" />
     </task>
     <task id="LOCAL-00001" summary="Create Project">
       <option name="closed" value="true" />
@@ -259,15 +258,7 @@
       <option name="project" value="LOCAL" />
       <updated>1744307200206</updated>
     </task>
-    <task id="LOCAL-00015" summary="Fixed undo and added the function of next level in the win-widget">
-      <option name="closed" value="true" />
-      <created>1744321271639</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1744321271639</updated>
-    </task>
-    <option name="localTasksCounter" value="16" />
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -339,7 +330,6 @@
     <MESSAGE value="car teleportation bug fixed AAAAHHHHHHH" />
     <MESSAGE value="car teleportation bug fixed AAAAHHHHHHH 2" />
     <MESSAGE value="grid" />
-    <MESSAGE value="Fixed undo and added the function of next level in the win-widget" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed undo and added the function of next level in the win-widget" />
+    <option name="LAST_COMMIT_MESSAGE" value="grid" />
   </component>
 </project>
