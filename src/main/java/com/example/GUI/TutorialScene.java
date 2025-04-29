@@ -161,6 +161,6 @@ public class TutorialScene {
         GameTitleScreen gameTitleScreen = new GameTitleScreen();
         Scene scene = gameTitleScreen.createGameTitleScene(primaryStage);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(GameSettings.isFullscreen());
+
     }
 }

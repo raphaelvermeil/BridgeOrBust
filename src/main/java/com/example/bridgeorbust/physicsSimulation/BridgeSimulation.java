@@ -1,19 +1,4 @@
 package com.example.bridgeorbust.physicsSimulation;
-
-/* problems:
- * !!BUG!! reset forces at pause, color should ideally stay, FIXED
- * change physic values per level? NO
- * calibrate realism FIxED
- * add weight effect to mass (hint: check only physical beams/use trulyUnder())
- * binding is spaghetti, bind width to height? (if so, ratio with full-screen size or smt)
- * \__} massPerLength, breakLimit, maxLength, x-Speed, y-accel, ect.
- * ---- max length in x and y, x
- * <p>
- * grid button while in build mode, (cannot be checked if pins != startPins and in freeMode)
- * level3
- * fix key comb. i.e. spacebar!! now p
- */
-
 import com.example.GUI.GameTitleScreen;
 import javafx.animation.*;
 import javafx.application.Application;
@@ -91,6 +76,9 @@ public class BridgeSimulation extends Application {
     private double[][] level2 = {{150, 300},{850, 300},{400, 550}};
     private double[][] level3 = {{200, 400},{800, 200},{800, 400}};
     private int initalPinCount = 0;
+    private boolean bustAnimating = false;
+    private boolean bustFinished = false;
+    private boolean lastLostState = false;
 
     // Load the audio file
     AudioClip beamSound = new AudioClip(getClass().getResource("/sounds/pop.mp3").toString());
@@ -1013,30 +1001,93 @@ public class BridgeSimulation extends Application {
         gc.setLineDashes(5);
         gc.strokeLine(0, this.lostArbitraryLimit, gc.getCanvas().getWidth(), this.lostArbitraryLimit);
 
-        if (lost) {
-            String text = " ";
-            gc.setFont(Font.font("Comic Sans MS", FontWeight.BOLD, 50)); // Change font size as needed
-            gc.setFill(Color.DARKRED);
-            double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
-            double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
+        // 1. Trigger BUST animation once when lost becomes true
+        if (lost && !lastLostState) {
+            bustAnimating = true;
+            bustFinished = false;
 
-            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
-            double y = (gc.getCanvas().getHeight() - textHeight) / 2 + textHeight; // Adjust for baseline alignment
+            String text = "BUST";
+            double canvasWidth = gc.getCanvas().getWidth();
+            double canvasHeight = gc.getCanvas().getHeight();
+            double centerY = canvasHeight / 2 + 35;
 
-            gc.fillText(text, x, y);
-        } else if (!play) {
-            String text = "Roads Left: " + maxRoadBeam + " Trusses Left: " + maxTruss;
-            gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20)); // Change font size as needed
-            gc.setFill(Color.ROSYBROWN);
-            double textWidth = gc.getFont().getSize() * text.length() * 0.4; // Approximate width
-            double textHeight = gc.getFont().getSize(); // Font size is a good estimate for height
+            final double[] fontSize = {150};
+            final double startSize = 150;
+            final double endSize = 100;
+            final double[] alpha = {0.0};
+            final double duration = 1.0;
 
-            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
-            double y = 30; // Adjust for baseline alignment
+            AnimationTimer timer = new AnimationTimer() {
+                long startTime = -1;
 
-            gc.fillText(text, x, y);
+                @Override
+                public void handle(long now) {
+                    if (startTime == -1) startTime = now;
+                    double elapsed = (now - startTime) / 1_000_000_000.0;
+                    elapsed = Math.min(elapsed, duration);
+                    double progress = elapsed / duration;
 
+                    fontSize[0] = startSize - (startSize - endSize) * progress;
+                    alpha[0] = progress;
+
+                    gc.setFont(Font.font("Impact", FontWeight.EXTRA_BOLD, fontSize[0]));
+                    gc.setFill(Color.DARKRED);
+                    gc.setGlobalAlpha(alpha[0]);
+
+                    Text tempText = new Text(text);
+                    tempText.setFont(gc.getFont());
+                    double textWidth = tempText.getLayoutBounds().getWidth();
+                    double x = (canvasWidth - textWidth) / 2;
+
+                    gc.fillText(text, x, centerY);
+                    gc.setGlobalAlpha(1.0);
+
+                    if (elapsed >= duration) {
+                        bustAnimating = false;
+                        bustFinished = true;
+                        stop();
+                    }
+                }
+            };
+            timer.start();
         }
+
+// 2. Always draw final static "BUST" if finished and lost is still true
+        if (bustFinished && !bustAnimating && lost) {
+            String text = "BUST";
+            gc.setFont(Font.font("Impact", FontWeight.EXTRA_BOLD, 100));
+            gc.setFill(Color.DARKRED);
+
+            Text tempText = new Text(text);
+            tempText.setFont(gc.getFont());
+            double textWidth = tempText.getLayoutBounds().getWidth();
+            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
+            double y = gc.getCanvas().getHeight() / 2 + 35;
+
+            gc.fillText(text, x, y);
+        }
+
+// 3. Reset animation state when user plays again
+        if (!lost && lastLostState) {
+            bustAnimating = false;
+            bustFinished = false;
+        }
+
+// 4. Show trusses/roads if game not in play mode
+        if (!play) {
+            String text = "Roads Left: " + maxRoadBeam + " Trusses Left: " + maxTruss;
+            gc.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
+            gc.setFill(Color.ROSYBROWN);
+
+            double textWidth = gc.getFont().getSize() * text.length() * 0.4;
+            double x = (gc.getCanvas().getWidth() - textWidth) / 2;
+            double y = 30;
+
+            gc.fillText(text, x, y);
+        }
+
+// 5. Update lastLostState at the end
+        lastLostState = lost;
         //Drawing grid
         if (gridModeButton.isSelected()) {
             gc.setStroke(Color.rgb(100, 100, 100, 0.5));

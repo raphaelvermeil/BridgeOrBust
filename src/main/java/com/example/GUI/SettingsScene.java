@@ -62,37 +62,20 @@ public class SettingsScene {
         });
 
 
- /*       // Fullscreen checkbox here
-        //TODO does not work yet but should be
-        fullscreenCheckbox = new CheckBox("Fullscreen");
-        fullscreenCheckbox.setStyle("-fx-font-size: 16px;");
-        fullscreenCheckbox.setSelected(GameSettings.isFullscreen());
 
-        fullscreenCheckbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            GameSettings.setFullscreen(newVal);
-            primaryStage.setFullScreen(newVal);
-        });
-        fullscreenCheckbox.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            primaryStage.setFullScreen(newVal);
-        });*/
 
         // Back button
         Button backButton = new Button("BACK");
         backButton.setStyle("-fx-text-fill: #006699; -fx-background-color: white; -fx-font-size: 28px;");
         backButton.getStyleClass().add("menu-button");
         addHoverEffect(backButton);
-        Button testSound = new Button("Test Sound Volume");
-        testSound.setOnAction(e -> {
-            System.out.println("Current volume: " + MusicManager.getCurrentVolume());
-        });
-        root.getChildren().add(testSound);
+
 
 
         backButton.setOnAction(e -> {
             GameTitleScreen gameTitleScreen = new GameTitleScreen();
             Scene scene = gameTitleScreen.createGameTitleScene(primaryStage);
             primaryStage.setScene(scene);
-            primaryStage.setFullScreen(GameSettings.isFullscreen());
         });
 
 
